@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Matrix | QuestEngine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #fee2e2;
+            --accent: #ef4444; 
+            --accent-hover: #dc2626;
+            --text-main: #7f1d1d;
+            --text-muted: #991b1b;
+            --border-color: rgba(239, 68, 68, 0.25);
+            --success: #10b981;
+            --danger: #b91c1c;
+            --font-sans: 'Poppins', sans-serif;
+            --glass-bg: rgba(255, 245, 245, 0.7);
+            --glass-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
+        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        
+        .view { display: none; width: 100%; }
+        .view.active-view { display: block; }
+        .view-container { max-width: 900px; margin: 120px auto 4rem; padding: 0 2rem; }
+
+        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 3.5rem 2rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .level-grid { display: flex; justify-content: center; gap: 1.2rem; margin: 3rem 0; flex-wrap: wrap; }
+        .level-btn { width: 70px; height: 70px; border-radius: 16px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.4rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
+
+        .btn-primary { background: var(--accent); color: white; padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; text-decoration: none; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; padding: 2.5rem; border-radius: 16px; max-width: 400px; text-align: center; }
+
+        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 2rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); }
+        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 3rem; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.2rem; }
+        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 30px; font-weight: 700; }
+        .timer { color: var(--danger); }
+        .options-list { display: flex; flex-direction: column; gap: 1rem; }
+        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1.2rem 1.5rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; }
+        .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
+        .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+        .quiz-controls { display: flex; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+
+        .review-item { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item.correct { border-left-color: var(--success); }
+        .review-item.wrong { border-left-color: var(--danger); }
+        .text-success { color: var(--success); font-weight: 600; }
+        .text-danger { color: var(--danger); font-weight: 600; }
+        footer { background: rgba(0,0,0,0.03); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo"><i class="fa-solid fa-flask"></i> Chemistry Matrix</a>
+            <a href="index.html" class="btn-secondary" style="padding: 0.5rem 1.2rem;">Home Matrix</a>
+        </div>
+    </header>
+
+    <div id="exitModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Terminate Evaluation?</h3>
+            <p style="margin:1rem 0;">Are you sure? Current progress values will be lost completely.</p>
+            <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
+            <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+        </div>
+    </div>
+
+    <div id="level-view" class="view active-view">
+        <div class="view-container">
+            <div class="level-container">
+                <h2>Chemistry Core Sectors</h2>
+                <p style="margin-top: 0.5rem;">Select an evaluation quadrant. Each sector contains 10 items.</p>
+                <div class="level-grid">
+                    <button class="level-btn" onclick="selectLevel(1)">1</button>
+                    <button class="level-btn" onclick="selectLevel(2)">2</button>
+                    <button class="level-btn" onclick="selectLevel(3)">3</button>
+                    <button class="level-btn" onclick="selectLevel(4)">4</button>
+                    <button class="level-btn" onclick="selectLevel(5)">5</button>
+                </div>
+                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Return</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="pre-quiz-view" class="view">
+        <div class="view-container">
+            <div class="pre-quiz-card">
+                <h2 id="preQuizTitle">Sector Registration</h2>
+                <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0;">
+                    <div><i class="fa-solid fa-clipboard-list"></i> 10 Questions</div>
+                    <div><i class="fa-solid fa-stopwatch"></i> 02:00 Minutes</div>
+                </div>
+                <button class="btn-secondary" onclick="showView('level-view')">Back</button>
+                <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-view" class="view">
+        <div class="quiz-window">
+            <div class="quiz-header">
+                <span class="tracker-pill" id="questionTracker">Item 1/10</span>
+                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 02:00</span>
+            </div>
+            <div>
+                <h3 id="questionText" style="font-size:1.35rem; margin-bottom:1.5rem;">Loading...</h3>
+                <div class="options-list" id="optionsContainer"></div>
+            </div>
+            <div class="quiz-controls">
+                <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+                    <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="results-view" class="view">
+        <div class="view-container">
+            <div class="pre-quiz-card">
+                <h2>Analysis Completed</h2>
+                <div style="font-size: 5rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
+                <p id="resultEvaluationMessage" style="margin-bottom: 2rem;"></p>
+                <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Red Configuration Matrix.</p>
+    </footer>
+
+    <script>
+        const CHEMISTRY_DATA = [
+            // SECTOR 1
+            [
+                { q: "What is the chemical symbol for Gold?", o: ["Ag", "Au", "Pb", "Fe"], a: 1 },
+                { q: "Which gas is most abundant in Earth's atmosphere?", o: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], a: 2 },
+                { q: "What is the pH value of pure water at standard temperature?", o: ["5", "7", "9", "14"], a: 1 },
+                { q: "Which subatomic particle carries a negative operational charge?", o: ["Proton", "Neutron", "Electron", "Nucleus"], a: 2 },
+                { q: "What type of chemical bond involves sharing electron pairs?", o: ["Ionic Bond", "Covalent Bond", "Metallic Bond", "Hydrogen Bond"], a: 1 },
+                { q: "What is the absolute lightest element listed on the periodic table?", o: ["Helium", "Lithium", "Oxygen", "Hydrogen"], a: 3 },
+                { q: "What is the standard chemical name for table salt?", o: ["Baking Soda", "Table Salt", "Bleach", "Sodium Chloride"], a: 3 },
+                { q: "In a balanced chemical equation, substances on the left are called?", o: ["Products", "Catalysts", "Reactants", "Enzymes"], a: 2 },
+                { q: "Which noble gas is uniquely utilized to create glowing signs?", o: ["Argon", "Krypton", "Neon", "Xenon"], a: 2 },
+                { q: "What is the process of a liquid phase turning directly into a gas phase?", o: ["Condensation", "Evaporation", "Sublimation", "Melting"], a: 1 }
+            ],
+            // SECTOR 2
+            [
+                { q: "What is the structural molecular formula for methane gas?", o: ["CO2", "CH4", "C2H6", "NH3"], a: 1 },
+                { q: "Which core element atom is foundational to all organic compounds?", o: ["Hydrogen", "Oxygen", "Carbon", "Nitrogen"], a: 2 },
+                { q: "What is the exact chemical formula for table sugar (Sucrose)?", o: ["C6H12O6", "C12H22O11", "CH3COOH", "NaCl"], a: 1 },
+                { q: "An acidic solution will shift blue litmus indicator paper into which color?", o: ["Green", "Yellow", "Red", "Purple"], a: 2 },
+                { q: "What is the atomic tracking number assigned to Carbon?", o: ["5", "6", "7", "8"], a: 1 },
+                { q: "Which pure metal is liquid at standard environmental room temperatures?", o: ["Gallium", "Mercury", "Cesium", "Sodium"], a: 1 },
+                { q: "What chemical law states mass is neither generated nor destroyed?", o: ["Boyle's Law", "Avogadro's Law", "Law of Conservation of Mass", "Charles's Law"], a: 2 },
+                { q: "What is the primary gaseous element found inside natural gas supplies?", o: ["Ethane", "Propane", "Butane", "Methane"], a: 3 },
+                { q: "Which distinct element profile is designated by the operational letter 'K'?", o: ["Krypton", "Potassium", "Calcium", "Phosphorus"], a: 1 },
+                { q: "What name is applied to chemical reactions that release net thermal energy?", o: ["Endothermic", "Exothermic", "Synthesis", "Decomposition"], a: 1 }
+            ],
+            // SECTOR 3
+            [
+                { q: "What is the proper IUPAC chemical name applied to kitchen baking soda?", o: ["Sodium Carbonate", "Sodium Bicarbonate", "Sodium Hydroxide", "Calcium Carbonate"], a: 1 },
+                { q: "What is the baseline oxidation state value assigned to uncombined pure elements?", o: ["-1", "0", "+1", "Variable"], a: 1 },
+                { q: "Which acid type is natively present inside human stomach digestive tracts?", o: ["Sulfuric Acid", "Nitric Acid", "Hydrochloric Acid", "Acetic Acid"], a: 2 },
+                { q: "What name configuration is given to horizontal rows across the periodic table?", o: ["Groups", "Families", "Periods", "Blocks"], a: 2 },
+                { q: "What is the true geometric molecular shape configuration of a water molecule?", o: ["Linear", "Bent", "Trigonal Planar", "Tetrahedral"], a: 1 },
+                { q: "Which specialized catalyst accelerates reactions inside living tissue?", o: ["Inhibitor", "Enzyme", "Reactant", "Solute"], a: 1 },
+                { q: "What discrete gas is evolved when zinc chips react with Hydrochloric Acid?", o: ["Oxygen", "Chlorine", "Hydrogen", "Nitrogen"], a: 2 },
+                { q: "Which fluid substance is broadly cataloged as the universal solvent matrix?", o: ["Alcohol", "Acetone", "Water", "Benzene"], a: 2 },
+                { q: "What absolute temperature scale metric initializes precisely at absolute zero?", o: ["Celsius", "Fahrenheit", "Kelvin", "Rankine"], a: 2 },
+                { q: "What specific state is generated by mixing two or more metal components?", o: ["Compound", "Alloy", "Polymer", "Isotope"], a: 1 }
+            ],
+            // SECTOR 4
+            [
+                { q: "What explicit functional group configuration characterizes simple alcohols?", o: ["-COOH", "-CHO", "-OH", "-NH2"], a: 2 },
+                { q: "What is the total atomic mass calculation equivalent of a single Hydrogen atom?", o: ["1 amu", "2 amu", "4 amu", "12 amu"], a: 0 },
+                { q: "Which gaseous molecular profile filters out harmful solar UV radiation fields?", o: ["Oxygen", "Ozone", "Nitrogen", "Argon"], a: 1 },
+                { q: "What is the structural molecular formula mapping out pure sulfuric acid?", o: ["HCl", "HNO3", "H2SO4", "H3PO4"], a: 2 },
+                { q: "What identifier defines atoms of an identical element possessing variant neutrons?", o: ["Allotropes", "Isotopes", "Isobars", "Isomers"], a: 1 },
+                { q: "What specific geometric crystal lattice pattern is generated by structural NaCl?", o: ["Body-centered cubic", "Face-centered cubic", "Hexagonal system", "Simple cubic layout"], a: 1 },
+                { q: "Which singular element across the periodic matrix exhibits peak electronegativity?", o: ["Oxygen", "Fluorine", "Chlorine", "Nitrogen"], a: 1 },
+                { q: "What state of matter contains highly energized ionized gas structures?", o: ["Solid state", "Liquid matrix", "Gaseous phase", "Plasma matrix"], a: 3 },
+                { q: "What primary core crustal ore mineral yields structural Aluminum extract?", o: ["Hematite", "Bauxite", "Galena", "Magnetite"], a: 1 },
+                { q: "What volatile gas product is produced during anaerobic fermentation cycles?", o: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Methane"], a: 1 }
+            ],
+            // SECTOR 5
+            [
+                { q: "What parameter matrix track does a standard Carbon-14 testing protocol calculate?", o: ["Acidity metrics", "Chronological Age", "Structural Mass", "Volumetric Density"], a: 1 },
+                { q: "What long chain molecular items are composed of repeating interconnected monomers?", o: ["Polymers", "Isomers", "Esters", "Alkanes"], a: 0 },
+                { q: "What laboratory apparatus tracks explicit enthalpy heat variance changes?", o: ["Thermometer", "Calorimeter", "Barometer", "Voltmeter"], a: 1 },
+                { q: "What primary structural compound element constitutes the mass profile of limestone?", o: ["CaSO4", "CaCO3", "CaO", "Ca(OH)2"], a: 1 },
+                { q: "Which distinct element parameter block is classified inherently as an amphoteric metalloid?", o: ["Silicon", "Iron", "Copper", "Sulfur"], a: 0 },
+                { q: "What is the verified scientific standard numerical value constant defining Avogadro's Number?", o: ["6.02x10^22", "6.02x10^23", "3.14x10^23", "9.11x10^-31"], a: 1 },
+                { q: "What is the systemic structural industrial name assigned to Bleaching Powder?", o: ["Calcium Chloride", "Calcium Hypochlorite", "Sodium Hypochlorite", "Calcium Carbonate"], a: 1 },
+                { q: "Which explicit gas state component can be compressed to structurally generate physical dry ice?", o: ["Nitrogen", "Oxygen", "Carbon Dioxide", "Helium"], a: 2 },
+                { q: "What explicit chemical bond linkage joins amino acid strings together within macro proteins?", o: ["Ionic linkage", "Peptide bond", "Glycosidic bond", "Ester linkage"], a: 1 },
+                { q: "What true color manifestation occurs when copper sulfate crystals are natively hydrated?", o: ["Deep Green", "Bright Yellow", "Vibrant Blue", "Opaque White"], a: 2 }
+            ]
+        ];
+
+        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
+        function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Chemistry - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
+        function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
+        function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
+
+        function startQuiz() {
+            currentQuestionIndex = 0; userAnswers = new Array(10).fill(null); timeRemaining = 120; renderQuestion(); showView('quiz-view');
+            clearInterval(quizTimer); updateTimerDisplay();
+            quizTimer = setInterval(() => { timeRemaining--; updateTimerDisplay(); if (timeRemaining <= 0) { clearInterval(quizTimer); evaluateQuizSession(); } }, 1000);
+        }
+        function updateTimerDisplay() {
+            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0'); const s = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
+        }
+        function renderQuestion() {
+            const item = CHEMISTRY_DATA[currentSectorIndex][currentQuestionIndex];
+            document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
+            document.getElementById('questionText').innerText = item.q;
+            const container = document.getElementById('optionsContainer'); container.innerHTML = "";
+            item.o.forEach((opt, idx) => {
+                const btn = document.createElement('button'); btn.className = `option-btn ${userAnswers[currentQuestionIndex] === idx ? 'selected' : ''}`;
+                btn.innerHTML = `<span style='font-weight:700;margin-right:8px;'>${String.fromCharCode(65 + idx)}.</span> ${opt}`;
+                btn.onclick = () => { userAnswers[currentQuestionIndex] = idx; renderQuestion(); }; container.appendChild(btn);
+            });
+            document.getElementById('prevBtn').style.visibility = (currentQuestionIndex === 0) ? "hidden" : "visible";
+            document.getElementById('nextBtn').innerText = (currentQuestionIndex === 9) ? "Submit Sector" : "Next";
+        }
+        function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
+        function evaluateQuizSession() {
+            const data = CHEMISTRY_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            document.getElementById('scoreDisplay').innerText = `${score}/10`;
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Excellent analytical throughput verified." : "Parameters outside optimal thresholds. Sector reset suggested.";
+            buildReviewMatrix(data); showView('results-view');
+        }
+        function buildReviewMatrix(data) {
+            const container = document.getElementById('reviewSection'); container.innerHTML = "";
+            data.forEach((item, idx) => {
+                const sel = userAnswers[idx]; const isCorrect = (sel === item.a); const div = document.createElement('div'); div.className = `review-item ${isCorrect ? 'correct' : 'wrong'}`;
+                div.innerHTML = `<h4>Item ${idx + 1}: ${item.q}</h4><p>Selected: <span class='${isCorrect?'text-success':'text-danger'}'>${sel!==null?item.o[sel]:'Expired'}</span></p>${!isCorrect?`<p>Target: <span class='text-success'>${item.o[item.a]}</span></p>`:''}`;
+                container.appendChild(div);
+            });
+        }
+        function toggleReviewSection() { const s = document.getElementById('reviewSection'); s.style.display = s.style.display === "none" ? "block" : "none"; }
+    </script>
+</body>
+</html>

@@ -12,1113 +12,133 @@
     <style>
         :root {
             --bg-primary: #f0f4f8;
-            --bg-secondary: #ffffff;
-            --accent: #f59e0b; 
-            --accent-hover: #d97706;
-            --accent-light: #fef3c7;
+            --accent: #6366f1; 
             --text-main: #0f172a;
             --text-muted: #475569;
             --border-color: rgba(255, 255, 255, 0.6);
-            --success: #10b981;
-            --danger: #ef4444;
             --font-sans: 'Poppins', sans-serif;
             --glass-bg: rgba(255, 255, 255, 0.45);
             --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-sans);
-            transition: all 0.25s ease;
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.25s ease; scroll-behavior: smooth; }
         body {
-            background-color: #e0c3fc;
+            background-color: #e2e8f0;
             background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,0.1) 0px, transparent 50%),
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, hsla(22,100%,77%,0.3) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, hsla(243,100%,77%,0.3) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, hsla(295,100%,77%,0.3) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(225,39%,30%,0.1) 0px, transparent 50%);
+            background-attachment: fixed; color: var(--text-main); overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh;
         }
 
-        /* NAVIGATION & HEADER */
         header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .logo i { color: var(--accent); }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 2rem;
-        }
+        .hero { min-height: 75vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 8rem 2rem 2rem; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 1.2rem; letter-spacing: -1.5px; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2.5rem; }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--text-main);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            letter-spacing: -0.5px;
-        }
+        .btn-primary { padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 30px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; border: none; background: var(--accent); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .logo i {
-            color: var(--accent);
-            font-size: 2rem;
-        }
+        .categories-section { max-width: 1200px; margin: 0 auto; padding: 2rem 2rem 8rem; width: 100%; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; font-weight: 800; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
 
-        .nav-toggle {
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.8);
-            border-radius: 8px;
-            padding: 8px 14px;
-            color: var(--text-main);
-            font-size: 1.4rem;
-            cursor: pointer;
-            display: block;
-        }
-
-        .nav-toggle:hover {
-            background: var(--accent);
-            color: #fff;
-        }
-
-        /* DROPDOWN MENU */
-        .nav-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.8);
-            display: none;
-            flex-direction: column;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 1rem 0 2rem;
-        }
-
-        .nav-menu.active {
-            display: flex;
-            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .nav-menu a {
-            color: var(--text-main);
-            text-decoration: none;
-            padding: 1.5rem;
-            font-weight: 700;
-            font-size: 1.3rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .nav-menu a:hover {
-            background: var(--accent-light);
-            color: var(--accent-hover);
-        }
-
-        /* CUSTOM POPUP MODAL */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            animation: fadeIn 0.2s ease forwards;
-        }
-
-        .modal-box {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            padding: 2.5rem;
-            border-radius: 16px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            border: 1px solid var(--border-color);
-        }
-
-        .modal-box h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-        .modal-box p { color: var(--text-muted); margin-bottom: 2rem; }
-        .modal-actions { display: flex; justify-content: center; gap: 1rem; }
-
-        /* BUTTONS */
-        .btn-primary, .btn-secondary {
-            padding: 0.85rem 2.2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #000;
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.7);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-        }
-
-        .btn-secondary:hover {
-            background: #fff;
-            transform: translateY(-2px);
-        }
-
-        /* LANDING HERO (100VH) */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 6rem 2rem 2rem;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 1.2rem;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-        }
-
-        .hero h1 span {
-            color: var(--accent-hover);
-            text-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 650px;
-            margin-bottom: 2.5rem;
-            font-weight: 500;
-        }
-
-        /* GLASSMORPHISM CARDS GRID */
-        .categories-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem 8rem;
-            width: 100%;
-        }
+        .card { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 20px; overflow: hidden; text-decoration: none; color: inherit; display: block; box-shadow: var(--glass-shadow); }
+        .card:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.7); }
         
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            font-weight: 800;
-        }
+        /* Specialized Hover Theme Borders for Landing Matrix */
+        .card.chem-card:hover { border-color: #ef4444; }
+        .card.riddle-card:hover { border-color: #eab308; }
+        .card.bio-card:hover { border-color: #10b981; }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            background: rgba(255, 255, 255, 0.7);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-bottom: 1px solid var(--border-color);
-        }
-
+        .card-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 1px solid var(--border-color); }
         .card-content { padding: 2rem; }
         .card-title { font-size: 1.5rem; margin-bottom: 0.6rem; font-weight: 700; }
-        .card-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+        .card-desc { color: var(--text-muted); font-size: 0.95rem; }
 
-        /* VIEWS CONFIGURATION */
-        .view { display: none; width: 100%; }
-        .view.active-view { display: block; }
-        
-        .view-container {
-            max-width: 900px;
-            margin: 120px auto 4rem;
-            padding: 0 2rem;
-        }
-
-        .level-container, .pre-quiz-card {
-            text-align: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 3.5rem 2rem;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--glass-shadow);
-        }
-
-        .level-grid {
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-        }
-
-        .level-btn {
-            width: 70px; height: 70px;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.6);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            font-size: 1.4rem; font-weight: 800;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .level-btn:hover {
-            background: var(--accent);
-            color: #000;
-            transform: scale(1.1) translateY(-5px);
-        }
-
-        /* IMMERSIVE LIVE QUIZ VIEW */
-        #quiz-view.active-view {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            padding: 2rem;
-            z-index: 2000;
-            display: flex; justify-content: center; align-items: center;
-            background-color: #e0c3fc;
-            background-image: inherit;
-        }
-
-        .quiz-window {
-            width: 100%; max-width: 850px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(25px);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-            padding: 3rem;
-        }
-
-        .quiz-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.2rem;
-        }
-
-        .tracker-pill, .timer {
-            background: rgba(255,255,255,0.8);
-            padding: 0.5rem 1.2rem; border-radius: 30px; font-weight: 700;
-        }
-        .timer { color: var(--danger); font-size: 1.2rem; }
-        .question-box h3 { font-size: 1.4rem; margin-bottom: 2rem; }
-        .options-list { display: flex; flex-direction: column; gap: 1rem; }
-
-        .option-btn {
-            background: rgba(255,255,255,0.6);
-            border: 1px solid var(--border-color);
-            padding: 1.2rem 1.5rem; border-radius: 12px;
-            text-align: left; cursor: pointer; font-size: 1.05rem;
-            display: flex; align-items: center;
-        }
-
-        .option-btn:hover { border-color: var(--accent); background: #fff; transform: translateX(5px); }
-        .option-btn.selected { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
-        .quiz-controls { display: flex; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
-
-        /* REVIEW SYSTEM STYLES */
-        .review-item {
-            background: rgba(255,255,255,0.6); padding: 1.5rem; border-radius: 12px;
-            margin-bottom: 1.2rem; border-left: 6px solid transparent; text-align: left;
-        }
-        .review-item.correct { border-left-color: var(--success); }
-        .review-item.wrong { border-left-color: var(--danger); }
-        .text-success { color: var(--success); font-weight: 600; }
-        .text-danger { color: var(--danger); font-weight: 600; }
-
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media(max-width: 768px) {
-            .hero h1 { font-size: 2.8rem; }
-            .quiz-window { padding: 1.5rem; }
-            .quiz-controls { flex-direction: column; gap: 1rem; }
-            .quiz-controls div { display: flex; width: 100%; gap: 10px; }
-            .quiz-controls button { flex: 1; justify-content: center; }
-            #quizBackBtn { width: 100%; justify-content: center; }
-        }
+        footer { background: rgba(15, 23, 42, 0.05); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; color: var(--text-muted); margin-top: auto; backdrop-filter: blur(10px); }
     </style>
 </head>
 <body>
 
-    <header id="siteHeader">
+    <header>
         <div class="nav-container">
-            <a href="#" class="logo" onclick="showView('landing-view')">
-                <i class="fa-solid fa-square-question"></i> QuestEngine
-            </a>
-            <button class="nav-toggle" id="navToggle"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo"><i class="fa-solid fa-square-question"></i> QuestEngine</a>
         </div>
-        <nav class="nav-menu" id="navMenu">
-            <a href="#" onclick="showView('landing-view'); document.getElementById('navMenu').classList.remove('active');">Home Base</a>
-            <a href="#categories" onclick="showView('landing-view'); document.getElementById('navMenu').classList.remove('active');">Test Matrix</a>
-        </nav>
     </header>
 
-    <div id="exitModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>Terminate Session?</h3>
-            <p>Are you sure you want to abort this quiz? All current progress will be lost.</p>
-            <div class="modal-actions">
-                <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
-                <button class="btn-primary" style="background: var(--danger); color: white;" onclick="confirmExitQuiz()">Yes, Abort</button>
-            </div>
-        </div>
-    </div>
+    <section class="hero">
+        <h1>Engineered Assessment <span>Hub</span></h1>
+        <p>Deploy rigorous, theme-isolated evaluation matrices optimized across multi-disciplinary configurations.</p>
+        <a href="#categories" class="btn-primary">Initialize Core Modules <i class="fa-solid fa-arrow-down"></i></a>
+    </section>
 
-    <div id="landing-view" class="view active-view">
-        <section class="hero">
-            <h1>Engineered For <span>Precision</span></h1>
-            <p>Deploy rigorous assessments across Logic, Sciences, Mathematics, and complex Cognitive Puzzles.</p>
-            <a href="#categories" class="btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 30px;">
-                Initialize Modules <i class="fa-solid fa-arrow-down"></i>
+    <section class="categories-section" id="categories">
+        <h2 class="section-title">Select Assessment Matrix</h2>
+        <div class="grid-layout">
+            
+            <a href="chemistry.html" class="card chem-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1554475900-0a0350e3fc7b?q=80&w=717&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Chemistry">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#ef4444;"><i class="fa-solid fa-flask"></i> Chemistry</h3>
+                    <p class="card-desc">Atomic setups, bonding mechanics, thermodynamics, and molecular diagnostics.</p>
+                </div>
             </a>
-        </section>
 
-        <section class="categories-section" id="categories">
-            <h2 class="section-title">Select Assessment Matrix</h2>
-            <div class="grid-layout" id="categoriesGrid"></div>
-        </section>
-    </div>
-
-    <div id="level-view" class="view">
-        <div class="view-container">
-            <div class="level-container">
-                <h2 id="levelViewTitle" style="font-size: 2rem;">Module Selection</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1rem;">Select a difficulty parameter sector. Each sector maps out exactly 10 questions.</p>
-                <div class="level-grid">
-                    <button class="level-btn" onclick="selectLevel(1)">1</button>
-                    <button class="level-btn" onclick="selectLevel(2)">2</button>
-                    <button class="level-btn" onclick="selectLevel(3)">3</button>
-                    <button class="level-btn" onclick="selectLevel(4)">4</button>
-                    <button class="level-btn" onclick="selectLevel(5)">5</button>
+            <a href="malayalamriddles.html" class="card riddle-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600" alt="Malayalam">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#b45309;"><i class="fa-solid fa-brain"></i> കടങ്കഥകൾ</h3>
+                    <p class="card-desc">Traditional language puzzles testing lateral problem-solving patterns.</p>
                 </div>
-                <button class="btn-secondary" onclick="showView('landing-view')"><i class="fa-solid fa-arrow-left"></i> Home</button>
-            </div>
+            </a>
+
+            <a href="biology.html" class="card bio-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1633167606207-d840b5070fc2?q=80&w=752&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Biology">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#10b981;"><i class="fa-solid fa-dna"></i> Biology</h3>
+                    <p class="card-desc">Cytological structures, advanced genomic setups, and ecological pathways.</p>
+                </div>
+            </a>
+
+            <a href="physics.html" class="card phys-card">
+    <img class="card-img" src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?q=80&w=717&auto=format&fit=crop&ixlib=rb-4.1.0" alt="Physics">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#334155;"><i class="fa-solid fa-atom"></i> Physics</h3>
+        <p class="card-desc">Kinematics, force vectors, thermodynamics, and modern quantum mechanics.</p>
+    </div>
+</a>
+
+<a href="cognitivepuzzles.html" class="card cog-card">
+    <img class="card-img" src="https://plus.unsplash.com/premium_photo-1723662084148-2cd2357705ba?q=80&w=1137&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cognitive Puzzles">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#64748b;"><i class="fa-solid fa-puzzle-piece"></i> Cognitive Puzzles</h3>
+        <p class="card-desc">Lateral reasoning, spatial patterns, analytical cryptograms, and logic blocks.</p>
+    </div>
+</a>
+
+<a href="maths.html" class="card math-card">
+    <img class="card-img" src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=717&auto=format&fit=crop&ixlib=rb-4.1.0" alt="Mathematics">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#2563eb;"><i class="fa-solid fa-calculator"></i> Mathematics</h3>
+        <p class="card-desc">Algebraic structures, coordinate geometry, calculus, and probability matrices.</p>
+    </div>
+</a>
+
         </div>
-    </div>
+    </section>
 
-    <div id="pre-quiz-view" class="view">
-        <div class="view-container">
-            <div class="pre-quiz-card">
-                <h2 id="preQuizTitle" style="font-size: 2rem;">Registration Setup</h2>
-                <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; color: var(--text-muted);">
-                    <div><i class="fa-solid fa-clipboard-list" style="color:var(--accent);"></i> 10 Items</div>
-                    <div><i class="fa-solid fa-stopwatch" style="color:var(--accent);"></i> 02:00 Mins</div>
-                </div>
-                <div style="display:flex; justify-content:center; gap:1.2rem;">
-                    <button class="btn-secondary" onclick="goBackToLevels()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                    <button class="btn-primary" onclick="startQuiz()">Start Engine <i class="fa-solid fa-play"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. All systems active.</p>
+    </footer>
 
-    <div id="quiz-view" class="view">
-        <div class="quiz-window">
-            <div class="quiz-header">
-                <span class="tracker-pill" id="questionTracker">Item 1/10</span>
-                <span class="timer" id="timerDisplay"><i class="fa-solid fa-hourglass-start"></i> 02:00</span>
-            </div>
-            <div class="question-box">
-                <h3 id="questionText">Loading...</h3>
-                <div class="options-list" id="optionsContainer"></div>
-            </div>
-            <div class="quiz-controls">
-                <button class="btn-secondary" id="quizBackBtn" onclick="requestAbortQuiz()">Exit Quiz</button>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
-                    <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="results-view" class="view">
-        <div class="view-container">
-            <div class="pre-quiz-card">
-                <h2 style="font-size: 2.2rem;">Evaluation Complete</h2>
-                <div style="font-size: 5rem; font-weight: 800; color: var(--accent-hover);" id="scoreDisplay">0/10</div>
-                <p id="resultEvaluationMessage" style="margin-bottom: 2rem; color: var(--text-muted);">Metrics compiled.</p>
-                <div style="display:flex; justify-content:center; gap:1.2rem; margin-bottom:2rem;">
-                    <button class="btn-secondary" onclick="showView('landing-view')"><i class="fa-solid fa-house"></i> Home</button>
-                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Answers <i class="fa-solid fa-magnifying-glass-chart"></i></button>
-                </div>
-                <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        /* 100% COMPLETE DATABANK - 6 CATEGORIES x 5 LEVELS x 10 Qs = 300 UNIQUE TOTAL QUESTIONS */
-        const QUIZ_DATABASE = {
-            malayalam_kadamkathakal: {
-                title: "Malayalam Kadamkathakal",
-                desc: "Traditional logic puzzles and structural riddles testing vernacular metaphor schemas.",
-                image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600",
-                levels: [
-                    [
-                        { q: "അമ്മ നടക്കും മകൾ ഇരുക്കും?", o: ["കതകും പടിയും", "ചക്കയും മാങ്ങയും", "അമ്മിളിയും കിണ്ടിയും", "ചൂലും തറയും"], a: 0 },
-                        { q: "ആകാശത്തുനിന്നും വീണൊരു മുത്ത്, തൊട്ടപ്പോൾ പോയി?", o: ["മഞ്ഞുതുള്ളി", "ആലിപ്പഴം", "മഴത്തുള്ളി", "നക്ഷത്രം"], a: 2 },
-                        { q: "കണ്ടാലറിയാം കൊണ്ടാലറിയില്ല?", o: ["ചൂട്", "വെളിച്ചം", "കാറ്റ്", "വിഷം"], a: 2 },
-                        { q: "കാള കിടക്കും കയറു ഓടും?", o: ["തീവണ്ടി", "മത്തങ്ങയും വള്ളിയും", "കിണറും കയറും", "പാമ്പും മാളവും"], a: 1 },
-                        { q: "അടിച്ചാൽ ചിരിക്കുന്നവൾ ആര്?", o: ["ചെണ്ട", "മണി", "കൈതട്ടി", "താക്കോൽ"], a: 0 },
-                        { q: "വെള്ളത്തിൽ ജനിക്കും വെള്ളത്തിൽ മരിക്കും, വെള്ളത്തിൽ ഇട്ടാൽ അലിഞ്ഞുപോകും?", o: ["പഞ്ചസാര", "ചായ", "ഉപ്പ്", "ഐസ്"], a: 2 },
-                        { q: "കറുത്ത പാറമേൽ വെളുത്ത കോഴി?", o: ["സ്ലേറ്റ് പേന", "ഉഴുന്ന് വട", "അരിയും ഉമ്മറവും", "കണ്ണും കൺപീലിയും"], a: 0 },
-                        { q: "വെള്ളം കുടിക്കും തോറും തടിക്കുന്നവൻ?", o: ["കുളം", "വയർ", "പഞ്ഞി", "തവള"], a: 2 },
-                        { q: "ആയിരം കിളികൾക്ക് ഒരു കൊക്ക്?", o: ["വാഴക്കുല", "തെങ്ങിൻ കുല", "നെൽക്കതിർ", "പൂക്കുല"], a: 0 },
-                        { q: "പച്ചത്തുണി പുതച്ച ചുവപ്പൻ സുന്ദരി?", o: ["തക്കാളി", "മുളക്", "വഴുതനങ്ങ", "കാരറ്റ്"], a: 1 }
-                    ],
-                    [
-                        { q: "കട്ടിലിനടിയിൽ കിടക്കും കാവൽക്കാരൻ?", o: ["ചെരിപ്പ്", "പൂച്ച", "നായ", "പെട്ടി"], a: 0 },
-                        { q: "തൊട്ടാൽ വാടും സുന്ദരി?", o: ["മുക്കുറ്റി", "തൊട്ടാവാടി", "താമര", "മല്ലിക"], a: 1 },
-                        { q: "പച്ചക്കുതിര പുറത്തു കയറി പാട്ടും പാടിപ്പോകുന്നു?", o: ["ഈച്ച", "വെട്ടുക്കിളി", "കൊതുക്", "വണ്ട്"], a: 1 },
-                        { q: "അകത്തു ചുവപ്പ്, പുറത്തു പച്ച, തിന്നാൽ കറുപ്പ്?", o: ["തണ്ണിമത്തൻ", "മാമ്പഴം", "പപ്പായ", "ആപ്പിൾ"], a: 0 },
-                        { q: "ആനകേറാമല ആളുകേറാമല ആയിരം കാന്താരി പൂത്തു നിൽക്കും മല?", o: ["ആകാശം", "കാട്", "കടൽ", "മേഘം"], a: 0 },
-                        { q: "കണ്ണില്ലാതെയറിയും കാതില്ലാതെയറിയും?", o: ["മനസ്സ്", "കാറ്റ്", "നിഴൽ", "സ്വപ്നം"], a: 0 },
-                        { q: "അമ്മയുണ്ടെങ്കിൽ മകളില്ല, മകളുണ്ടെങ്കിൽ അമ്മയില്ല?", o: ["തീയും പുകയം", "രാത്രിയും പകലും", "വെയിൽ", "മഴ"], a: 1 },
-                        { q: "ഒരു പെട്ടിയിൽ മുപ്പത്തിരണ്ടു മുത്തുകൾ?", o: ["പല്ലുകൾ", "നക്ഷത്രങ്ങൾ", "അരിമണികൾ", "കടുകുമണികൾ"], a: 0 },
-                        { q: "വാലില്ലാപ്പക്ഷിക്ക് ഒൻപതു വാല്?", o: ["പട്ടം", "പമ്പരം", "തൂവൽ", "മേഘം"], a: 0 },
-                        { q: "കുളിച്ചാലും കുളിച്ചാലും ഈറൻ മാറാത്തവൾ?", o: ["തവള", "മീൻ", "കിണർ", "തറ"], a: 2 }
-                    ],
-                    [
-                        { q: "കാലില്ലാതെ ഓടും കൈയില്ലാതെ പിടിക്കും?", o: ["വെള്ളം", "കാറ്റ്", "പാമ്പ്", "നിഴൽ"], a: 0 },
-                        { q: "തോലുരിച്ചാൽ കരയിക്കുന്നവൻ ആര്?", o: ["ഉള്ളി", "മുളക്", "ഇഞ്ചി", "വെളുത്തുള്ളി"], a: 0 },
-                        { q: "വെളുത്ത കൊട്ടാരത്തിൽ മഞ്ഞക്കിളി?", o: ["മുട്ട", "തേങ്ങ", "നാരങ്ങ", "പപ്പായ"], a: 0 },
-                        { q: "കടിച്ചാൽ പൊട്ടാത്ത മിഠായി?", o: ["കല്ല്", "ഇരുമ്പ്", "പല്ല്", "അണ്ടിപ്പരിപ്പ്"], a: 2 },
-                        { q: "കണ്ടാൽ ഒന്നുണ്ട് ഒപ്പമുണ്ട് പക്ഷെ പിടിച്ചാൽ കിട്ടില്ല?", o: ["നിഴൽ", "കാറ്റ്", "പുക", "വെളിച്ചം"], a: 0 },
-                        { q: "പച്ചച്ചരടിൽ ചുവപ്പു മുത്തുകൾ കോർത്തതുപോലെ?", o: ["ചുവന്ന മുളക്", "കോവയ്ക്ക", "തക്കാളി", "പയർ"], a: 0 },
-                        { q: "മുകളിലേക്ക് പോകും താഴേക്ക് വരില്ല?", o: ["പ്രായം", "പുക", "പട്ടം", "റോക്കറ്റ്"], a: 0 },
-                        { q: "കുത്താൻ വരും പക്ഷെ ഓടിക്കില്ല?", o: ["കടന്നൽ", "മുള്ള്", "തയ്യൽ സൂചി", "പശു"], a: 2 },
-                        { q: "വീട്ടിലിരുന്നാൽ വിറയ്ക്കും പുറത്തിറങ്ങിയാൽ നിൽക്കും?", o: ["കുട", "തുണി", "ചൂല്", "പായ"], a: 0 },
-                        { q: "ഊതിയാൽ വീർക്കും കുത്തിയാൽ പൊട്ടും?", o: ["ബലൂൺ", "കുമിള", "പന്ത്", "കണ്ണ്"], a: 0 }
-                    ],
-                    [
-                        { q: "വാലുണ്ട് തലയില്ല, ശരീരമുണ്ട് ജീവനില്ല?", o: ["നാണയം", "പമ്പരം", "പട്ടം", "ചട്ടുകം"], a: 0 },
-                        { q: "അടി കറുപ്പ് നടുവ് വെളുപ്പ് തല പച്ച?", o: ["ചേമ്പ്", "മുള്ളങ്കി", "സവാള", "കപ്പ"], a: 0 },
-                        { q: "എത്ര നടന്നാലും വഴി തെറ്റാത്തവൻ?", o: ["തീവണ്ടി", "കാറ്റ്", "വെള്ളം", "ഉറുമ്പ്"], a: 0 },
-                        { q: "തൊപ്പിയിട്ട സുന്ദരി വിപണിയിൽ തിളങ്ങുന്നു?", o: ["വഴുതനങ്ങ", "തക്കാളി", "തേങ്ങ", "പൈനാപ്പിൾ"], a: 0 },
-                        { q: "വെള്ളം കുടിച്ചാൽ ചത്തുപോകും?", o: ["തീ", "പഞ്ഞി", "മണ്ണ്", "ഉപ്പ്"], a: 0 },
-                        { q: "പച്ച വീടിനുള്ളിൽ കറുത്ത കുട്ടികൾ?", o: ["തണ്ണിമത്തൻ", "പപ്പായ", "കുരുമുളക്", "ഏലയ്ക്ക"], a: 0 },
-                        { q: "പൂട്ടും പക്ഷെ തുറക്കാൻ താക്കോൽ വേണ്ട?", o: ["കണ്ണ്", "കതക്", "പെട്ടി", "കൈകൾ"], a: 0 },
-                        { q: "ഒരു വടിയിൽ ഇരുപതു നഖങ്ങൾ?", o: ["കൈവിരലുകൾ", "ഈർക്കിലി", "ചീപ്പ്", "കരിമ്പ്"], a: 2 },
-                        { q: "ഓടും കുതിര ചാടും കുതിര വെള്ളം കണ്ടാൽ നിൽക്കും കുതിര?", o: ["ചെരിപ്പ്", "പന്തു", "വണ്ടി", "തവള"], a: 0 },
-                        { q: "കറുത്ത പശു വെളുത്ത പുല്ല് തിന്നുന്നു?", o: ["ബ്ലാക്ക്ബോർഡും ചോക്കും", "പേനയും പേപ്പറും", "രാത്രിയും പകലൂം", "കണ്ണും കാഴ്ചയും"], a: 0 }
-                    ],
-                    [
-                        { q: "വെള്ളം തളിച്ചാൽ വിടരും സുന്ദരി?", o: ["കുട", "മുല്ലപ്പൂ", "തറ", "താമര"], a: 0 },
-                        { q: "പിടിച്ചാൽ ഒരു പിടി, വിട്ടാൽ ഒരു കുന്ന്?", o: ["കുട", "മുടി", "നൂൽ", "ചരട്"], a: 0 },
-                        { q: "തറയിൽ മുട്ടും തലയിൽ മുട്ടില്ല?", o: ["കാൽപ്പാദം", "ചെരിപ്പ്", "തൊപ്പി", "കുട"], a: 3 },
-                        { q: "ഒരു മരത്തിൽ പന്ത്രണ്ടു ശാഖകൾ, ഓരോന്നിലും മുപ്പതു ഇലകൾ?", o: ["വർഷവും മാസവും ദിവസങ്ങളും", "കലണ്ടർ", "സമയം", "ക്ലോക്ക്"], a: 0 },
-                        { q: "വലിപ്പമുള്ള ചെവിയുണ്ട് പക്ഷെ കേൾക്കില്ല?", o: ["ആന", "ചേമ്പ്", "മുറം", "വിശറി"], a: 1 },
-                        { q: "കയറിയാൽ ഇറങ്ങാൻ പറ്റാത്ത കിണർ?", o: ["ജയിൽ", "മരണം", "കുഴി", "ചെളി"], a: 1 },
-                        { q: "കണ്ണീരൊഴുക്കി ജീവൻ വെടിയുന്നവൾ?", o: ["മെഴുക് തിരി", "വിളക്ക്", "അഗർബത്തി", "പുകച്ചൂരുട്ട്"], a: 0 },
-                        { q: "ചുവന്ന കോട്ടയ്ക്കുള്ളിൽ വെളുത്ത കാവൽക്കാർ?", o: ["പല്ലുകൾ", "അരിമണികൾ", "മുത്തുകൾ", "കടല"], a: 0 },
-                        { q: "കാടുകണ്ട് ഓടും നാട്ടുകണ്ട് നിൽക്കും?", o: ["കോടാലി", "കുട", "ചൂല്", "കാവൽക്കാരൻ"], a: 0 },
-                        { q: "ആയിരം കണ്ണുള്ള സുന്ദരൻ?", o: ["മയിൽ", "പൈനാപ്പിൾ", "ആകാശം", "വല"], a: 0 }
-                    ]
-                ]
-            },
-            chemistry: {
-                title: "Chemistry",
-                desc: "Atomic structures, chemical bonding, thermodynamics, and molecular interactions.",
-                image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                levels: [
-                    [
-                        { q: "What is the chemical symbol for Gold?", o: ["Ag", "Au", "Pb", "Fe"], a: 1 },
-                        { q: "Which gas is most abundant in Earth's atmosphere?", o: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], a: 2 },
-                        { q: "What is the pH value of pure water?", o: ["5", "7", "9", "14"], a: 1 },
-                        { q: "Which subatomic particle has a negative charge?", o: ["Proton", "Neutron", "Electron", "Nucleus"], a: 2 },
-                        { q: "What type of bond involves sharing electron pairs?", o: ["Ionic Bond", "Covalent Bond", "Metallic Bond", "Hydrogen Bond"], a: 1 },
-                        { q: "What is the lightest element on the periodic table?", o: ["Helium", "Lithium", "Oxygen", "Hydrogen"], a: 3 },
-                        { q: "What is the common name for sodium chloride?", o: ["Baking Soda", "Table Salt", "Bleach", "Sugar"], a: 1 },
-                        { q: "In a chemical equation, substances on the left are?", o: ["Products", "Catalysts", "Reactants", "Enzymes"], a: 2 },
-                        { q: "Which noble gas is commonly used in glowing signs?", o: ["Argon", "Krypton", "Neon", "Xenon"], a: 2 },
-                        { q: "What is the process of a liquid turning into gas called?", o: ["Condensation", "Evaporation", "Sublimation", "Melting"], a: 1 }
-                    ],
-                    [
-                        { q: "What is the formula for methane gas?", o: ["CO2", "CH4", "C2H6", "NH3"], a: 1 },
-                        { q: "Which element is common to all organic compounds?", o: ["Hydrogen", "Oxygen", "Carbon", "Nitrogen"], a: 2 },
-                        { q: "What is the chemical formula for table sugar?", o: ["C6H12O6", "C12H22O11", "CH3COOH", "NaCl"], a: 1 },
-                        { q: "An acid turns blue litmus paper into which color?", o: ["Green", "Yellow", "Red", "Purple"], a: 2 },
-                        { q: "What is the atomic number of Carbon?", o: ["5", "6", "7", "8"], a: 1 },
-                        { q: "Which metal is liquid at standard room temperature?", o: ["Gallium", "Mercury", "Cesium", "Sodium"], a: 1 },
-                        { q: "What law states mass is neither created nor destroyed?", o: ["Boyle's Law", "Avogadro's Law", "Conservation of Mass", "Charles's Law"], a: 2 },
-                        { q: "What is the primary gas found in natural gas?", o: ["Ethane", "Propane", "Butane", "Methane"], a: 3 },
-                        { q: "Which element has the symbol 'K'?", o: ["Krypton", "Potassium", "Calcium", "Phosphorus"], a: 1 },
-                        { q: "What type of reaction releases thermal energy?", o: ["Endothermic", "Exothermic", "Synthesis", "Decomposition"], a: 1 }
-                    ],
-                    [
-                        { q: "What is the chemical name for baking soda?", o: ["Sodium Carbonate", "Sodium Bicarbonate", "Sodium Hydroxide", "Calcium Carbonate"], a: 1 },
-                        { q: "What is the oxidation state of pure elements?", o: ["-1", "0", "+1", "Varies"], a: 1 },
-                        { q: "Which acid is majorly present in human stomachs?", o: ["Sulfuric Acid", "Nitric Acid", "Hydrochloric Acid", "Acetic Acid"], a: 2 },
-                        { q: "What name is given to rows on the periodic table?", o: ["Groups", "Families", "Periods", "Blocks"], a: 2 },
-                        { q: "What is the molecular shape of water?", o: ["Linear", "Bent", "Trigonal Planar", "Tetrahedral"], a: 1 },
-                        { q: "Which catalyst accelerates biological reactions?", o: ["Inhibitor", "Enzyme", "Reactant", "Solute"], a: 1 },
-                        { q: "What gas is evolved when zinc reacts with HCl?", o: ["Oxygen", "Chlorine", "Hydrogen", "Nitrogen"], a: 2 },
-                        { q: "Which substance is called the universal solvent?", o: ["Alcohol", "Acetone", "Water", "Benzene"], a: 2 },
-                        { q: "What temperature scale starts at absolute zero?", o: ["Celsius", "Fahrenheit", "Kelvin", "Rankine"], a: 2 },
-                        { q: "What is the mixture of two or more metals called?", o: ["Compound", "Alloy", "Polymer", "Isotope"], a: 1 }
-                    ],
-                    [
-                        { q: "What functional group characterizes alcohols?", o: ["-COOH", " -CHO", "-OH", "-NH2"], a: 2 },
-                        { q: "What is the atomic mass of Hydrogen approximately?", o: ["1 amu", "2 amu", "4 amu", "12 amu"], a: 0 },
-                        { q: "Which gas prevents UV radiation in upper atmosphere?", o: ["Oxygen", "Ozone", "Nitrogen", "Argon"], a: 1 },
-                        { q: "What is the formula of sulfuric acid?", o: ["HCl", "HNO3", "H2SO4", "H3PO4"], a: 2 },
-                        { q: "What are atoms of same element with different neutrons?", o: ["Allotropes", "Isotopes", "Isobars", "Isomers"], a: 1 },
-                        { q: "What is the crystal lattice structure of NaCl?", o: ["Body-centered cubic", "Face-centered cubic", "Hexagonal", "Simple cubic"], a: 1 },
-                        { q: "Which element is the most electronegative?", o: ["Oxygen", "Fluorine", "Chlorine", "Nitrogen"], a: 1 },
-                        { q: "What state of matter contains highly ionized gas?", o: ["Solid", "Liquid", "Gas", "Plasma"], a: 3 },
-                        { q: "What is the primary ore of aluminum?", o: ["Hematite", "Bauxite", "Galena", "Magnetite"], a: 1 },
-                        { q: "What gas is produced during fermentation?", o: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Methane"], a: 1 }
-                    ],
-                    [
-                        { q: "What parameter does a carbon-14 test measure?", o: ["Acidity", "Age", "Mass", "Density"], a: 1 },
-                        { q: "What are polymers composed of repeating units called?", o: ["Monomers", "Isomers", "Esters", "Alkanes"], a: 0 },
-                        { q: "What device measures heat changes in reactions?", o: ["Thermometer", "Calorimeter", "Barometer", "Voltmeter"], a: 1 },
-                        { q: "What is the main compound in limestone?", o: ["CaSO4", "CaCO3", "CaO", "Ca(OH)2"], a: 1 },
-                        { q: "Which element is classified as a metalloid?", o: ["Silicon", "Iron", "Copper", "Sulfur"], a: 0 },
-                        { q: "What is the standard value of Avogadro's number?", o: ["6.02x10^22", "6.02x10^23", "3.14x10^23", "9.11x10^-31"], a: 1 },
-                        { q: "What is the chemical name of Bleaching Powder?", o: ["Calcium Chloride", "Calcium Hypochlorite", "Sodium Hypochlorite", "Calcium Carbonate"], a: 1 },
-                        { q: "Which gas makes dry ice when solidified?", o: ["Nitrogen", "Oxygen", "Carbon Dioxide", "Helium"], a: 2 },
-                        { q: "What type of linkage binds amino acids in proteins?", o: ["Ionic", "Peptide", "Glycosidic", "Ester"], a: 1 },
-                        { q: "What is the color of copper sulfate crystals?", o: ["Green", "Yellow", "Blue", "White"], a: 2 }
-                    ]
-                ]
-            },
-            biology: {
-                title: "Biology",
-                desc: "Cytological organelles, advanced genomic structures, and plant/animal taxonomy.",
-                image: "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?q=80&w=752&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                levels: [
-                    [
-                        { q: "What is often referred to as the powerhouse of the cell?", o: ["Nucleus", "Ribosome", "Mitochondria", "Golgi Apparatus"], a: 2 },
-                        { q: "Which biomolecule green pigment captures solar energy in plants?", o: ["Carotene", "Xanthophyll", "Chlorophyll", "Hemoglobin"], a: 2 },
-                        { q: "What basic gas do humans exhale?", o: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Carbon Monoxide"], a: 2 },
-                        { q: "How many chambers comprise the human heart?", o: ["Two", "Three", "Four", "Five"], a: 2 },
-                        { q: "Which major vitamin category is synthesized during skin solar exposure?", o: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], a: 3 },
-                        { q: "What structural bone element ranks as the longest in human bodies?", o: ["Humerus", "Femur", "Tibia", "Fibula"], a: 1 },
-                        { q: "What biochemical component conveys primary genetic instructions?", o: ["RNA", "DNA", "ATP", "Hemoglobin"], a: 1 },
-                        { q: "Which human organ system handles macro nutrient breakdown?", o: ["Circulatory", "Nervous", "Digestive", "Lymphatic"], a: 2 },
-                        { q: "Which blood cells are responsible for fighting infection?", o: ["Red Blood Cells", "White Blood Cells", "Platelets", "Plasma"], a: 1 },
-                        { q: "What is the largest organ in the human body?", o: ["Liver", "Brain", "Skin", "Heart"], a: 2 }
-                    ],
-                    [
-                        { q: "What is the main component of plant cell walls?", o: ["Chitin", "Cellulose", "Peptidoglycan", "Glycogen"], a: 1 },
-                        { q: "Where does human blood production occur?", o: ["Heart", "Spleen", "Bone Marrow", "Liver"], a: 2 },
-                        { q: "What is the structural unit of the nervous system?", o: ["Nephron", "Neuron", "Axon", "Dendrite"], a: 1 },
-                        { q: "Which hormone manages glucose levels in the bloodstream?", o: ["Thyroxin", "Adrenaline", "Insulin", "Estrogen"], a: 2 },
-                        { q: "What organ filters blood and produces urine?", o: ["Liver", "Kidney", "Bladder", "Pancreas"], a: 1 },
-                        { q: "What is the process of cell division in somatic cells?", o: ["Mitosis", "Meiosis", "Binary Fission", "Budding"], a: 0 },
-                        { q: "Which blood type is considered the universal donor?", o: ["A+", "B-", "AB+", "O-"], a: 3 },
-                        { q: "What molecule transports oxygen in human blood?", o: ["Myoglobin", "Hemoglobin", "Albumin", "Globulin"], a: 1 },
-                        { q: "What organisms produce their own organic food matrices?", o: ["Heterotrophs", "Autotrophs", "Saprophytes", "Parasites"], a: 1 },
-                        { q: "Which process creates offspring via gamete fusion?", o: ["Asexual Reproduction", "Sexual Reproduction", "Parthenogenesis", "Cloning"], a: 1 }
-                    ],
-                    [
-                        { q: "What structure connects skeletal muscles to bones?", o: ["Ligament", "Tendon", "Cartilage", "Joint"], a: 1 },
-                        { q: "Which structural organelle conducts protein synthesis?", o: ["Lysosome", "Ribosome", "Vacuole", "Centrosome"], a: 1 },
-                        { q: "What basic component is missing from prokaryotic cells?", o: ["Cell Membrane", "DNA", "Ribosomes", "Defined Nucleus"], a: 3 },
-                        { q: "What is the biological classification unit below Order?", o: ["Class", "Family", "Genus", "Species"], a: 1 },
-                        { q: "Which plant tissue distributes water from roots?", o: ["Phloem", "Xylem", "Cortex", "Epidermis"], a: 1 },
-                        { q: "What is the study of interactions between organisms and environments?", o: ["Genetics", "Ecology", "Evolution", "Botany"], a: 1 },
-                        { q: "What structure protects mammalian brains?", o: ["Spine", "Ribcage", "Cranium", "Pelvis"], a: 2 },
-                        { q: "Which vitamin deficiency causes night blindness?", o: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin K"], a: 0 },
-                        { q: "What chemical bond strings double-helix DNA bases together?", o: ["Ionic", "Covalent", "Hydrogen", "Peptide"], a: 2 },
-                        { q: "Where does fertilization normally occur in mammals?", o: ["Ovary", "Uterus", "Fallopian Tube", "Cervix"], a: 2 }
-                    ],
-                    [
-                        { q: "What is the genetic makeup of an organism called?", o: ["Phenotype", "Genotype", "Karyotype", "Allele"], a: 1 },
-                        { q: "Which organ secretes bile juice?", o: ["Stomach", "Pancreas", "Gallbladder", "Liver"], a: 3 },
-                        { q: "What kingdom do mushrooms belong to?", o: ["Plantae", "Animalia", "Fungi", "Protista"], a: 2 },
-                        { q: "What are structural units of heredity called?", o: ["Chromosomes", "Genes", "Proteins", "Nuclei"], a: 1 },
-                        { q: "Which human gland is called the master gland?", o: ["Thyroid", "Adrenal", "Pituitary", "Pancreas"], a: 2 },
-                        { q: "What is the movement of water across semi-permeable membranes?", o: ["Diffusion", "Osmosis", "Active Transport", "Endocytosis"], a: 1 },
-                        { q: "Which vector spreads malaria to humans?", o: ["Aedes Mosquito", "Anopheles Mosquito", "Housefly", "Tick"], a: 1 },
-                        { q: "What is the primary site of photosynthesis in plants?", o: ["Stem", "Root", "Leaf", "Flower"], a: 2 },
-                        { q: "How many chromosomes do normal human somatic cells contain?", o: ["23", "44", "46", "48"], a: 2 },
-                        { q: "What enzyme breaks starch into simple sugars?", o: ["Pepsin", "Lipase", "Amylase", "Trypsin"], a: 2 }
-                    ],
-                    [
-                        { q: "What structural adaptation helps fish breathe underwater?", o: ["Lungs", "Tracheae", "Gills", "Skin"], a: 2 },
-                        { q: "What macromolecule forms animal hair and claws?", o: ["Collagen", "Keratin", "Chitin", "Elastin"], a: 1 },
-                        { q: "What are the air sacs in mammalian lungs called?", o: ["Bronchi", "Bronchioles", "Alveoli", "Pleura"], a: 2 },
-                        { q: "What division process produces genetic gametes?", o: ["Mitosis", "Meiosis", "Budding", "Fragmentation"], a: 1 },
-                        { q: "Which gas is used up during cellular respiration?", o: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Carbon Monoxide"], a: 1 },
-                        { q: "What structural valve separates stomach contents from esophagus?", o: ["Pyloric Sphincter", "Cardiac Sphincter", "Ileocecal Valve", "Anal Sphincter"], a: 1 },
-                        { q: "What is the physical appearance of an organism termed?", o: ["Genotype", "Phenotype", "Isotype", "Holotype"], a: 1 },
-                        { q: "Which cell organelle destroys old cellular parts?", o: ["Peroxisome", "Lysosome", "Glyoxysome", "Ribosome"], a: 1 },
-                        { q: "What dynamic state describes a balanced interior environment?", o: ["Metabolism", "Homeostasis", "Anabolism", "Catabolism"], a: 1 },
-                        { q: "Who is known as the father of modern genetics?", o: ["Charles Darwin", "Gregor Mendel", "Louis Pasteur", "Alexander Fleming"], a: 1 }
-                    ]
-                ]
-            },
-            physics: {
-                title: "Physics",
-                desc: "Quantum mechanical principles, relativistic kinetics, and electromagnetic mechanics.",
-                image: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=600",
-                levels: [
-                    [
-                        { q: "What is the SI unit of electric current?", o: ["Volt", "Ampere", "Ohm", "Watt"], a: 1 },
-                        { q: "The rate of change of displacement is known as?", o: ["Acceleration", "Speed", "Velocity", "Force"], a: 2 },
-                        { q: "Which fundamental force keeps planetary systems bound?", o: ["Electromagnetic", "Strong Nuclear", "Gravitational", "Weak Nuclear"], a: 2 },
-                        { q: "Light waves travel fastest through which medium?", o: ["Water", "Glass", "Air", "Vacuum"], a: 3 },
-                        { q: "What device measures electrical resistance?", o: ["Ammeter", "Voltmeter", "Ohmmeter", "Galvanometer"], a: 2 },
-                        { q: "The process of a solid converting directly to a gas is?", o: ["Evaporation", "Sublimation", "Condensation", "Deposition"], a: 1 },
-                        { q: "What type of lens is used to correct myopia?", o: ["Concave", "Convex", "Cylindrical", "Bifocal"], a: 0 },
-                        { q: "Sound waves cannot travel through which environment?", o: ["Steel", "Water", "Hydrogen", "Vacuum"], a: 3 },
-                        { q: "Who formulated basic laws of universal gravitation?", o: ["Albert Einstein", "Isaac Newton", "Galileo Galilei", "Niels Bohr"], a: 1 },
-                        { q: "What is the approximate speed of light in a vacuum?", o: ["300,000 km/s", "150,000 km/s", "3,000 km/s", "30,000 km/s"], a: 0 }
-                    ],
-                    [
-                        { q: "What is the SI unit of power?", o: ["Joule", "Watt", "Newton", "Pascal"], a: 1 },
-                        { q: "What property causes an object to resist motion state changes?", o: ["Velocity", "Mass", "Inertia", "Friction"], a: 2 },
-                        { q: "What thermodynamic law dictates absolute zero parameters?", o: ["First", "Second", "Third", "Zeroth"], a: 2 },
-                        { q: "What frequency range lies below human hearing capability?", o: ["Ultrasonic", "Infrasonic", "Supersonic", "Audible"], a: 1 },
-                        { q: "What optical effect describes light bending across mediums?", o: ["Reflection", "Refraction", "Diffraction", "Dispersion"], a: 1 },
-                        { q: "What is the primary charge on an alpha particle?", o: ["Negative", "Neutral", "Positive", "Variable"], a: 2 },
-                        { q: "Which instrument tracks atmospheric air pressure?", o: ["Thermometer", "Hygrometer", "Barometer", "Anemometer"], a: 2 },
-                        { q: "What basic circuit wiring configuration offers one path?", o: ["Parallel", "Series", "Combined", "Open"], a: 1 },
-                        { q: "What mirrors focus light inward to a single point?", o: ["Plane", "Convex", "Concave", "Bifocal"], a: 2 },
-                        { q: "What quantity equals force multiplied by distance?", o: ["Energy", "Power", "Work", "Momentum"], a: 2 }
-                    ],
-                    [
-                        { q: "What is the resistance of an ideal ammeter?", o: ["Zero", "Infinite", "100 Ohms", "Variable"], a: 0 },
-                        { q: "What effect defines a frequency shift due to motion?", o: ["Joule Effect", "Doppler Effect", "Photoelectric Effect", "Compton Effect"], a: 1 },
-                        { q: "What atomic model portrays electrons orbiting in shells?", o: ["Thomson", "Rutherford", "Bohr", "Dalton"], a: 2 },
-                        { q: "What material blocks electric current flow completely?", o: ["Conductor", "Semiconductor", "Insulator", "Superconductor"], a: 2 },
-                        { q: "What formula determines potential energy calculations?", o: ["mgh", "0.5mv^2", "F*d", "m*a"], a: 0 },
-                        { q: "What unit captures magnetic flux density?", o: ["Weber", "Tesla", "Henry", "Farad"], a: 1 },
-                        { q: "What phenomenon occurs when light hits a metal emitting electrons?", o: ["Thermionic Emission", "Photoelectric Effect", "Fluorescence", "Phosphorescence"], a: 1 },
-                        { q: "What device steps voltage parameters up or down?", o: ["Generator", "Motor", "Transformer", "Commutator"], a: 2 },
-                        { q: "What light characteristic determines its distinct color expression?", o: ["Amplitude", "Frequency", "Wavelength", "Velocity"], a: 2 },
-                        { q: "What physical metric represents mass per unit volume?", o: ["Weight", "Pressure", "Density", "Viscosity"], a: 2 }
-                    ],
-                    [
-                        { q: "What is the escape velocity from Earth's surface?", o: ["9.8 km/s", "11.2 km/s", "42 km/s", "1.6 km/s"], a: 1 },
-                        { q: "What form of heat transfer requires atomic collisions?", o: ["Conduction", "Convection", "Radiation", "Insulation"], a: 0 },
-                        { q: "What type of wave is a sound wave classified as?", o: ["Transverse", "Longitudinal", "Electromagnetic", "Surface"], a: 1 },
-                        { q: "What component stores electrical energy in electric fields?", o: ["Resistor", "Inductor", "Capacitor", "Diode"], a: 2 },
-                        { q: "What constant connects photon energy to frequency?", o: ["Boltzmann", "Planck", "Gravitational", "Coulomb"], a: 1 },
-                        { q: "What mechanical principle operates a classic hydraulic lift?", o: ["Bernoulli's", "Pascal's", "Archimedes's", "Hooke's"], a: 1 },
-                        { q: "What radioactive decay emits high energy photons?", o: ["Alpha", "Beta", "Gamma", "Positron"], a: 2 },
-                        { q: "What factor determines the pitch of a sound wave?", o: ["Amplitude", "Frequency", "Speed", "Loudness"], a: 1 },
-                        { q: "What speed does an object exceed to be supersonic?", o: ["Speed of Sound", "Speed of Light", "100 mph", "1000 mph"], a: 0 },
-                        { q: "What force acts perpendicular to moving charges in magnetic fields?", o: ["Lorentz Force", "Coulomb Force", "Ampere Force", "Ohm Force"], a: 0 }
-                    ],
-                    [
-                        { q: "What unit tracks radioactive source decay activity?", o: ["Curie", "Becquerel", "Sievert", "Gray"], a: 1 },
-                        { q: "What lens feature splits white light into colored bands?", o: ["Refraction", "Chromatic Aberration", "Polarization", "Interference"], a: 1 },
-                        { q: "What fluid parameter dictates inner fluid friction?", o: ["Surface Tension", "Viscosity", "Buoyancy", "Capillarity"], a: 1 },
-                        { q: "What material exhibits zero resistance under threshold temperatures?", o: ["Semiconductor", "Dielectric", "Superconductor", "Ferromagnet"], a: 2 },
-                        { q: "What theory blends spacetime coordinates into a single fabric?", o: ["Quantum Mechanics", "Special Relativity", "General Relativity", "Classical Mechanics"], a: 2 },
-                        { q: "What property lets insects walk on calm water sheets?", o: ["Viscosity", "Buoyancy", "Surface Tension", "Density"], a: 2 },
-                        { q: "What device flips mechanical rotational kinetic energy to electricity?", o: ["Motor", "Generator", "Transformer", "Inverter"], a: 1 },
-                        { q: "What optical filter blocks specific light wave oscillations?", o: ["Diffraction Grating", "Polarizer", "Prism", "Concave Lens"], a: 1 },
-                        { q: "What conservation system governs rocket forward propulsion mechanics?", o: ["Mass", "Energy", "Linear Momentum", "Angular Momentum"], a: 2 },
-                        { q: "What subatomic particle balances protons to make atomic numbers?", o: ["Neutron", "Positron", "Electron", "Quark"], a: 2 }
-                    ]
-                ]
-            },
-            mathematics: {
-                title: "Mathematics",
-                desc: "Algebraic topologies, basic calculus, trigonometry, and core number theory.",
-                image: "https://images.unsplash.com/photo-1635372722656-389f87a941b7?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                levels: [
-                    [
-                        { q: "What is the value of Pi to two decimal places?", o: ["3.12", "3.14", "3.16", "3.18"], a: 1 },
-                        { q: "What is the square root of 144?", o: ["10", "12", "14", "16"], a: 1 },
-                        { q: "What is 15% of 200?", o: ["20", "30", "40", "50"], a: 1 },
-                        { q: "Solve for x: 2x + 5 = 15", o: ["x = 3", "x = 4", "x = 5", "x = 10"], a: 2 },
-                        { q: "What is the sum of the interior angles of a triangle?", o: ["90 degrees", "180 degrees", "360 degrees", "270 degrees"], a: 1 },
-                        { q: "What is the next prime number after 7?", o: ["8", "9", "10", "11"], a: 3 },
-                        { q: "If a = 3 and b = 4, what is the hypotenuse of a right triangle?", o: ["5", "6", "7", "8"], a: 0 },
-                        { q: "What is the derivative of x^2?", o: ["x", "2x", "x^3", "2"], a: 1 },
-                        { q: "How many sides does a hexagon have?", o: ["5", "6", "7", "8"], a: 1 },
-                        { q: "What is 8 multiplied by 9?", o: ["64", "72", "81", "90"], a: 1 }
-                    ],
-                    [
-                        { q: "What is the value of 5 factorial (5!)?", o: ["60", "100", "120", "150"], a: 2 },
-                        { q: "What is the slope of a horizontal line?", o: ["0", "1", "Undefined", "-1"], a: 0 },
-                        { q: "How many degrees are in a full circle?", o: ["180", "270", "360", "720"], a: 2 },
-                        { q: "What is the log base 10 of 1000?", o: ["1", "2", "3", "4"], a: 2 },
-                        { q: "What is the mathematical term for a flat 2D surface?", o: ["Line", "Point", "Plane", "Solid"], a: 2 },
-                        { q: "Solve for y: 3y - 7 = 8", o: ["y = 3", "y = 5", "y = 6", "y = 15"], a: 1 },
-                        { q: "What is the lowest common multiple of 4 and 6?", o: ["12", "24", "8", "18"], a: 0 },
-                        { q: "Which polygon has 5 sides?", o: ["Hexagon", "Octagon", "Pentagon", "Heptagon"], a: 2 },
-                        { q: "What is the value of cos(0)?", o: ["0", "1", "0.5", "Undefined"], a: 1 },
-                        { q: "What is the formula for the area of a circle?", o: ["2*pi*r", "pi*r^2", "pi*d", "2*pi*r^2"], a: 1 }
-                    ],
-                    [
-                        { q: "What is the mid-point formula between two coordinates?", o: ["(x1+x2)/2 , (y1+y2)/2", "(x1-x2)/2 , (y1-y2)/2", "x1+x2, y1+y2", "sqrt(x^2+y^2)"], a: 0 },
-                        { q: "What is the value of 2 raised to the power of 8?", o: ["64", "128", "256", "512"], a: 2 },
-                        { q: "What is a line segment that touches two points on a circle boundary?", o: ["Radius", "Tangent", "Secant", "Chord"], a: 3 },
-                        { q: "Find the median of the set: 3, 5, 7, 12, 15", o: ["7", "5", "8.4", "12"], a: 0 },
-                        { q: "What is the derivative of sin(x)?", o: ["cos(x)", "-cos(x)", "tan(x)", "sin(x)"], a: 0 },
-                        { q: "What is the probability of rolling a 4 on a fair standard die?", o: ["1/2", "1/4", "1/6", "1/3"], a: 2 },
-                        { q: "What is the algebraic expression for a term with degree 2?", o: ["Linear", "Quadratic", "Cubic", "Quartic"], a: 1 },
-                        { q: "How many faces does a standard cube possess?", o: ["4", "6", "8", "12"], a: 1 },
-                        { q: "What is the value of 0! (zero factorial)?", o: ["0", "1", "Undefined", "-1"], a: 1 },
-                        { q: "If two lines never cross and maintain equal gaps, they are?", o: ["Perpendicular", "Parallel", "Intersecting", "Coincident"], a: 1 }
-                    ],
-                    [
-                        { q: "What type of triangle has all three sides of equal length?", o: ["Isosceles", "Scalene", "Equilateral", "Right-angled"], a: 2 },
-                        { q: "What is the product of a complex number and its conjugate?", o: ["Imaginary number", "Real number", "Zero", "Negative value"], a: 1 },
-                        { q: "What is the integral of 1/x dx?", o: ["x", "ln|x|", "x^-1", "1"], a: 1 },
-                        { q: "How many items are in three dozen?", o: ["24", "30", "36", "42"], a: 2 },
-                        { q: "What is the determinant of a 2x2 matrix [[a,b],[c,d]]?", o: ["ab - cd", "ad - bc", "ac - bd", "ad + bc"], a: 1 },
-                        { q: "What is the geometric mean of 4 and 16?", o: ["8", "10", "64", "5"], a: 0 },
-                        { q: "What branch of math handles data collection and analysis?", o: ["Algebra", "Geometry", "Calculus", "Statistics"], a: 3 },
-                        { q: "What is the value of i^2 in complex numbers?", o: ["1", "-1", "sqrt(-1)", "0"], a: 1 },
-                        { q: "What angle type measures greater than 90 but less than 180 degrees?", o: ["Acute", "Obtuse", "Reflex", "Right"], a: 1 },
-                        { q: "What is the value of 10^0?", o: ["0", "1", "10", "Undefined"], a: 1 }
-                    ],
-                    [
-                        { q: "What is the sum of the first 10 positive integers?", o: ["45", "50", "55", "60"], a: 2 },
-                        { q: "What is the value of tan(45 degrees)?", o: ["0", "0.5", "1", "Undefined"], a: 2 },
-                        { q: "What is the volume formula for a basic sphere?", o: ["pi*r^2", "2*pi*r", "(4/3)*pi*r^3", "pi*r^3"], a: 2 },
-                        { q: "Which number is neither prime nor composite?", o: ["1", "2", "3", "4"], a: 0 },
-                        { q: "What is the value of 3^3 + 4^3?", o: ["25", "91", "100", "7"], a: 1 },
-                        { q: "How many quadrants form a classic Cartesian graph plane?", o: ["2", "3", "4", "6"], a: 2 },
-                        { q: "What is the coefficient of x in the expression 5x - 3?", o: ["5", "-3", "x", "0"], a: 0 },
-                        { q: "What is the next sequence number: 1, 1, 2, 3, 5, 8, ...?", o: ["10", "11", "12", "13"], a: 3 },
-                        { q: "What name fits a polygon with 8 straight sides?", o: ["Decagon", "Hexagon", "Octagon", "Nonagon"], a: 2 },
-                        { q: "What is the limit of (1/x) as x approaches infinity?", o: ["Infinity", "1", "0", "Undefined"], a: 2 }
-                    ]
-                ]
-            },
-            puzzles: {
-                title: "Cognitive Puzzles",
-                desc: "Lateral thinking riddles, logical deduction chains, and spatial reasoning teasers.",
-                image: "https://plus.unsplash.com/premium_photo-1723662084148-2cd2357705ba?q=80&w=1137&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                levels: [
-                    [
-                        { q: "I speak without a mouth and hear without ears. What am I?", o: ["A ghost", "An echo", "A thought", "A shadow"], a: 1 },
-                        { q: "What comes once in a minute, twice in a moment, but never in a thousand years?", o: ["The letter M", "The sun", "A second", "A blink"], a: 0 },
-                        { q: "If you drop me I'm sure to crack, but give me a smile and I'll always smile back.", o: ["An egg", "A mirror", "A diamond", "A window"], a: 1 },
-                        { q: "The more of this there is, the less you see. What is it?", o: ["Fog", "Darkness", "Light", "Smoke"], a: 1 },
-                        { q: "I have keys but no doors. I have space but no room. You can enter but not go outside. What am I?", o: ["A keyboard", "A map", "A safe", "A car"], a: 0 },
-                        { q: "What belongs to you, but other people use it more than you do?", o: ["Your money", "Your name", "Your car", "Your house"], a: 1 },
-                        { q: "What has a head and a tail but no body?", o: ["A snake", "A coin", "A comet", "A rope"], a: 1 },
-                        { q: "I am an odd number. Take away a letter and I become even. What number am I?", o: ["Three", "Five", "Seven", "Nine"], a: 2 },
-                        { q: "What breaks yet never falls, and what falls yet never breaks?", o: ["Day and night", "Glass and rain", "Morning and evening", "Heart and mind"], a: 0 },
-                        { q: "What gets wetter as it dries?", o: ["A sponge", "A towel", "A cloud", "Paint"], a: 1 }
-                    ],
-                    [
-                        { q: "A man pushes his car to a hotel and tells the owner he's bankrupt. Why?", o: ["He ran out of gas", "He is playing Monopoly", "The car broke down", "He got evicted"], a: 1 },
-                        { q: "What has many needles but cannot sew?", o: ["A pine tree", "A cactus", "A hedgehog", "A map compass"], a: 0 },
-                        { q: "What can travel around the world while staying in a corner?", o: ["A stamp", "A letter", "A postcard", "A bird"], a: 0 },
-                        { q: "What has hands but cannot clap?", o: ["A clock", "A statue", "A baby", "A glove"], a: 0 },
-                        { q: "What has a neck but no head?", o: ["A bottle", "A shirt", "A guitar", "A snake"], a: 0 },
-                        { q: "What contains cities but no houses, mountains but no trees, and water but no fish?", o: ["A globe", "A book", "A map", "A painting"], a: 2 },
-                        { q: "The person who makes it has no need of it; the person who buys it does not use it. What is it?", o: ["A coffin", "A car", "A ring", "A bed"], a: 0 },
-                        { q: "What can you catch but not throw?", o: ["A ball", "A cold", "A wave", "A secret"], a: 1 },
-                        { q: "What is so fragile that saying its name breaks it?", o: ["Glass", "Silence", "A promise", "Ice"], a: 1 },
-                        { q: "What running track has 13 hearts but no other organs?", o: ["A stadium", "A deck of cards", "A hospital", "A forest"], a: 1 }
-                    ],
-                    [
-                        { q: "If a brother, his sister, and their dog aren't under an umbrella, why didn't they get wet?", o: ["They were indoors", "It wasn't raining", "They wore raincoats", "They ran fast"], a: 1 },
-                        { q: "How many months have 28 days?", o: ["Only 1", "Exactly 6", "All 12 months", "None"], a: 2 },
-                        { q: "What goes up but never comes back down?", o: ["A balloon", "Your age", "Smoke", "A kite"], a: 1 },
-                        { q: "What has one eye but cannot see anything?", o: ["A needle", "A storm", "A cyclops", "A potato"], a: 0 },
-                        { q: "What has a thumb and four fingers but is not alive?", o: ["A skeleton", "A glove", "A hand print", "A doll"], a: 1 },
-                        { q: "What gets sharper the more you use it?", o: ["A knife", "Your brain", "A pencil", "An axe"], a: 1 },
-                        { q: "What heavy material is lighter than a feather yet hard to hold for long?", o: ["Your breath", "Smoke", "A bubble", "Hot air"], a: 0 },
-                        { q: "If an electric train travels north, which direction blows its smoke?", o: ["South", "West", "No direction (Electric)", "East"], a: 2 },
-                        { q: "What can you hold in your left hand but never in your right hand?", o: ["A coin", "Your right elbow", "Your left wrist", "A pen"], a: 1 },
-                        { q: "What building type has the most stories inside it?", o: ["A skyscraper", "A library", "A museum", "A hotel"], a: 1 }
-                    ],
-                    [
-                        { q: "Give me food and I will live; give me water and I will die. What am I?", o: ["A plant", "Fire", "An ice block", "A sponge"], a: 1 },
-                        { q: "What runs all around a backyard but never moves?", o: ["A dog", "A fence", "A path", "A stream"], a: 1 },
-                        { q: "What can you break without picking it up or touching it?", o: ["A window", "A promise", "A mirror", "A plate"], a: 1 },
-                        { q: "What loses its head in the morning but gets it back at night?", o: ["A pillow", "A hat", "A coat", "A cat"], a: 0 },
-                        { q: "What has two heads, four eyes, six legs, and one tail?", o: ["A monster", "A cowboy on a horse", "A dynamic double act", "A spider"], a: 1 },
-                        { q: "What goes through cities and over hills but never moves an inch?", o: ["A river", "A road", "The wind", "An airplane"], a: 1 },
-                        { q: "I have branches but no fruit, trunk, or leaves. What am I?", o: ["A river", "A bank", "A family tree", "A building road"], a: 1 },
-                        { q: "What starts with an E, ends with an E, but only contains one letter?", o: ["An envelope", "An eye", "An engine", "An elite"], a: 0 },
-                        { q: "What has a mouth but never talks, and a bed but never sleeps?", o: ["A river", "A cave", "A valley", "A forest"], a: 0 },
-                        { q: "What kind of room has no doors, windows, floor, or ceiling?", o: ["A dynamic vault", "A mushroom", "A space station", "A dream room"], a: 1 }
-                    ],
-                    [
-                        { q: "What word becomes shorter when you add two letters to it?", o: ["Short", "Brief", "Small", "Tiny"], a: 0 },
-                        { q: "What five-letter English word is pronounced the same even if four letters are taken away?", o: ["Queue", "Empty", "Bribe", "Clean"], a: 0 },
-                        { q: "What container holds water without a lid or bottom structure?", o: ["An egg", "A melon", "A cloud", "A sponge"], a: 3 },
-                        { q: "If you have me, you want to share me. If you share me, you haven't got me. What am I?", o: ["A secret", "A cake", "A joke", "Money"], a: 0 },
-                        { q: "What structural device lets you look right through walls?", o: ["An X-ray", "A window", "A telescope", "A mirror"], a: 1 },
-                        { q: "What matches down the steps without ever making sound?", o: ["A shadow", "The light", "Dust", "A ghost"], a: 1 },
-                        { q: "What is always ahead of you but cannot be seen directly?", o: ["The past", "The future", "Your nose", "The wind"], a: 1 },
-                        { q: "What is black when you buy it, red when you use it, and gray when you throw it away?", o: ["Wood", "Charcoal", "Matchstick", "Paper"], a: 1 },
-                        { q: "What follows you everywhere and copies your every move yet has no mass?", o: ["Your twin", "Your reflection", "Your shadow", "A ghost"], a: 2 },
-                        { q: "What is full of holes but can still hold water effectively?", o: ["A bucket", "A net", "A sponge", "A sieve"], a: 2 }
-                    ]
-                ]
-            }
-        };
-
-        let currentCategoryKey = "";
-        let currentLevelIndex = 0;
-        let currentQuestionIndex = 0;
-        let userAnswers = [];
-        let quizTimer = null;
-        let timeRemaining = 120; 
-
-        document.getElementById('navToggle').addEventListener('click', () => {
-            document.getElementById('navMenu').classList.toggle('active');
-        });
-
-        function initCategoryGrid() {
-            const grid = document.getElementById('categoriesGrid');
-            grid.innerHTML = "";
-            for (const [key, item] of Object.entries(QUIZ_DATABASE)) {
-                const card = document.createElement('div');
-                card.className = "card";
-                card.onclick = () => openCategory(key);
-                card.innerHTML = `
-                    <img class="card-img" src="${item.image}" alt="${item.title}">
-                    <div class="card-content">
-                        <h3 class="card-title">${item.title}</h3>
-                        <p class="card-desc">${item.desc}</p>
-                    </div>
-                `;
-                grid.appendChild(card);
-            }
-        }
-
-        function showView(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
-            document.getElementById(viewId).classList.add('active-view');
-            
-            const header = document.getElementById('siteHeader');
-            if (viewId === 'quiz-view') header.style.display = "none";
-            else header.style.display = "block";
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openCategory(key) {
-            currentCategoryKey = key;
-            document.getElementById('levelViewTitle').innerText = `${QUIZ_DATABASE[key].title} Modules`;
-            showView('level-view');
-        }
-
-        function selectLevel(num) {
-            currentLevelIndex = num - 1;
-            document.getElementById('preQuizTitle').innerText = `${QUIZ_DATABASE[currentCategoryKey].title} - Module ${num}`;
-            showView('pre-quiz-view');
-        }
-
-        function goBackToLevels() { showView('level-view'); }
-
-        function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
-        function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
-        function confirmExitQuiz() {
-            closeExitModal();
-            clearInterval(quizTimer);
-            showView('level-view');
-        }
-
-        function startQuiz() {
-            currentQuestionIndex = 0;
-            userAnswers = new Array(10).fill(null);
-            timeRemaining = 120;
-            renderActiveQuestion();
-            showView('quiz-view');
-            
-            clearInterval(quizTimer);
-            updateTimerDisplay();
-            quizTimer = setInterval(() => {
-                timeRemaining--;
-                updateTimerDisplay();
-                if (timeRemaining <= 0) {
-                    clearInterval(quizTimer);
-                    terminateQuizSession();
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const min = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
-            const sec = (timeRemaining % 60).toString().padStart(2, '0');
-            document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${min}:${sec}`;
-        }
-
-        function renderActiveQuestion() {
-            const dataSet = QUIZ_DATABASE[currentCategoryKey].levels[currentLevelIndex];
-            const activeItem = dataSet[currentQuestionIndex];
-            
-            document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
-            document.getElementById('questionText').innerText = activeItem.q;
-            
-            const container = document.getElementById('optionsContainer');
-            container.innerHTML = "";
-            
-            activeItem.o.forEach((optText, index) => {
-                const btn = document.createElement('button');
-                btn.className = `option-btn ${userAnswers[currentQuestionIndex] === index ? 'selected' : ''}`;
-                btn.innerHTML = `<span style="font-weight:700; margin-right:8px;">${String.fromCharCode(65 + index)}.</span> ${optText}`;
-                btn.onclick = () => chooseOption(index);
-                container.appendChild(btn);
-            });
-
-            document.getElementById('prevBtn').style.visibility = (currentQuestionIndex === 0) ? "hidden" : "visible";
-            document.getElementById('nextBtn').innerText = (currentQuestionIndex === 9) ? "Submit Engine" : "Next";
-        }
-
-        function chooseOption(index) {
-            userAnswers[currentQuestionIndex] = index;
-            document.querySelectorAll('#optionsContainer .option-btn').forEach((el, idx) => {
-                if (idx === index) el.classList.add('selected');
-                else el.classList.remove('selected');
-            });
-        }
-
-        function navigateQuestion(dir) {
-            if (dir === 1) {
-                if (currentQuestionIndex < 9) {
-                    currentQuestionIndex++;
-                    renderActiveQuestion();
-                } else {
-                    clearInterval(quizTimer);
-                    terminateQuizSession();
-                }
-            } else if (dir === -1 && currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                renderActiveQuestion();
-            }
-        }
-
-        function terminateQuizSession() {
-            const dataSet = QUIZ_DATABASE[currentCategoryKey].levels[currentLevelIndex];
-            let rawScore = 0;
-            dataSet.forEach((item, index) => { if (userAnswers[index] === item.a) rawScore++; });
-            
-            document.getElementById('scoreDisplay').innerText = `${rawScore}/10`;
-            
-            let message = "Evaluation assessment successfully structured.";
-            if (rawScore === 10) message = "Flawless optimization. Maximum performance verified.";
-            else if (rawScore >= 7) message = "High competency matrix. Well done!";
-            else if (rawScore >= 4) message = "Median thresholds met. Review suggested.";
-            else message = "Low performance calibration. Try initializing again.";
-
-            document.getElementById('resultEvaluationMessage').innerText = message;
-            compileReviewMatrix(dataSet);
-            
-            document.getElementById('reviewSection').style.display = "none";
-            document.getElementById('reviewBtn').innerHTML = 'Review Answers <i class="fa-solid fa-magnifying-glass-chart"></i>';
-            showView('results-view');
-        }
-
-        function compileReviewMatrix(dataSet) {
-            const target = document.getElementById('reviewSection');
-            target.innerHTML = "";
-
-            dataSet.forEach((item, index) => {
-                const choice = userAnswers[index];
-                const passing = (choice === item.a);
-                const card = document.createElement('div');
-                card.className = `review-item ${passing ? 'correct' : 'wrong'}`;
-                
-                const textSelected = choice !== null ? item.o[choice] : "No choice logged (Expired)";
-                const textCorrect = item.o[item.a];
-
-                card.innerHTML = `
-                    <h4>Item ${index + 1}: ${item.q}</h4>
-                    <div style="font-size: 0.95rem;">
-                        <p>Your Answer: <span class="${passing ? 'text-success' : 'text-danger'}">${textSelected}</span></p>
-                        ${!passing ? `<p>Correct Answer: <span class="text-success">${textCorrect}</span></p>` : ''}
-                    </div>
-                `;
-                target.appendChild(card);
-            });
-        }
-
-        function toggleReviewSection() {
-            const section = document.getElementById('reviewSection');
-            const btn = document.getElementById('reviewBtn');
-            if (section.style.display === "none") {
-                section.style.display = "block";
-                btn.innerHTML = 'Hide Review <i class="fa-solid fa-angle-up"></i>';
-                section.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                section.style.display = "none";
-                btn.innerHTML = 'Review Answers <i class="fa-solid fa-magnifying-glass-chart"></i>';
-            }
-        }
-
-        window.onload = () => { initCategoryGrid(); };
-    </script>
 </body>
 </html>
