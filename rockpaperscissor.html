@@ -6,135 +6,296 @@
     <title>QuestEngine Arcade | Rock Paper Scissors</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --bg-dark: #0f172a;
+            --bg-surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
             --accent: #d97706;
-            --accent-light: #fef3c7;
-            --border: #e2e8f0;
-            --radius-lg: 24px;
-            --radius-md: 14px;
+            --accent-glow: rgba(217, 119, 6, 0.35);
+            --border: #334155;
+            --radius-custom: 16px;
+            --font-display: 'Space Grotesk', sans-serif;
             --font-sans: 'Poppins', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
-        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-top: 90px; }
+        
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(217, 119, 6, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(30, 41, 59, 0.2) 0%, transparent 50%);
+        }
 
-        nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 1000; height: 70px; }
-        .nav-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        /* Minimalist Navigation Header */
+        header {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .brand {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
         .brand span { color: var(--accent); }
 
-        main { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
-        .score-board { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 600px; display: flex; justify-content: space-around; text-align: center; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02); margin-bottom: 3rem; position: relative; overflow: hidden; }
-        .score-board::before { content: ""; position: absolute; top:0; left:0; width:100%; height:4px; background: var(--accent); }
-        .score-node h2 { font-size: 2.5rem; font-weight: 800; color: var(--text-main); }
-        .score-node p { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+        /* Main Game Arena Container */
+        .game-container {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
 
-        .arena { display: flex; gap: 4rem; align-items: center; justify-content: center; margin-bottom: 4rem; width: 100%; }
-        .arena-card { background: var(--surface); border: 1px solid var(--border); width: 160px; height: 160px; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 3.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); position: relative; }
-        .arena-card span { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); position: absolute; bottom: 12px; }
+        /* Score Tracker Grid Display */
+        .score-board {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-custom);
+            width: 100%;
+            max-width: 500px;
+            padding: 1.5rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin-bottom: 3.5rem;
+        }
+        .score-node h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+        .score-node.player h2 { color: var(--text-main); }
+        .score-node.bot h2 { color: var(--accent); }
+        .score-node p {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+        .vs-divider {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--border);
+            padding: 0 1rem;
+        }
 
-        .choices-grid { display: flex; gap: 1.5rem; }
-        .choice-btn { background: var(--surface); border: 1px solid var(--border); width: 90px; height: 90px; border-radius: 50%; font-size: 2rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
-        .choice-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-4px); background: var(--accent-light); }
+        /* Real-time Match Visual Cards */
+        .arena-floor {
+            display: flex;
+            gap: 3rem;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 3.5rem;
+        }
+        .matrix-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            width: 160px;
+            height: 160px;
+            border-radius: var(--radius-custom);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--text-muted);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .matrix-card span {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            position: absolute;
+            bottom: 16px;
+        }
+        .matrix-card.active-vector {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
 
-        .result-banner { margin-top: 2.5rem; font-size: 1.5rem; font-weight: 800; text-align: center; min-height: 40px; }
+        /* Status Output Log */
+        .output-banner {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 500;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 3rem;
+            min-height: 35px;
+            letter-spacing: -0.01em;
+        }
+        .output-banner span {
+            color: var(--accent);
+            font-weight: 700;
+        }
 
-        footer { background: #0f172a; color: #94a3b8; width: 100%; padding: 2rem; text-align: center; font-size: 0.9rem; margin-top: auto; }
-        
-        @media (max-width: 640px) {
-            .arena { gap: 1.5rem; }
-            .arena-card { width: 120px; height: 120px; font-size: 2.5rem; }
+        /* Control Input Tray Buttons */
+        .control-tray {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .vector-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .vector-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(217, 119, 6, 0.15);
+            background: rgba(217, 119, 6, 0.03);
+        }
+        .vector-btn:active {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 0 1.5rem; }
+            .arena-floor { gap: 1.5rem; }
+            .matrix-card { width: 130px; height: 130px; font-size: 2.2rem; }
+            .control-tray { gap: 1rem; }
+            .vector-btn { width: 70px; height: 70px; font-size: 1.5rem; }
+            .score-board { margin-bottom: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
-        </div>
-    </nav>
+    <header>
+        <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
+    </header>
 
-    <main>
-        <div class="score-board">
-            <div class="score-node">
-                <h2 id="player-score">0</h2>
-                <p>Player Index</p>
+    <main class="game-container">
+        <section class="score-board">
+            <div class="score-node player">
+                <h2 id="p-score">0</h2>
+                <p>User Matrix</p>
             </div>
-            <div style="font-size: 1.5rem; display: flex; align-items: center; font-weight: 800; color: var(--border);">VS</div>
-            <div class="score-node">
-                <h2 id="bot-score">0</h2>
+            <div class="vs-divider">VS</div>
+            <div class="score-node bot">
+                <h2 id="b-score">0</h2>
                 <p>System Core</p>
             </div>
-        </div>
+        </section>
 
-        <div class="arena">
-            <div class="arena-card" id="player-card">
-                <i class="fa-solid fa-question" style="color:var(--border);"></i>
-                <span>Player</span>
+        <section class="arena-floor">
+            <div class="matrix-card" id="user-vector">
+                <i class="fa-solid fa-ellipsis"></i>
+                <span>User Node</span>
             </div>
-            <div class="arena-card" id="bot-card">
-                <i class="fa-solid fa-question" style="color:var(--border);"></i>
-                <span>System</span>
+            <div class="matrix-card" id="core-vector">
+                <i class="fa-solid fa-ellipsis"></i>
+                <span>Core Node</span>
             </div>
+        </section>
+
+        <div class="output-banner" id="game-status">
+            Select a processing vector below to initialize the cycle.
         </div>
 
-        <div class="choices-grid">
-            <button class="choice-btn" onclick="executeTurn('rock')"><i class="fa-solid fa-hand-fist"></i></button>
-            <button class="choice-btn" onclick="executeTurn('paper')"><i class="fa-solid fa-hand"></i></button>
-            <button class="choice-btn" onclick="executeTurn('scissors')"><i class="fa-solid fa-hand-scissors"></i></button>
-        </div>
-
-        <div class="result-banner" id="game-result">Select an operational vector to begin.</div>
+        <section class="control-tray">
+            <button class="vector-btn" onclick="processVector('rock')" aria-label="Select Rock Vector"><i class="fa-solid fa-hand-fist"></i></button>
+            <button class="vector-btn" onclick="processVector('paper')" aria-label="Select Paper Vector"><i class="fa-solid fa-hand"></i></button>
+            <button class="vector-btn" onclick="processVector('scissors')" aria-label="Select Scissors Vector"><i class="fa-solid fa-hand-scissors"></i></button>
+        </section>
     </main>
 
-    <footer>
-        <p>&copy; 2026 QuestEngine Platform System. All metrics active.</p>
-    </footer>
-
     <script>
-        let pScore = 0;
-        let bScore = 0;
-        const iconMap = {
+        let userPoints = 0;
+        let corePoints = 0;
+
+        const vectorIcons = {
             rock: 'fa-solid fa-hand-fist',
             paper: 'fa-solid fa-hand',
-            scissors: 'fa-solid fa-hand-scissors'
+            scissors: 'fa-solid fa-hand-scissors',
+            null: 'fa-solid fa-ellipsis'
         };
 
-        function executeTurn(playerChoice) {
-            const choices = ['rock', 'paper', 'scissors'];
-            const botChoice = choices[Math.floor(Math.random() * 3)];
+        function processVector(userChoice) {
+            const options = ['rock', 'paper', 'scissors'];
+            const coreChoice = options[Math.floor(Math.random() * 3)];
 
-            // Update UI Icons dynamically
-            document.getElementById('player-card').innerHTML = `<i class="${iconMap[playerChoice]}"></i><span>Player</span>`;
-            document.getElementById('bot-card').innerHTML = `<i class="${iconMap[botChoice]}"></i><span>System</span>`;
+            const userCard = document.getElementById('user-vector');
+            const coreCard = document.getElementById('core-vector');
+            const statusLabel = document.getElementById('game-status');
 
-            let result = "";
-            if (playerChoice === botChoice) {
-                result = "Operational Draw.";
+            // Render vector selections into DOM nodes
+            userCard.innerHTML = `<i class="${vectorIcons[userChoice]}"></i><span>User Node</span>`;
+            coreCard.innerHTML = `<i class="${vectorIcons[coreChoice]}"></i><span>Core Node</span>`;
+
+            // Clear active glowing highlights cleanly before assigning new frames
+            userCard.classList.remove('active-vector');
+            coreCard.classList.remove('active-vector');
+
+            if (userChoice === coreChoice) {
+                statusLabel.innerHTML = `Parameters match. Cycle resulted in a <span>Draw</span>.`;
             } else if (
-                (playerChoice === 'rock' && botChoice === 'scissors') ||
-                (playerChoice === 'paper' && botChoice === 'rock') ||
-                (playerChoice === 'scissors' && botChoice === 'paper')
+                (userChoice === 'rock' && coreChoice === 'scissors') ||
+                (userChoice === 'paper' && coreChoice === 'rock') ||
+                (userChoice === 'scissors' && coreChoice === 'paper')
             ) {
-                result = "Vector successful. Player wins cycle!";
-                pScore++;
+                statusLabel.innerHTML = `Node collision successful. <span>User Win</span> verified.`;
+                userPoints++;
+                userCard.classList.add('active-vector');
             } else {
-                result = "System core bypassed node. Bot wins cycle.";
-                bScore++;
+                statusLabel.innerHTML = `System core bypassed defenses. <span>Core Win</span> logged.`;
+                corePoints++;
+                coreCard.classList.add('active-vector');
             }
 
-            document.getElementById('player-score').innerText = pScore;
-            document.getElementById('bot-score').innerText = bScore;
-            document.getElementById('game-result').innerText = result;
+            // Sync structural score parameters
+            document.getElementById('p-score').innerText = userPoints;
+            document.getElementById('b-score').innerText = corePoints;
         }
     </script>
 </body>

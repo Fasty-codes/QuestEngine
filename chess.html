@@ -3,221 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuestEngine Arcade | Chess Cluster</title>
+    <title>QuestEngine Arcade | Professional Chess</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --accent: #d97706;
-            --accent-light: #fef3c7;
-            --border: #e2e8f0;
-            --radius-lg: 20px;
-            --font-sans: 'Poppins', sans-serif;
-            --light-square: #f1f5f9;
-            --dark-square: #cbd5e1;
+            --bg-dark: #302e2b;       /* Chess.com Background */
+            --bg-card: #262421;       /* Panel Dark Accent */
+            --light-square: #eeeed2;  /* Chess.com Light Tile */
+            --dark-square: #769656;   /* Chess.com Green Tile */
+            --highlight: rgba(247, 247, 105, 0.6);
+            --check-red: rgba(255, 82, 82, 0.65);
+            --text-main: #ffffff;
+            --text-muted: #c3c2c1;
+            --accent: #81b64c;        /* Chess.com Green Button */
+            --accent-hover: #a3d16c;
+            --radius: 12px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
-        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-top: 90px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            padding-bottom: 3rem;
+        }
 
-        nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 1000; height: 70px; }
-        .nav-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        header {
+            width: 100%;
+            height: 70px;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            border-bottom: 2px solid #3d3b38;
+            margin-bottom: 1.5rem;
+        }
+        .brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
         .brand span { color: var(--accent); }
 
-        main { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 2rem 4rem; display: flex; flex-direction: column; align-items: center; }
-        
-        .controls-wrapper { display: flex; gap: 1rem; margin-bottom: 2rem; width: 100%; max-width: 480px; }
-        .btn { flex: 1; background: var(--surface); border: 1px solid var(--border); padding: 0.75rem; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; }
-        .btn.active { background: var(--accent-light); border-color: var(--accent); color: #b45309; }
+        .game-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            max-width: 1100px;
+            width: 100%;
+            padding: 0 1rem;
+            justify-content: center;
+        }
 
-        .board-container { display: flex; flex-direction: column; align-items: center; background: var(--surface); padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.04); }
-        .turn-indicator { margin-bottom: 1rem; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); }
-
-        #chess-board { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: min(80vw, 480px); height: min(80vw, 480px); border: 4px solid #475569; border-radius: 8px; overflow: hidden; }
-        .square { display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 4vw, 2.2rem); cursor: pointer; user-select: none; transition: background 0.15s ease; position: relative; }
+        .board-wrapper {
+            position: relative;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
         
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            width: min(88vw, 560px);
+            height: min(88vw, 560px);
+            position: relative;
+            user-select: none;
+        }
+
+        /* Chess.com Square Mechanics */
+        .square {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
         .square.light { background: var(--light-square); }
         .square.dark { background: var(--dark-square); }
-        .square.selected { background: #fef08a !important; }
-        .square.highlighted::after { content: ""; width: 14px; height: 14px; background: rgba(217, 119, 6, 0.4); border-radius: 50%; position: absolute; }
+        .square.selected { background: var(--highlight) !important; }
+        .square.in-check { background: radial-gradient(circle, var(--check-red) 20%, transparent 75%) !important; }
+        
+        /* Coordinate Labels */
+        .coord {
+            position: absolute;
+            font-size: clamp(0.65rem, 1.6vw, 0.85rem);
+            font-weight: 700;
+            pointer-events: none;
+        }
+        .coord.rank { top: 4px; left: 4px; }
+        .coord.file { bottom: 4px; right: 4px; }
+        .light .coord { color: var(--dark-square); }
+        .dark .coord { color: var(--light-square); }
 
-        .piece.white { color: #ffffff; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.75)); }
-        .piece.black { color: #1e293b; filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.4)); }
+        /* Legal Hint Markers */
+        .hint-dot {
+            width: 24%; height: 24%;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .hint-capture {
+            width: 82%; height: 82%;
+            border: 5px solid rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 2;
+            pointer-events: none;
+        }
 
-        footer { background: #0f172a; color: #94a3b8; width: 100%; padding: 2rem; text-align: center; font-size: 0.9rem; margin-top: auto; }
+        /* Responsive Piece Graphics */
+        .piece {
+            font-size: clamp(1.8rem, 5.5vw, 3rem);
+            z-index: 3;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        .piece:active { cursor: grabbing; }
+        .piece.w { color: #ffffff; filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.35)); }
+        .piece.b { color: #1a1918; filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.25)); }
+
+        /* Sidebar Control Center */
+        .control-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .panel-section h3 { font-size: 0.9rem; margin-bottom: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .mode-row, .level-row { display: flex; gap: 0.5rem; }
+        .panel-btn {
+            flex: 1; background: #32312f; border: 1px solid #454340; color: white;
+            padding: 0.6rem; font-weight: 600; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s ease;
+        }
+        .panel-btn:hover { background: #3d3b38; }
+        .panel-btn.active { background: var(--accent); border-color: transparent; }
+
+        .status-box {
+            background: #1e1c1a; border-radius: 8px; padding: 1rem;
+            flex: 1; display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .turn-banner { font-size: 1.1rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
+        .move-history { font-size: 0.85rem; color: var(--text-muted); height: 140px; overflow-y: auto; line-height: 1.6; padding-right: 4px; }
+
+        /* Custom Scrollbar for Move Log */
+        .move-history::-webkit-scrollbar { width: 4px; }
+        .move-history::-webkit-scrollbar-thumb { background: #454340; border-radius: 2px; }
+
+        /* Pawn Promotion Floating Board Overlay */
+        .promo-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .promo-box {
+            background: #22201e; border: 2px solid #454340; padding: 1rem;
+            border-radius: 8px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .promo-box p { font-size: 0.9rem; margin-bottom: 0.75rem; font-weight: 600; }
+        .promo-options { display: flex; gap: 0.75rem; justify-content: center; }
+        .promo-choice {
+            background: #32312f; border: 1px solid #454340; width: 60px; height: 60px;
+            font-size: 2rem; color: white; display: flex; align-items: center;
+            justify-content: center; border-radius: 6px; cursor: pointer; transition: background 0.15s;
+        }
+        .promo-choice:hover { background: var(--accent); }
+
+        /* Cinematic End Game Overlay Window */
+        .victory-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .victory-overlay.show { opacity: 1; pointer-events: auto; }
+        
+        .victory-card {
+            background: #22201e; padding: 2.5rem 2rem; border-radius: var(--radius);
+            text-align: center; border: 1px solid #454340; transform: scale(0.7);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 90%;
+        }
+        .victory-overlay.show .victory-card { transform: scale(1); }
+        .victory-card h2 { font-family: 'Lora', serif; font-size: 2.2rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .victory-card p { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; }
+
+        @media (max-width: 900px) {
+            .game-layout { flex-direction: column; align-items: center; }
+            .control-panel { width: 100%; max-width: 560px; }
+            .move-history { height: 90px; }
+        }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
-        </div>
-    </nav>
+    <header>
+        <a href="index.html" class="brand"><i class="fa-solid fa-chess-knight"></i> Quest<span>Chess</span></a>
+    </header>
 
-    <main>
-        <div class="controls-wrapper">
-            <button class="btn active" id="mode-bot" onclick="changeMode('bot')"><i class="fa-solid fa-robot"></i> Bot Core</button>
-            <button class="btn" id="mode-friend" onclick="changeMode('friend')"><i class="fa-solid fa-user-group"></i> Local PvP</button>
+    <main class="game-layout">
+        
+        <div class="board-wrapper">
+            <div id="board"></div>
+
+            <div class="promo-overlay" id="promotion-screen">
+                <div class="promo-box">
+                    <p>Promote Pawn to:</p>
+                    <div class="promo-options">
+                        <button class="promo-choice" onclick="selectPromotionPiece('q')"><i class="fa-solid fa-chess-queen"></i></button>
+                        <button class="promo-choice" onclick="selectPromotionPiece('r')"><i class="fa-solid fa-chess-rook"></i></button>
+                        <button class="promo-choice" onclick="selectPromotionPiece('b')"><i class="fa-solid fa-chess-bishop"></i></button>
+                        <button class="promo-choice" onclick="selectPromotionPiece('n')"><i class="fa-solid fa-chess-knight"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="victory-overlay" id="end-screen">
+                <div class="victory-card">
+                    <h2 id="end-title">Game Over</h2>
+                    <p id="end-desc">White won by checkmate.</p>
+                    <button class="panel-btn active" style="padding: 0.8rem 2rem;" onclick="restartChessMatch()">Play Again</button>
+                </div>
+            </div>
         </div>
 
-        <div class="board-container">
-            <div class="turn-indicator" id="turn-banner">White Operation Move</div>
-            <div id="chess-board"></div>
+        <div class="control-panel">
+            <div class="panel-section">
+                <h3>Game Mode</h3>
+                <div class="mode-row">
+                    <button class="panel-btn active" id="mode-bot" onclick="changeMode('bot')"><i class="fa-solid fa-robot"></i> VS Bot</button>
+                    <button class="panel-btn" id="mode-friend" onclick="changeMode('friend')"><i class="fa-solid fa-user-group"></i> Pass & Play</button>
+                </div>
+            </div>
+
+            <div class="panel-section" id="bot-config">
+                <h3>Bot Difficulty</h3>
+                <div class="level-row">
+                    <button class="panel-btn active" id="lvl-1" onclick="changeLevel(1)">Easy</button>
+                    <button class="panel-btn" id="lvl-2" onclick="changeLevel(2)">Medium</button>
+                    <button class="panel-btn" id="lvl-3" onclick="changeLevel(3)">Hard</button>
+                </div>
+            </div>
+
+            <div class="status-box">
+                <div class="turn-banner" id="turn-label">White's Turn</div>
+                <div style="border-bottom: 1px solid #3d3b38; margin: 0.25rem 0;"></div>
+                <div class="move-history" id="history-box">No moves logged yet.</div>
+            </div>
+
+            <button class="panel-btn" style="background:#3d3b38;" onclick="restartChessMatch()"><i class="fa-solid fa-rotate-right"></i> Reset Board</button>
         </div>
+
     </main>
 
-    <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. All systems active.</p>
-    </footer>
-
     <script>
-        let gameMode = 'bot';
-        let currentTurn = 'white';
+        // Initialize standard chess.js engine instance 
+        let game = new Chess();
+        
+        let currentMode = 'bot';
+        let botDifficulty = 1;
         let selectedSquare = null;
-        let validMovePositions = [];
+        let legalHints = [];
+        let activePromotionIntent = null; // Saves temporary data for processing promotion flags
 
-        // Font Awesome Unified Icon Matrix Array Setup
-        const initialBoardSetup = [
-            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', ''],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
-        ];
-
-        const iconClasses = {
-            'r': 'fa-chess-rook', 'n': 'fa-chess-knight', 'b': 'fa-chess-bishop', 'q': 'fa-chess-queen', 'k': 'fa-chess-king', 'p': 'fa-chess-pawn',
-            'R': 'fa-chess-rook', 'N': 'fa-chess-knight', 'B': 'fa-chess-bishop', 'Q': 'fa-chess-queen', 'K': 'fa-chess-king', 'P': 'fa-chess-pawn'
+        const faPieces = {
+            'p': 'fa-chess-pawn', 'r': 'fa-chess-rook', 'n': 'fa-chess-knight', 'b': 'fa-chess-bishop', 'q': 'fa-chess-queen', 'k': 'fa-chess-king'
         };
 
-        let currentBoardState = JSON.parse(JSON.stringify(initialBoardSetup));
-
         function changeMode(mode) {
-            gameMode = mode;
+            currentMode = mode;
             document.getElementById('mode-bot').classList.toggle('active', mode === 'bot');
             document.getElementById('mode-friend').classList.toggle('active', mode === 'friend');
-            resetBoard();
+            document.getElementById('bot-config').style.display = mode === 'bot' ? 'block' : 'none';
+            restartChessMatch();
         }
 
-        function resetBoard() {
-            currentBoardState = JSON.parse(JSON.stringify(initialBoardSetup));
-            currentTurn = 'white';
+        function changeLevel(lvl) {
+            botDifficulty = lvl;
+            document.querySelectorAll('[id^="lvl-"]').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`lvl-${lvl}`).classList.add('active');
+            restartChessMatch();
+        }
+
+        function restartChessMatch() {
+            game.reset();
             selectedSquare = null;
-            renderBoard();
+            legalHints = [];
+            activePromotionIntent = null;
+            document.getElementById('end-screen').classList.remove('show');
+            document.getElementById('promotion-screen').style.display = 'none';
+            document.getElementById('history-box').innerHTML = 'Moves will be logged here...';
+            updateGameUI();
         }
 
-        function renderBoard() {
-            const boardElement = document.getElementById('chess-board');
-            boardElement.innerHTML = '';
-            document.getElementById('turn-banner').innerText = `${currentTurn} Operation Move`;
+        function updateGameUI() {
+            const boardContainer = document.getElementById('board');
+            boardContainer.innerHTML = '';
 
+            // Map and calculate if a king is locked into a check condition state
+            let checkSquare = null;
+            if (game.in_check()) {
+                const currentTurn = game.turn(); // 'w' or 'b'
+                // Find target king coordinate parameters safely from board array
+                game.board().forEach((rowArr, rIdx) => {
+                    rowArr.forEach((sq, cIdx) => {
+                        if (sq && sq.type === 'k' && sq.color === currentTurn) {
+                            checkSquare = algebraic(rIdx, cIdx);
+                        }
+                    });
+                });
+            }
+
+            // Draw full grid setup matrices structure parameters
             for (let r = 0; r < 8; r++) {
                 for (let c = 0; c < 8; c++) {
-                    const square = document.createElement('div');
-                    square.className = `square ${(r + c) % 2 === 0 ? 'light' : 'dark'}`;
-                    square.dataset.row = r;
-                    square.dataset.col = c;
+                    const squareDiv = document.createElement('div');
+                    const squareName = algebraic(r, c);
+                    const isDark = (r + c) % 2 === 1;
 
-                    const token = currentBoardState[r][c];
-                    if (token) {
-                        const icon = document.createElement('i');
-                        const side = token === token.toUpperCase() ? 'white' : 'black';
-                        icon.className = `fa-solid ${iconClasses[token]} piece ${side}`;
-                        square.appendChild(icon);
+                    squareDiv.className = `square ${isDark ? 'dark' : 'light'}`;
+                    squareDiv.dataset.square = squareName;
+
+                    // Standard Chess.com coordinate labels injection
+                    if (c === 0) {
+                        const rankLabel = document.createElement('span');
+                        rankLabel.className = 'coord rank';
+                        rankLabel.innerText = 8 - r;
+                        squareDiv.appendChild(rankLabel);
+                    }
+                    if (r === 7) {
+                        const fileLabel = document.createElement('span');
+                        fileLabel.className = 'coord file';
+                        fileLabel.innerText = String.fromCharCode(97 + c);
+                        squareDiv.appendChild(fileLabel);
                     }
 
-                    square.addEventListener('click', () => handleSquareInteraction(r, c));
-                    boardElement.appendChild(square);
+                    // Render matching active items from engine state array metrics
+                    const pieceObj = game.get(squareName);
+                    if (pieceObj) {
+                        const icon = document.createElement('i');
+                        icon.className = `fa-solid ${faPieces[pieceObj.type]} piece ${pieceObj.color}`;
+                        squareDiv.appendChild(icon);
+                    }
+
+                    // Highlight selected frame fields
+                    if (selectedSquare === squareName) {
+                        squareDiv.classList.add('selected');
+                    }
+
+                    // Apply soft gradient alert layer onto checked king node location
+                    if (checkSquare === squareName) {
+                        squareDiv.classList.add('in-check');
+                    }
+
+                    // Map lookahead legality hint tracking dots markers
+                    const matchingHint = legalHints.find(h => h.to === squareName);
+                    if (matchingHint) {
+                        const marker = document.createElement('div');
+                        marker.className = pieceObj ? 'hint-capture' : 'hint-dot';
+                        squareDiv.appendChild(marker);
+                    }
+
+                    squareDiv.addEventListener('click', () => handleSquareTap(squareName));
+                    boardContainer.appendChild(squareDiv);
                 }
+            }
+
+            // Sync dynamic labels trackers
+            const activeTeam = game.turn() === 'w' ? "White" : "Black";
+            document.getElementById('turn-label').innerText = `${activeTeam}'s Turn`;
+            
+            // Print out global history record list lines
+            syncLogBox();
+
+            // Run system terminal checks for end game states triggers definitions
+            if (game.game_over()) {
+                triggerEndMatchModal();
             }
         }
 
-        function handleSquareInteraction(r, c) {
-            if (gameMode === 'bot' && currentTurn === 'black') return;
+        function handleSquareTap(sqName) {
+            // Block user adjustments when it is the bot's turn pipeline sequence
+            if (currentMode === 'bot' && game.turn() === 'b') return;
 
-            const clickedPiece = currentBoardState[r][c];
-            const activePieceSide = clickedPiece ? (clickedPiece === clickedPiece.toUpperCase() ? 'white' : 'black') : null;
+            const clickedPiece = game.get(sqName);
+            const verifiedMove = legalHints.find(h => h.to === sqName);
 
-            if (selectedSquare) {
-                const prevRow = selectedSquare.row;
-                const prevCol = selectedSquare.col;
-
-                if (prevRow === r && prevCol === c) {
-                    clearSelections();
+            if (verifiedMove) {
+                // Intercept processing chain layout when promotion metrics are requested
+                if (verifiedMove.flags.includes('p')) {
+                    activePromotionIntent = { from: selectedSquare, to: sqName };
+                    document.getElementById('promotion-screen').style.display = 'flex';
                     return;
                 }
-
-                // Execute move execution parameters
-                currentBoardState[r][c] = currentBoardState[prevRow][prevCol];
-                currentBoardState[prevRow][prevCol] = '';
-                clearSelections();
-                switchTurn();
+                
+                // Fire move directly inside engine system tracking matrix
+                game.move({ from: selectedSquare, to: sqName });
+                postMoveTurnSwap();
+            } else if (clickedPiece && clickedPiece.color === game.turn()) {
+                selectedSquare = sqName;
+                legalHints = game.moves({ square: sqName, verbose: true });
+                updateGameUI();
             } else {
-                if (activePieceSide === currentTurn) {
-                    selectedSquare = { row: r, col: c };
-                    renderBoard();
-                    document.querySelector(`[data-row='${r}'][data-col='${c}']`).classList.add('selected');
-                }
+                selectedSquare = null;
+                legalHints = [];
+                updateGameUI();
             }
         }
 
-        function clearSelections() { selectedSquare = null; }
+        function selectPromotionPiece(pieceCode) {
+            if (!activePromotionIntent) return;
+            
+            game.move({
+                from: activePromotionIntent.from,
+                to: activePromotionIntent.to,
+                promotion: pieceCode
+            });
 
-        function switchTurn() {
-            currentTurn = currentTurn === 'white' ? 'black' : 'white';
-            renderBoard();
-            if (gameMode === 'bot' && currentTurn === 'black') {
-                setTimeout(executeBotMove, 600);
+            activePromotionIntent = null;
+            document.getElementById('promotion-screen').style.display = 'none';
+            postMoveTurnSwap();
+        }
+
+        function postMoveTurnSwap() {
+            selectedSquare = null;
+            legalHints = [];
+            updateGameUI();
+
+            // Trigger bot logic calculations loops
+            if (currentMode === 'bot' && !game.game_over() && game.turn() === 'b') {
+                setTimeout(executeBotTurn, 400);
             }
         }
 
-        function executeBotMove() {
-            // Evaluates valid positions for legal pieces and fires a deterministic mirror move tracking sequence
-            let botPieces = [];
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    let token = currentBoardState[r][c];
-                    if (token && token === token.toLowerCase()) {
-                        botPieces.push({ r, c, token });
+        function executeBotTurn() {
+            const availableMoves = game.moves({ verbose: true });
+            if (availableMoves.length === 0) return;
+
+            let chosenMove = null;
+
+            if (botDifficulty === 1) {
+                // Easy: Completely random choices selection
+                chosenMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            } else if (botDifficulty === 2) {
+                // Medium: Prioritizes standard capture vectors if found, otherwise falls back to random selection
+                const captures = availableMoves.filter(m => m.flags.includes('c') || m.flags.includes('e'));
+                chosenMove = captures.length > 0 ? captures[Math.floor(Math.random() * captures.length)] : availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            } else {
+                // Hard: Prioritizes high-weight targets (Capturing major pieces, checking king, or executing promotion vectors)
+                availableMoves.forEach(m => {
+                    m.score = 0;
+                    if (m.captured) {
+                        const values = { p: 10, n: 30, b: 30, r: 50, q: 90 };
+                        m.score += values[m.captured] || 0;
                     }
-                }
+                    if (m.flags.includes('p')) m.score += 80; // High score priority value for running promotions layout steps
+                });
+                availableMoves.sort((a,b) => b.score - a.score);
+                chosenMove = availableMoves[0];
             }
 
-            // Fallback move mechanism
-            if (botPieces.length > 0) {
-                let moved = false;
-                while (!moved && botPieces.length > 0) {
-                    let index = Math.floor(Math.random() * botPieces.length);
-                    let piece = botPieces[index];
-                    let targets = [1, -1];
-                    let targetRow = piece.r + 1;
-                    let targetCol = piece.c + targets[Math.floor(Math.random() * 2)];
+            // Always default promote pawns into Queens for bot speed efficiency stability
+            game.move({
+                from: chosenMove.from,
+                to: chosenMove.to,
+                promotion: 'q'
+            });
 
-                    if (targetRow < 8 && targetCol >= 0 && targetCol < 8 && currentBoardState[targetRow][targetCol] === '') {
-                        currentBoardState[targetRow][targetCol] = piece.token;
-                        currentBoardState[piece.r][piece.c] = '';
-                        moved = true;
-                    } else {
-                        botPieces.splice(index, 1);
-                    }
-                }
-            }
-            currentTurn = 'white';
-            renderBoard();
+            postMoveTurnSwap();
         }
 
-        window.onload = renderBoard;
+        function syncLogBox() {
+            const historyList = game.history();
+            const logBox = document.getElementById('history-box');
+            
+            if (historyList.length === 0) {
+                logBox.innerHTML = 'Moves will be logged here...';
+                return;
+            }
+
+            let logsHTML = '';
+            for (let i = 0; i < historyList.length; i += 2) {
+                const moveNum = Math.floor(i / 2) + 1;
+                const whiteMove = historyList[i];
+                const blackMove = historyList[i + 1] || '';
+                logsHTML += `<div><strong>${moveNum}.</strong> ${whiteMove} &nbsp;&nbsp; ${blackMove}</div>`;
+            }
+
+            logBox.innerHTML = logsHTML;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function triggerEndMatchModal() {
+            const titleNode = document.getElementById('end-title');
+            const descNode = document.getElementById('end-desc');
+
+            if (game.in_checkmate()) {
+                titleNode.innerText = "Checkmate!";
+                const winner = game.turn() === 'w' ? "Black" : "White";
+                descNode.innerText = `${winner} wins the match by checkmate.`;
+            } else if (game.in_stalemate()) {
+                titleNode.innerText = "Draw (Stalemate)";
+                descNode.innerText = `The active side has no legal moves and is not in check.`;
+            } else if (game.in_threefold_repetition()) {
+                titleNode.innerText = "Draw (Repetition)";
+                descNode.innerText = "The exact identical board matrix configuration was repeated 3 times.";
+            } else if (game.insufficient_material()) {
+                titleNode.innerText = "Draw (Insufficient Material)";
+                descNode.innerText = "Neither side has enough pieces left to physically force a checkmate.";
+            } else {
+                titleNode.innerText = "Draw Match";
+                descNode.innerText = "The game was concluded by draw parameters (50-move rule).";
+            }
+
+            document.getElementById('end-screen').classList.add('show');
+        }
+
+        // Help translation helper utilities converting numerical indexes back down into coordinate text keys strings
+        function algebraic(r, c) {
+            const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+            return files[c] + ranks[r];
+        }
+
+        // Boot board setup processes array
+        window.onload = restartChessMatch;
     </script>
 </body>
 </html>

@@ -3,152 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuestEngine Arcade | Guessing Core</title>
+    <title>QuestEngine Arcade | Number Guessing Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --accent: #d97706;
-            --accent-light: #fef3c7;
-            --border: #e2e8f0;
-            --radius-lg: 24px;
-            --radius-md: 14px;
-            --font-sans: 'Poppins', sans-serif;
+            --primary: #ff7a00;
+            --primary-gradient: linear-gradient(135deg, #ff9f43, #ff5252);
+            --bot-gradient: linear-gradient(135deg, #54a0ff, #5f27cd);
+            --friend-gradient: linear-gradient(135deg, #1dd1a1, #10ac84);
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --radius: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
-        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-top: 90px; }
-
-        nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 1000; height: 70px; }
-        .nav-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
-        .brand span { color: var(--accent); }
-
-        main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        .mode-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
-        .game-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02); text-align: center; }
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-light); 
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255, 122, 0, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(95, 39, 205, 0.15) 0%, transparent 40%);
+        }
+
+        /* Navbar Header */
+        header {
+            width: 100%;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+        .brand span { color: var(--primary); }
+
+        /* Main Game Layout */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Bright Mode Toggles */
+        .mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .mode-btn {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            color: var(--text-muted);
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .mode-btn:hover { border-color: var(--text-muted); }
+        .mode-btn.active-bot {
+            background: var(--bot-gradient);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 20px rgba(95, 39, 205, 0.3);
+        }
+        .mode-btn.active-friend {
+            background: var(--friend-gradient);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 20px rgba(16, 172, 132, 0.3);
+        }
+
+        /* Beautiful Game Box */
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        h2 { font-family: 'Fredoka', sans-serif; font-size: 2rem; margin-bottom: 0.5rem; }
+        .game-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; }
+
+        /* Input Styles */
+        .input-box {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .input-box label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .main-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .main-input:focus { border-color: #ff9f43; }
+
+        /* Fancy Button */
+        .action-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 1.1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 16px rgba(255, 82, 82, 0.2);
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(255, 82, 82, 0.3);
+        }
+        .action-btn:active { transform: translateY(0); }
+
+        /* Live Feedback Logs */
+        .feedback-area {
+            margin-top: 2rem;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         
-        .input-group { display: flex; flex-direction: column; gap: 0.75rem; margin: 2rem 0; text-align: left; }
-        .input-group label { font-weight: 700; font-size: 0.9rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em; }
-        .game-input { width: 100%; padding: 1rem; border: 1px solid var(--border); background: var(--bg-primary); border-radius: var(--radius-md); font-size: 1.1rem; font-weight: 600; text-align: center; outline: none; }
-        .game-input:focus { border-color: var(--accent); }
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .status-text.alert { color: #ff5252; }
+        .status-text.success { color: #1dd1a1; }
+        .status-text.info { color: #54a0ff; }
 
-        .btn { background: var(--accent); color: white; border: none; padding: 1rem 2rem; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; transition: all 0.2s ease; }
-        .btn:hover { background: #b45309; transform: translateY(-1px); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-        .btn-outline.active { background: var(--accent-light); border-color: var(--accent); color: #b45309; }
+        /* Thinking Animation dots */
+        .thinking-dots {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .thinking-dots span {
+            width: 8px; height: 8px; background: #54a0ff; border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
 
-        .log-display { margin-top: 1.5rem; font-weight: 700; font-size: 1.1rem; color: var(--accent); min-height: 30px; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
 
-        footer { background: #0f172a; color: #94a3b8; width: 100%; padding: 2rem; text-align: center; font-size: 0.9rem; margin-top: auto; }
+        /* Score Tracker */
+        .score-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .score-row span strong { color: white; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
-        </div>
-    </nav>
+    <header>
+        <a href="index.html" class="brand"><i class="fa-solid fa-gamepad"></i> Quest<span>Arcade</span></a>
+    </header>
 
     <main>
-        <div class="mode-container">
-            <button class="btn btn-outline active" id="btn-bot" onclick="setMode('bot')"><i class="fa-solid fa-robot"></i> VS Bot</button>
-            <button class="btn btn-outline" id="btn-friend" onclick="setMode('friend')"><i class="fa-solid fa-user-group"></i> VS Friend</button>
+        <div class="mode-selector">
+            <button class="mode-btn active-bot" id="bot-tab" onclick="toggleMode('bot')">
+                <i class="fa-solid fa-robot"></i> Play Bot
+            </button>
+            <button class="mode-btn" id="friend-tab" onclick="toggleMode('friend')">
+                <i class="fa-solid fa-user-group"></i> Play Friend
+            </button>
         </div>
 
         <div class="game-card">
-            <h2 id="panel-title">System Analysis</h2>
-            <p id="panel-desc">Deduct the hidden integer value bounded between 1 and 100.</p>
+            <h2 id="title-display">Guess the Number!</h2>
+            <p class="game-desc" id="desc-display">Find the hidden number between 1 and 100.</p>
 
-            <div class="input-group" id="setup-block" style="display:none;">
-                <label id="input-label">Set Secret Target</label>
-                <input type="password" id="secret-input" class="game-input" placeholder="Enter target variable">
+            <div class="input-box" id="setup-panel" style="display: none;">
+                <label>Player 1: Type Secret Number (1-100)</label>
+                <input type="password" id="secret-field" class="main-input" maxlength="3" placeholder="Keep it hidden!">
             </div>
 
-            <div class="input-group" id="guess-block">
-                <label>Input Guess Vector</label>
-                <input type="number" id="guess-input" class="game-input" placeholder="00">
+            <div class="input-box" id="guess-panel">
+                <label id="input-label-text">Enter Your Guess</label>
+                <input type="number" id="guess-field" class="main-input" placeholder="00" min="1" max="100">
             </div>
 
-            <button class="btn" id="action-btn" onclick="processAction()">Submit Parameter</button>
-            <div class="log-display" id="feedback-log"></div>
+            <button class="action-btn" id="main-action-btn" onclick="handleGameAction()">Submit</button>
+
+            <div class="feedback-area">
+                <div id="status-msg" class="status-text"></div>
+            </div>
+
+            <div class="score-row">
+                <span>Attempts: <strong id="attempt-count">0</strong></span>
+            </div>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. All systems active.</p>
-    </footer>
-
     <script>
         let currentMode = 'bot';
-        let secretValue = 0;
-        let isConfigured = false;
+        let secretNumber = 0;
+        let attempts = 0;
+        let isReadyToGuess = false;
 
-        function setMode(mode) {
+        function toggleMode(mode) {
             currentMode = mode;
-            document.getElementById('btn-bot').classList.toggle('active', mode === 'bot');
-            document.getElementById('btn-friend').classList.toggle('active', mode === 'friend');
-            resetMatrix();
+            document.getElementById('bot-tab').className = `mode-btn ${mode === 'bot' ? 'active-bot' : ''}`;
+            document.getElementById('friend-tab').className = `mode-btn ${mode === 'friend' ? 'active-friend' : ''}`;
+            restartGame();
         }
 
-        function resetMatrix() {
-            document.getElementById('feedback-log').innerText = '';
-            document.getElementById('guess-input').value = '';
-            document.getElementById('secret-input').value = '';
-            
-            if(currentMode === 'bot') {
-                secretValue = Math.floor(Math.random() * 100) + 1;
-                document.getElementById('panel-title').innerText = "System Analysis";
-                document.getElementById('setup-block').style.display = 'none';
-                document.getElementById('guess-block').style.opacity = '1';
-                isConfigured = true;
+        function restartGame() {
+            attempts = 0;
+            document.getElementById('attempt-count').innerText = attempts;
+            document.getElementById('status-msg').innerHTML = '';
+            document.getElementById('guess-field').value = '';
+            document.getElementById('secret-field').value = '';
+
+            if (currentMode === 'bot') {
+                secretNumber = Math.floor(Math.random() * 100) + 1;
+                document.getElementById('title-display').innerText = "Play Against Bot";
+                document.getElementById('desc-display').innerText = "The bot picked a number between 1 and 100. Can you find it?";
+                document.getElementById('setup-panel').style.display = 'none';
+                document.getElementById('guess-panel').style.display = 'block';
+                document.getElementById('main-action-btn').innerText = "Submit Guess";
+                isReadyToGuess = true;
             } else {
-                document.getElementById('panel-title').innerText = "Dual Matrix Setup";
-                document.getElementById('setup-block').style.display = 'flex';
-                document.getElementById('guess-block').style.opacity = '0.5';
-                isConfigured = false;
+                document.getElementById('title-display').innerText = "Play Against a Friend";
+                document.getElementById('desc-display').innerText = "Player 1 sets the target, Player 2 tries to guess it.";
+                document.getElementById('setup-panel').style.display = 'block';
+                document.getElementById('guess-panel').style.display = 'none';
+                document.getElementById('main-action-btn').innerText = "Lock In Number";
+                isReadyToGuess = false;
             }
         }
 
-        function processAction() {
-            if(!isConfigured && currentMode === 'friend') {
-                const setupVal = parseInt(document.getElementById('secret-input').value);
-                if(isNaN(setupVal) || setupVal < 1 || setupVal > 100) {
-                    alert("Invalid parameter. Bounded constraints: 1 to 100.");
+        function handleGameAction() {
+            const statusBox = document.getElementById('status-msg');
+
+            // Setup step for Local 2 Player
+            if (!isReadyToGuess && currentMode === 'friend') {
+                const targetInput = parseInt(document.getElementById('secret-field').value);
+                if (isNaN(targetInput) || targetInput < 1 || targetInput > 100) {
+                    statusBox.className = "status-text alert";
+                    statusBox.innerText = "Please enter a valid number between 1 and 100!";
                     return;
                 }
-                secretValue = setupVal;
-                isConfigured = true;
-                document.getElementById('setup-block').style.display = 'none';
-                document.getElementById('guess-block').style.opacity = '1';
-                document.getElementById('panel-title').innerText = "Player 2 Verification Turn";
+                secretNumber = targetInput;
+                isReadyToGuess = true;
+                document.getElementById('setup-panel').style.display = 'none';
+                document.getElementById('guess-panel').style.display = 'block';
+                document.getElementById('main-action-btn').innerText = "Submit Guess";
+                statusBox.className = "status-text success";
+                statusBox.innerText = "Secret locked! Player 2, start guessing!";
                 return;
             }
 
-            const guess = parseInt(document.getElementById('guess-input').value);
-            const feedback = document.getElementById('feedback-log');
+            // Guess verification processing
+            const userGuess = parseInt(document.getElementById('guess-field').value);
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+                statusBox.className = "status-text alert";
+                statusBox.innerText = "Enter a number between 1 and 100!";
+                return;
+            }
 
-            if(isNaN(guess)) return;
+            attempts++;
+            document.getElementById('attempt-count').innerText = attempts;
 
-            if(guess === secretValue) {
-                feedback.innerText = "System synchronized. Correct Target Identified!";
-                setTimeout(resetMatrix, 3000);
-            } else if(guess < secretValue) {
-                feedback.innerText = "Target matrix parameters lie HIGHER.";
+            if (currentMode === 'bot') {
+                // Trigger Simulated Dynamic Bot Thinking Module
+                statusBox.className = "status-text info";
+                statusBox.innerHTML = `Bot is calculating <div class="thinking-dots"><span></span><span></span><span></span></div>`;
+                document.getElementById('main-action-btn').disabled = true;
+
+                setTimeout(() => {
+                    document.getElementById('main-action-btn').disabled = false;
+                    evaluateGuess(userGuess, statusBox);
+                }, 1000); // 1-second dynamic processing delay
             } else {
-                feedback.innerText = "Target matrix parameters lie LOWER.";
+                evaluateGuess(userGuess, statusBox);
             }
         }
 
-        window.onload = resetMatrix;
+        function evaluateGuess(guess, outputElement) {
+            if (guess === secretNumber) {
+                outputElement.className = "status-text success";
+                outputElement.innerHTML = `🎉 Correct! You won in ${attempts} tries!`;
+                setTimeout(restartGame, 4000);
+            } else if (guess < secretNumber) {
+                outputElement.className = "status-text alert";
+                outputElement.innerText = "Too Low! Try a higher number.";
+            } else {
+                outputElement.className = "status-text alert";
+                outputElement.innerText = "Too High! Try a lower number.";
+            }
+            document.getElementById('guess-field').value = '';
+        }
+
+        // Initialize board configuration metrics
+        window.onload = restartGame;
     </script>
 </body>
 </html>
