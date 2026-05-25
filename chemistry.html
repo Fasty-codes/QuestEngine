@@ -11,76 +11,91 @@
     
     <style>
         :root {
-            --bg-primary: #fee2e2;
+            --bg-primary: #fef2f2;
             --accent: #ef4444; 
             --accent-hover: #dc2626;
             --text-main: #7f1d1d;
             --text-muted: #991b1b;
             --border-color: rgba(239, 68, 68, 0.25);
-            --success: #10b981;
-            --danger: #b91c1c;
+            --success: #16a34a;
+            --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
-            --glass-bg: rgba(255, 245, 245, 0.7);
-            --glass-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.08);
+            --glass-bg: rgba(254, 242, 242, 0.85);
+            --glass-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
         body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
         .view { display: none; width: 100%; }
         .view.active-view { display: block; }
-        .view-container { max-width: 900px; margin: 120px auto 4rem; padding: 0 2rem; }
+        .view-container { max-width: 900px; margin: 100px auto 4rem; padding: 0 1rem; }
 
-        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 3.5rem 2rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
-        .level-grid { display: flex; justify-content: center; gap: 1.2rem; margin: 3rem 0; flex-wrap: wrap; }
-        .level-btn { width: 70px; height: 70px; border-radius: 16px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.4rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 2.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .level-grid { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+        .level-btn { width: 60px; height: 60px; border-radius: 14px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.25rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
 
-        .btn-primary { background: var(--accent); color: white; padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: white; padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
         .btn-primary:hover { background: var(--accent-hover); }
-        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; text-decoration: none; }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: white; padding: 2.5rem; border-radius: 16px; max-width: 400px; text-align: center; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; }
 
-        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 2rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); }
-        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 3rem; }
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.2rem; }
-        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 30px; font-weight: 700; }
+        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
+        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
+        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
-        .options-list { display: flex; flex-direction: column; gap: 1rem; }
-        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1.2rem 1.5rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
         .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-        .quiz-controls { display: flex; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
+        .control-group { display: flex; gap: 8px; }
 
-        .review-item { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .text-success { color: var(--success); font-weight: 600; }
         .text-danger { color: var(--danger); font-weight: 600; }
-        footer { background: rgba(0,0,0,0.03); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: auto; }
+        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 1.5rem; text-align: center; margin-top: auto; font-size: 0.85rem; }
+
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.8rem 1rem; }
+            .logo { font-size: 1.3rem; }
+            .view-container { margin-top: 90px; }
+            .quiz-window { padding: 1.2rem 1rem; }
+            #questionText { font-size: 1.15rem !important; margin-bottom: 1.2rem !important; }
+            .option-btn { padding: 0.85rem 1rem; font-size: 0.9rem; }
+            .quiz-controls { flex-direction: column-reverse; width: 100%; }
+            .quiz-controls button, .control-group { width: 100%; }
+            .control-group button { flex: 1; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-flask"></i> Chemistry Matrix</a>
-            <a href="index.html" class="btn-secondary" style="padding: 0.5rem 1.2rem;">Home Matrix</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-flask"></i> Chemistry</a>
+            <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
             <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0;">Are you sure? Current progress values will be lost completely.</p>
-            <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
-            <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Unsaved element configurations will completely reset.</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            </div>
         </div>
     </div>
 
@@ -88,7 +103,7 @@
         <div class="view-container">
             <div class="level-container">
                 <h2>Chemistry Core Sectors</h2>
-                <p style="margin-top: 0.5rem;">Select an evaluation quadrant. Each sector contains 10 items.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation quadrant. Each sector processes exactly 10 high-tier chemistry matrices.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -96,7 +111,7 @@
                     <button class="level-btn" onclick="selectLevel(4)">4</button>
                     <button class="level-btn" onclick="selectLevel(5)">5</button>
                 </div>
-                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Return</a>
+                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Return</a>
             </div>
         </div>
     </div>
@@ -105,12 +120,14 @@
         <div class="view-container">
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
-                <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0;">
-                    <div><i class="fa-solid fa-clipboard-list"></i> 10 Questions</div>
-                    <div><i class="fa-solid fa-stopwatch"></i> 02:00 Minutes</div>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
+                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
-                <button class="btn-secondary" onclick="showView('level-view')">Back</button>
-                <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Back</button>
+                    <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                </div>
             </div>
         </div>
     </div>
@@ -121,13 +138,13 @@
                 <span class="tracker-pill" id="questionTracker">Item 1/10</span>
                 <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 02:00</span>
             </div>
-            <div>
-                <h3 id="questionText" style="font-size:1.35rem; margin-bottom:1.5rem;">Loading...</h3>
+            <div style="flex: 1;">
+                <h3 id="questionText" style="font-size:1.25rem; margin-bottom:1.5rem; font-weight: 600; line-height: 1.4;">Loading...</h3>
                 <div class="options-list" id="optionsContainer"></div>
             </div>
             <div class="quiz-controls">
                 <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
-                <div style="display: flex; gap: 10px;">
+                <div class="control-group">
                     <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
                     <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
                 </div>
@@ -139,85 +156,82 @@
         <div class="view-container">
             <div class="pre-quiz-card">
                 <h2>Analysis Completed</h2>
-                <div style="font-size: 5rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
-                <p id="resultEvaluationMessage" style="margin-bottom: 2rem;"></p>
-                <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
-                <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
+                <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                </div>
                 <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. Red Configuration Matrix.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Red Configuration.</p>
     </footer>
 
     <script>
         const CHEMISTRY_DATA = [
-            // SECTOR 1
             [
-                { q: "What is the chemical symbol for Gold?", o: ["Ag", "Au", "Pb", "Fe"], a: 1 },
-                { q: "Which gas is most abundant in Earth's atmosphere?", o: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], a: 2 },
-                { q: "What is the pH value of pure water at standard temperature?", o: ["5", "7", "9", "14"], a: 1 },
-                { q: "Which subatomic particle carries a negative operational charge?", o: ["Proton", "Neutron", "Electron", "Nucleus"], a: 2 },
-                { q: "What type of chemical bond involves sharing electron pairs?", o: ["Ionic Bond", "Covalent Bond", "Metallic Bond", "Hydrogen Bond"], a: 1 },
-                { q: "What is the absolute lightest element listed on the periodic table?", o: ["Helium", "Lithium", "Oxygen", "Hydrogen"], a: 3 },
-                { q: "What is the standard chemical name for table salt?", o: ["Baking Soda", "Table Salt", "Bleach", "Sodium Chloride"], a: 3 },
-                { q: "In a balanced chemical equation, substances on the left are called?", o: ["Products", "Catalysts", "Reactants", "Enzymes"], a: 2 },
-                { q: "Which noble gas is uniquely utilized to create glowing signs?", o: ["Argon", "Krypton", "Neon", "Xenon"], a: 2 },
-                { q: "What is the process of a liquid phase turning directly into a gas phase?", o: ["Condensation", "Evaporation", "Sublimation", "Melting"], a: 1 }
+                { q: "What subatomic particle features a definitive negative electrical charge?", o: ["Proton", "Neutron", "Electron", "Positron"], a: 2 },
+                { q: "What is the baseline chemical pH value metric mapped to absolute pure water?", o: ["5", "7", "9", "14"], a: 1 },
+                { q: "Which core element holds the foundational atomic position of 1 on the modern periodic table?", o: ["Helium", "Oxygen", "Hydrogen", "Carbon"], a: 2 },
+                { q: "What specific form of chemical bond involves sharing electron pairs between atoms?", o: ["Ionic Bond", "Covalent Bond", "Hydrogen Bond", "Metallic Bond"], a: 1 },
+                { q: "What distinct gas format makes up approximately 78% of Earth's baseline atmosphere?", o: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Argon"], a: 1 },
+                { q: "What structural chemical indicator changes configuration colors when dipped into acidic pools?", o: ["Litmus Paper", "Filter Paper", "Petri Dish", "Catalyst"], a: 0 },
+                { q: "What is the common tracking configuration formula used to define standard table salt?", o: ["H2O", "CO2", "NaCl", "HCl"], a: 2 },
+                { q: "What atomic state variant maps items containing unaligned matching neutron tallies?", o: ["Isotope", "Ion", "Allotrope", "Isomer"], a: 0 },
+                { q: "What thermodynamic chemical process discharges high net thermal heat into its environment?", o: ["Endothermic", "Exothermic", "Isothermal", "Adiabatic"], a: 1 },
+                { q: "What states of matter possess a fixed volume format but assume fluid container shapes?", o: ["Solid", "Liquid", "Gas", "Plasma"], a: 1 }
             ],
-            // SECTOR 2
             [
-                { q: "What is the structural molecular formula for methane gas?", o: ["CO2", "CH4", "C2H6", "NH3"], a: 1 },
-                { q: "Which core element atom is foundational to all organic compounds?", o: ["Hydrogen", "Oxygen", "Carbon", "Nitrogen"], a: 2 },
-                { q: "What is the exact chemical formula for table sugar (Sucrose)?", o: ["C6H12O6", "C12H22O11", "CH3COOH", "NaCl"], a: 1 },
-                { q: "An acidic solution will shift blue litmus indicator paper into which color?", o: ["Green", "Yellow", "Red", "Purple"], a: 2 },
-                { q: "What is the atomic tracking number assigned to Carbon?", o: ["5", "6", "7", "8"], a: 1 },
-                { q: "Which pure metal is liquid at standard environmental room temperatures?", o: ["Gallium", "Mercury", "Cesium", "Sodium"], a: 1 },
-                { q: "What chemical law states mass is neither generated nor destroyed?", o: ["Boyle's Law", "Avogadro's Law", "Law of Conservation of Mass", "Charles's Law"], a: 2 },
-                { q: "What is the primary gaseous element found inside natural gas supplies?", o: ["Ethane", "Propane", "Butane", "Methane"], a: 3 },
-                { q: "Which distinct element profile is designated by the operational letter 'K'?", o: ["Krypton", "Potassium", "Calcium", "Phosphorus"], a: 1 },
-                { q: "What name is applied to chemical reactions that release net thermal energy?", o: ["Endothermic", "Exothermic", "Synthesis", "Decomposition"], a: 1 }
+                { q: "What core elemental atom establishes the structural baseline architecture for organic chemistry tracks?", o: ["Oxygen", "Nitrogen", "Carbon", "Silicon"], a: 2 },
+                { q: "What specific chemical compound functions as the baseline active key within commercial vinegar?", o: ["Hydrochloric Acid", "Acetic Acid", "Citric Acid", "Sulfuric Acid"], a: 1 },
+                { q: "What hydrocarbon compound acts as the baseline configuration molecule for the simplest alkane structures?", o: ["Methane", "Ethane", "Propane", "Butane"], a: 0 },
+                { q: "What functional group block structures alcohol chains across organic synthesis layouts?", o: ["Carbonyl Group", "Carboxyl Group", "Hydroxyl Group", "Amino Group"], a: 2 },
+                { q: "What matching chemical formula setups exhibit unique geometric molecular configurations?", o: ["Isotopes", "Isomers", "Allotropes", "Polymers"], a: 1 },
+                { q: "What cyclical aromatic hydrocarbon structural ring sets up the molecular profile C6H6?", o: ["Hexane", "Cyclohexane", "Benzene", "Toluene"], a: 2 },
+                { q: "What high-tier organic processing path combines small tracking units into massive polymer setups?", o: ["Saponification", "Polymerization", "Esterification", "Hydrolysis"], a: 1 },
+                { q: "What specific organic substance category creates fragrant scent paths via mixing acid and alcohol lines?", o: ["Esters", "Ethers", "Ketones", "Aldehydes"], a: 0 },
+                { q: "What configuration line defines hydrocarbon options that contain double or triple atomic bonds?", o: ["Saturated", "Unsaturated", "Acyclic", "Alkanes"], a: 1 },
+                { q: "What conversion process chemically treats raw lipid fats to synthesize basic commercial soap blocks?", o: ["Fermentation", "Esterification", "Saponification", "Oxidation"], a: 2 }
             ],
-            // SECTOR 3
             [
-                { q: "What is the proper IUPAC chemical name applied to kitchen baking soda?", o: ["Sodium Carbonate", "Sodium Bicarbonate", "Sodium Hydroxide", "Calcium Carbonate"], a: 1 },
-                { q: "What is the baseline oxidation state value assigned to uncombined pure elements?", o: ["-1", "0", "+1", "Variable"], a: 1 },
-                { q: "Which acid type is natively present inside human stomach digestive tracts?", o: ["Sulfuric Acid", "Nitric Acid", "Hydrochloric Acid", "Acetic Acid"], a: 2 },
-                { q: "What name configuration is given to horizontal rows across the periodic table?", o: ["Groups", "Families", "Periods", "Blocks"], a: 2 },
-                { q: "What is the true geometric molecular shape configuration of a water molecule?", o: ["Linear", "Bent", "Trigonal Planar", "Tetrahedral"], a: 1 },
-                { q: "Which specialized catalyst accelerates reactions inside living tissue?", o: ["Inhibitor", "Enzyme", "Reactant", "Solute"], a: 1 },
-                { q: "What discrete gas is evolved when zinc chips react with Hydrochloric Acid?", o: ["Oxygen", "Chlorine", "Hydrogen", "Nitrogen"], a: 2 },
-                { q: "Which fluid substance is broadly cataloged as the universal solvent matrix?", o: ["Alcohol", "Acetone", "Water", "Benzene"], a: 2 },
-                { q: "What absolute temperature scale metric initializes precisely at absolute zero?", o: ["Celsius", "Fahrenheit", "Kelvin", "Rankine"], a: 2 },
-                { q: "What specific state is generated by mixing two or more metal components?", o: ["Compound", "Alloy", "Polymer", "Isotope"], a: 1 }
+                { q: "What constant tracking metric states that exactly 6.022 x 10²³ entities reside inside one mole?", o: ["Planck Constant", "Avogadro Number", "Gas Constant", "Faraday Constant"], a: 1 },
+                { q: "Which fundamental law dictates that mass metrics cannot be generated or destroyed during reactions?", o: ["Law of Definite Proportions", "Law of Conservation of Mass", "Boyle's Law", "Charles's Law"], a: 1 },
+                { q: "What precise tracking parameter metrics are balanced cleanly across a standard chemical equation?", o: ["Volume", "Atoms Tally", "Temperature", "Pressure"], a: 1 },
+                { q: "What gas dynamic dictates that tracking pressure scales inversely against volume at fixed temperatures?", o: ["Charles's Law", "Boyle's Law", "Gay-Lussac's Law", "Dalton's Law"], a: 1 },
+                { q: "What exact volumetric spatial footprint is claimed by an ideal gas mole at standard STP?", o: ["11.2 Liters", "22.4 Liters", "44.8 Liters", "24.5 Liters"], a: 1 },
+                { q: "What systemic tracking option operates to restrict the max product threshold in unaligned reactions?", o: ["Excess Reagent", "Limiting Reagent", "Catalytic Agent", "Solute Matrix"], a: 1 },
+                { q: "What exact value tracks concentration levels expressed via moles per target liter of solution?", o: ["Molality", "Molarity", "Normality", "Mole Fraction"], a: 1 },
+                { q: "What thermal baseline track links zero volume metrics directly to an ideal gas layout?", o: ["0° Celsius", "0 Kelvin", "-100° Celsius", "273° Fahrenheit"], a: 1 },
+                { q: "What standard gas formula captures the comprehensive performance tracking metric PV = nRT?", o: ["Ideal Gas Law", "Combined Gas Law", "Real Gas Equation", "Van der Waals Law"], a: 0 },
+                { q: "What analytical configuration calculates theoretical mass yields against actual obtained product scales?", o: ["Percent Composition", "Percent Yield", "Empirical Formula", "Molar Mass Ratio"], a: 1 }
             ],
-            // SECTOR 4
             [
-                { q: "What explicit functional group configuration characterizes simple alcohols?", o: ["-COOH", "-CHO", "-OH", "-NH2"], a: 2 },
-                { q: "What is the total atomic mass calculation equivalent of a single Hydrogen atom?", o: ["1 amu", "2 amu", "4 amu", "12 amu"], a: 0 },
-                { q: "Which gaseous molecular profile filters out harmful solar UV radiation fields?", o: ["Oxygen", "Ozone", "Nitrogen", "Argon"], a: 1 },
-                { q: "What is the structural molecular formula mapping out pure sulfuric acid?", o: ["HCl", "HNO3", "H2SO4", "H3PO4"], a: 2 },
-                { q: "What identifier defines atoms of an identical element possessing variant neutrons?", o: ["Allotropes", "Isotopes", "Isobars", "Isomers"], a: 1 },
-                { q: "What specific geometric crystal lattice pattern is generated by structural NaCl?", o: ["Body-centered cubic", "Face-centered cubic", "Hexagonal system", "Simple cubic layout"], a: 1 },
-                { q: "Which singular element across the periodic matrix exhibits peak electronegativity?", o: ["Oxygen", "Fluorine", "Chlorine", "Nitrogen"], a: 1 },
-                { q: "What state of matter contains highly energized ionized gas structures?", o: ["Solid state", "Liquid matrix", "Gaseous phase", "Plasma matrix"], a: 3 },
-                { q: "What primary core crustal ore mineral yields structural Aluminum extract?", o: ["Hematite", "Bauxite", "Galena", "Magnetite"], a: 1 },
-                { q: "What volatile gas product is produced during anaerobic fermentation cycles?", o: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Methane"], a: 1 }
+                { q: "What physical mechanism tracks atomic configurations shifting from fluid states into solid layout forms?", o: ["Evaporation", "Freezing", "Sublimation", "Condensation"], a: 1 },
+                { q: "What process maps solid structures transforming into gas streams without passing through fluid layers?", o: ["Deposition", "Sublimation", "Melting", "Vaporization"], a: 1 },
+                { q: "What specific chemical parameter captures an atoms inherent potential to capture bonding electrons?", o: ["Ionization Energy", "Electronegativity", "Electron Affinity", "Atomic Radius"], a: 1 },
+                { q: "Which atomic column classification groups the absolute least reactive elements on the periodic table?", o: ["Alkali Metals", "Halogens", "Noble Gases", "Alkaline Earth Metals"], a: 2 },
+                { q: "What unique spatial framework configurations map out particle structures within crystalline sets?", o: ["Amorphous Blocks", "Space Lattice", "Phase Diagram", "Colloid Mix"], a: 1 },
+                { q: "What term identifies a fully uniform mix formed by blending a solute item cleanly into a liquid?", o: ["Heterogeneous Mix", "Solution", "Suspension", "Emulsion"], a: 1 },
+                { q: "What specific compound setup retains water metrics locked within its structured crystal framework?", o: ["Anhydrous Salt", "Hydrate", "Colloid", "Solvent Matrix"], a: 1 },
+                { q: "What distinct dynamic states that matching temperature changes scale gas volume tracks directly?", o: ["Boyle's Law", "Charles's Law", "Avogadro's Law", "Henry's Law"], a: 1 },
+                { q: "What physical barrier layer keeps a fluid material from smoothly accelerating its localized flow layout?", o: ["Surface Tension", "Viscosity", "Vapor Pressure", "Density"], a: 1 },
+                { q: "What physical mixture configuration scatters light tracks via suspended colloidal tracking arrays?", o: ["Tyndall Effect", "Brownian Motion", "Raoult's Law", "Electrolysis Profile"], a: 0 }
             ],
-            // SECTOR 5
             [
-                { q: "What parameter matrix track does a standard Carbon-14 testing protocol calculate?", o: ["Acidity metrics", "Chronological Age", "Structural Mass", "Volumetric Density"], a: 1 },
-                { q: "What long chain molecular items are composed of repeating interconnected monomers?", o: ["Polymers", "Isomers", "Esters", "Alkanes"], a: 0 },
-                { q: "What laboratory apparatus tracks explicit enthalpy heat variance changes?", o: ["Thermometer", "Calorimeter", "Barometer", "Voltmeter"], a: 1 },
-                { q: "What primary structural compound element constitutes the mass profile of limestone?", o: ["CaSO4", "CaCO3", "CaO", "Ca(OH)2"], a: 1 },
-                { q: "Which distinct element parameter block is classified inherently as an amphoteric metalloid?", o: ["Silicon", "Iron", "Copper", "Sulfur"], a: 0 },
-                { q: "What is the verified scientific standard numerical value constant defining Avogadro's Number?", o: ["6.02x10^22", "6.02x10^23", "3.14x10^23", "9.11x10^-31"], a: 1 },
-                { q: "What is the systemic structural industrial name assigned to Bleaching Powder?", o: ["Calcium Chloride", "Calcium Hypochlorite", "Sodium Hypochlorite", "Calcium Carbonate"], a: 1 },
-                { q: "Which explicit gas state component can be compressed to structurally generate physical dry ice?", o: ["Nitrogen", "Oxygen", "Carbon Dioxide", "Helium"], a: 2 },
-                { q: "What explicit chemical bond linkage joins amino acid strings together within macro proteins?", o: ["Ionic linkage", "Peptide bond", "Glycosidic bond", "Ester linkage"], a: 1 },
-                { q: "What true color manifestation occurs when copper sulfate crystals are natively hydrated?", o: ["Deep Green", "Bright Yellow", "Vibrant Blue", "Opaque White"], a: 2 }
+                { q: "What high-tier device framework converts direct chemical energy outputs into structured electricity streams?", o: ["Electrolytic Cell", "Galvanic Cell", "Voltmeter", "Transformer Matrix"], a: 1 },
+                { q: "What terminal oxidation state modification tracks an item gaining a net count of incoming electrons?", o: ["Oxidation", "Reduction", "Neutralization", "Hydrolysis"], a: 1 },
+                { q: "What physical location hub processes incoming oxidation tasks inside an active electrochemical setup?", o: ["Cathode Node", "Anode Node", "Salt Bridge", "Electrolyte Layer"], a: 1 },
+                { q: "What parameter expression states log concentration scales mapped to hydronium ions?", o: ["pOH", "pH", "Ka", "Kw"], a: 1 },
+                { q: "What target asset maintains localized pH boundaries if tracking inputs face acid adjustments?", o: ["Indicator solution", "Buffer solution", "Neutral salt pool", "Standard Titrant"], a: 1 },
+                { q: "What interaction results when matching acid assets merge with alkaline materials to form salt and water?", o: ["Hydrolysis", "Neutralization", "Saponification", "Precipitation"], a: 1 },
+                { q: "What specific device tool uses electric line flows to drive non-spontaneous breakdown transformations?", o: ["Voltaic Pile", "Electrolytic Cell", "Fuel Cell Matrix", "Galvanic Setup"], a: 1 },
+                { q: "What parameter value drops as electrons exit a specific chemical participant?", o: ["Oxidation Number", "Mass Number", "Atomic Number", "Charge Value"], a: 0 },
+                { q: "What process forces a protective Zinc shell down over Iron cores to prevent oxidative degradation?", o: ["Anodizing", "Galvanization", "Electroplating", "Alloying"], a: 1 },
+                { q: "What diagnostic laboratory operation uses incremental fluid additions to decode unaligned solution scales?", o: ["Filtration", "Titration", "Distillation", "Centrifugation"], a: 1 }
             ]
         ];
 
@@ -254,14 +268,14 @@
         function evaluateQuizSession() {
             const data = CHEMISTRY_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Excellent analytical throughput verified." : "Parameters outside optimal thresholds. Sector reset suggested.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Atomic configurations verified and structurally stable." : "Molecular valence anomalies found. Reset sector.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {
             const container = document.getElementById('reviewSection'); container.innerHTML = "";
             data.forEach((item, idx) => {
                 const sel = userAnswers[idx]; const isCorrect = (sel === item.a); const div = document.createElement('div'); div.className = `review-item ${isCorrect ? 'correct' : 'wrong'}`;
-                div.innerHTML = `<h4>Item ${idx + 1}: ${item.q}</h4><p>Selected: <span class='${isCorrect?'text-success':'text-danger'}'>${sel!==null?item.o[sel]:'Expired'}</span></p>${!isCorrect?`<p>Target: <span class='text-success'>${item.o[item.a]}</span></p>`:''}`;
+                div.innerHTML = `<h4>Item ${idx + 1}: ${item.q}</h4><p>Selected: <span class='${isCorrect?'text-success':'text-danger'}'>${sel!==null?item.o[sel]:'Expired'}</span></p>${!isCorrect?`<p>Target Matrix: <span class='text-success'>${item.o[item.a]}</span></p>`:''}`;
                 container.appendChild(div);
             });
         }

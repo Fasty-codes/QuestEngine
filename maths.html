@@ -11,76 +11,91 @@
     
     <style>
         :root {
-            --bg-primary: #dbeafe;
+            --bg-primary: #eff6ff;
             --accent: #2563eb; 
             --accent-hover: #1d4ed8;
             --text-main: #1e3a8a;
-            --text-muted: #1d4ed8;
-            --border-color: rgba(37, 99, 211, 0.25);
+            --text-muted: #1e40af;
+            --border-color: rgba(37, 99, 235, 0.25);
             --success: #16a34a;
             --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
-            --glass-bg: rgba(239, 246, 255, 0.8);
-            --glass-shadow: 0 8px 32px 0 rgba(37, 99, 211, 0.06);
+            --glass-bg: rgba(239, 246, 255, 0.85);
+            --glass-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
         body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
         .view { display: none; width: 100%; }
         .view.active-view { display: block; }
-        .view-container { max-width: 900px; margin: 120px auto 4rem; padding: 0 2rem; }
+        .view-container { max-width: 900px; margin: 100px auto 4rem; padding: 0 1rem; }
 
-        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 3.5rem 2rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
-        .level-grid { display: flex; justify-content: center; gap: 1.2rem; margin: 3rem 0; flex-wrap: wrap; }
-        .level-btn { width: 70px; height: 70px; border-radius: 16px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.4rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 2.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .level-grid { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+        .level-btn { width: 60px; height: 60px; border-radius: 14px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.25rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
 
-        .btn-primary { background: var(--accent); color: white; padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: white; padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
         .btn-primary:hover { background: var(--accent-hover); }
-        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; text-decoration: none; }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: white; padding: 2.5rem; border-radius: 16px; max-width: 400px; text-align: center; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; }
 
-        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 2rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); }
-        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 3rem; }
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.2rem; }
-        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 30px; font-weight: 700; }
+        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
+        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
+        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
-        .options-list { display: flex; flex-direction: column; gap: 1rem; }
-        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1.2rem 1.5rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
         .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-        .quiz-controls { display: flex; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
+        .control-group { display: flex; gap: 8px; }
 
-        .review-item { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .text-success { color: var(--success); font-weight: 600; }
         .text-danger { color: var(--danger); font-weight: 600; }
-        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: auto; }
+        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 1.5rem; text-align: center; margin-top: auto; font-size: 0.85rem; }
+
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.8rem 1rem; }
+            .logo { font-size: 1.3rem; }
+            .view-container { margin-top: 90px; }
+            .quiz-window { padding: 1.2rem 1rem; }
+            #questionText { font-size: 1.15rem !important; margin-bottom: 1.2rem !important; }
+            .option-btn { padding: 0.85rem 1rem; font-size: 0.9rem; }
+            .quiz-controls { flex-direction: column-reverse; width: 100%; }
+            .quiz-controls button, .control-group { width: 100%; }
+            .control-group button { flex: 1; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-calculator"></i> Mathematics Matrix</a>
-            <a href="index.html" class="btn-secondary" style="padding: 0.5rem 1.2rem;">Home Matrix</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-calculator"></i> Mathematics</a>
+            <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
             <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0;">Are you sure? Current math calculation values will reset.</p>
-            <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
-            <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current quantitative progress data will completely reset.</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            </div>
         </div>
     </div>
 
@@ -88,7 +103,7 @@
         <div class="view-container">
             <div class="level-container">
                 <h2>Mathematics Core Sectors</h2>
-                <p style="margin-top: 0.5rem;">Select an evaluation quadrant. Each sector contains 10 rigorous math items.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a quantitative quadrant. Each sector processes exactly 10 algebraic tracking matrices.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -96,7 +111,7 @@
                     <button class="level-btn" onclick="selectLevel(4)">4</button>
                     <button class="level-btn" onclick="selectLevel(5)">5</button>
                 </div>
-                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Return</a>
+                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Return</a>
             </div>
         </div>
     </div>
@@ -105,12 +120,14 @@
         <div class="view-container">
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
-                <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0;">
-                    <div><i class="fa-solid fa-clipboard-list"></i> 10 Questions</div>
-                    <div><i class="fa-solid fa-stopwatch"></i> 03:00 Minutes</div>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
+                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
-                <button class="btn-secondary" onclick="showView('level-view')">Back</button>
-                <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Back</button>
+                    <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                </div>
             </div>
         </div>
     </div>
@@ -119,15 +136,15 @@
         <div class="quiz-window">
             <div class="quiz-header">
                 <span class="tracker-pill" id="questionTracker">Item 1/10</span>
-                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 03:00</span>
+                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 02:00</span>
             </div>
-            <div>
-                <h3 id="questionText" style="font-size:1.35rem; margin-bottom:1.5rem;">Loading...</h3>
+            <div style="flex: 1;">
+                <h3 id="questionText" style="font-size:1.25rem; margin-bottom:1.5rem; font-weight: 600; line-height: 1.4;">Loading...</h3>
                 <div class="options-list" id="optionsContainer"></div>
             </div>
             <div class="quiz-controls">
                 <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
-                <div style="display: flex; gap: 10px;">
+                <div class="control-group">
                     <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
                     <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
                 </div>
@@ -139,89 +156,86 @@
         <div class="view-container">
             <div class="pre-quiz-card">
                 <h2>Analysis Completed</h2>
-                <div style="font-size: 5rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
-                <p id="resultEvaluationMessage" style="margin-bottom: 2rem;"></p>
-                <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
-                <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
+                <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                </div>
                 <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. Blue Configuration Matrix.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Blue Mathematical Configuration.</p>
     </footer>
 
     <script>
-        const MATH_DATA = [
-            // SECTOR 1: ALGEBRA & ARITHMETIC
+        const MATHS_DATA = [
             [
-                { q: "What is the value of x if 3x + 7 = 22?", o: ["3", "4", "5", "6"], a: 2 },
-                { q: "Calculate the value of 12% of 250.", o: ["25", "30", "35", "40"], a: 1 },
-                { q: "What is the solution of the expression: 7 + 3 * (10 - 4)?", o: ["60", "43", "25", "31"], a: 2 },
-                { q: "What are the prime factors of 42?", o: ["2, 3, 7", "2, 4, 6", "3, 5, 7", "2, 3, 9"], a: 0 },
-                { q: "Find the value of x in the ratio: 4:5 = 16:x.", o: ["18", "20", "22", "24"], a: 1 },
-                { q: "Evaluate 5 cubed minus 5 squared.", o: ["50", "75", "100", "125"], a: 2 },
-                { q: "If a car travels at 60 km/h, how far does it go in 15 minutes?", o: ["10 km", "12 km", "15 km", "20 km"], a: 2 },
-                { q: "What is the lowest common multiple (LCM) of 8 and 12?", o: ["16", "24", "36", "48"], a: 1 },
-                { q: "Solve for y: 2y / 5 = 10.", o: ["15", "20", "25", "30"], a: 2 },
-                { q: "What is the square root of 225?", o: ["13", "14", "15", "16"], a: 2 }
+                { q: "Solve for x: 2x + 7 = 15.", o: ["x = 3", "x = 4", "x = 5", "x = 6"], a: 1 },
+                { q: "What is the absolute value of the square root of 144?", o: ["11", "12", "14", "16"], a: 1 },
+                { q: "Calculate the total area of a rectangle with length = 8cm and width = 5cm.", o: ["30 cm²", "35 cm²", "40 cm²", "45 cm²"], a: 2 },
+                { q: "What is the baseline structural value of any non-zero number raised to the power of 0?", o: ["0", "1", "The number itself", "Infinity"], a: 1 },
+                { q: "Find the average (mean) value of the following data set: 4, 8, 12, 16.", o: ["8", "10", "12", "14"], a: 1 },
+                { q: "What is the value of 15% of 200?", o: ["20", "25", "30", "35"], a: 2 },
+                { q: "A triangle has angles measuring 60° and 50°. Calculate the measurement of the third interior angle.", o: ["60°", "70°", "80°", "90°"], a: 1 },
+                { q: "What is the prime number immediately following 19?", o: ["21", "23", "25", "29"], a: 1 },
+                { q: "Calculate the evaluation of: (5 + 3) * 2 - 4.", o: ["8", "10", "12", "14"], a: 2 },
+                { q: "How many total face blocks structure a standard geometric 3D cube?", o: ["4", "6", "8", "12"], a: 1 }
             ],
-            // SECTOR 2: GEOMETRY & TRIGONOMETRY
             [
-                { q: "What is the sum of internal angles of a hexagon?", o: ["360°", "540°", "720°", "900°"], a: 2 },
-                { q: "If the radius of a circle is 7 cm, calculate its approximate area.", o: ["44 cm²", "154 cm²", "98 cm²", "124 cm²"], a: 1 },
-                { q: "What is the value of sin(90°)?", o: ["0", "0.5", "1", "Undefined"], a: 2 },
-                { q: "The hypotenuse of a right triangle with sides 6cm and 8cm is:", o: ["9 cm", "10 cm", "11 cm", "12 cm"], a: 1 },
-                { q: "How many degrees does a supplementary angle pair add up to?", o: ["90°", "180°", "270°", "360°"], a: 1 },
-                { q: "The perimeter of a square is 36 cm. What is its area?", o: ["36 cm²", "64 cm²", "81 cm²", "100 cm²"], a: 2 },
-                { q: "What is the value of tan(45°)?", o: ["0", "0.5", "1", "√3"], a: 2 },
-                { q: "A cylinder has a base radius of 3cm and a height of 7cm. Volume (using π ≈ 22/7) is:", o: ["66 cm³", "132 cm³", "198 cm³", "244 cm³"], a: 2 },
-                { q: "How many diagonals can be drawn inside a standard pentagon?", o: ["3", "4", "5", "6"], a: 2 },
-                { q: "If two lines intersect, the vertically opposite angles are always:", o: ["Complementary", "Supplementary", "Equal", "Parallel"], a: 2 }
+                { q: "Find the structural value of x if x² = 49 and x must be greater than zero.", o: ["x = 5", "x = 6", "x = 7", "x = 8"], a: 2 },
+                { q: "What is the mathematical value expression of 1/4 + 2/3?", o: ["3/7", "5/12", "11/12", "7/12"], a: 2 },
+                { q: "Identify the lowest common multiple (LCM) shared between 6 and 8.", o: ["12", "16", "24", "48"], a: 2 },
+                { q: "A circle features a radius measurement of 7 units. Using pi = 22/7, calculate its circumference.", o: ["22 units", "44 units", "88 units", "154 units"], a: 1 },
+                { q: "Solve for y in the linear system expression: 3y - 12 = 0.", o: ["y = 2", "y = 3", "y = 4", "y = 5"], a: 2 },
+                { q: "What is the total value of 2 raised to the power of 5?", o: ["16", "24", "32", "64"], a: 2 },
+                { q: "What value defines the absolute hypotenuse of a right triangle with legs measuring 3cm and 4cm?", o: [] , o: ["5 cm", "6 cm", "7 cm", "8 cm"], a: 0 },
+                { q: "Calculate the product result of: (-6) * (-4).", o: ["-24", "24", "-10", "10"], a: 1 },
+                { q: "If a digital variable value tracking ratio states 3:5 = 12:x, find the value of x.", o: ["15", "18", "20", "24"], a: 2 },
+                { q: "Find the median value profile tracking inside the data set: 3, 11, 7, 5, 9.", o: ["5", "7", "9", "11"], a: 1 }
             ],
-            // SECTOR 3: CALCULUS & ADVANCED MATH
             [
-                { q: "What is the derivative of x² with respect to x?", o: ["x", "2x", "2", "x³/3"], a: 1 },
-                { q: "Evaluate the limit as x approaches 3 of (x² - 9) / (x - 3).", o: ["0", "3", "6", "Undefined"], a: 2 },
-                { q: "What is the integral of 1/x dx?", o: ["ln|x| + C", "x + C", "-1/x² + C", "e^x + C"], a: 0 },
-                { q: "What is the value of i² in complex numbers?", o: ["1", "-1", "√-1", "0"], a: 1 },
-                { q: "Find the derivative of sin(x).", o: ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"], a: 0 },
-                { q: "What is the slope of the line tangent to y = 3x² at x = 2?", o: ["6", "12", "8", "4"], a: 1 },
-                { q: "The value of 0 factorial (0!) is:", o: ["0", "1", "Undefined", "Infinite"], a: 1 },
-                { q: "Determine the determinant of a 2x2 matrix with rows [4, 2] and [1, 3].", o: ["14", "10", "12", "8"], a: 1 },
-                { q: "What is the base of natural logarithms?", o: ["10", "π", "e", "2"], a: 2 },
-                { q: "Which mathematical sequence grows by multiplying a constant ratio?", o: ["Arithmetic Sequence", "Geometric Sequence", "Fibonacci Sequence", "Harmonic Sequence"], a: 1 }
+                { q: "Solve the linear equation system for x: 5x - 3 = 2x + 9.", o: ["x = 2", "x = 3", "x = 4", "x = 5"], a: 2 },
+                { q: "What mathematical identifier describes a structural fraction inverted backwards?", o: ["Reciprocal", "Quotient", "Ratio", "Remainder"], a: 0 },
+                { q: "Calculate the value tracking summation of the first five positive prime numbers.", o: ["26", "28", "30", "32"], a: 1 },
+                { q: "What is the total sum of the exterior angles of any convex polygon structure?", o: ["180°", "270°", "360°", "540°"], a: 2 },
+                { q: "Evaluate the factorial metric parameter expression of 5! (5 factorial).", o: ["60", "100", "120", "150"], a: 2 },
+                { q: "A cylinder features a baseline area of 20 cm² and a height of 5cm. Calculate its volume footprint.", o: ["50 cm³", "75 cm³", "100 cm³", "125 cm³"], a: 2 },
+                { q: "What base tracking angle maps out the exact supplementary match to an angle of 45°?", o: ["45°", "90°", "135°", "145°"], a: 2 },
+                { q: "Identify the greatest common divisor (GCD) shared cleanly between 36 and 48.", o: ["6", "8", "12", "16"], a: 2 },
+                { q: "What is the cube root metric value of 212 + 131 (343)?", o: ["6", "7", "8", "9"], a: 1 },
+                { q: "If the probability tracker of an event index is 0.25, what is the exact probability of it NOT occurring?", o: ["0.25", "0.50", "0.75", "1.00"], a: 2 }
             ],
-            // SECTOR 4: PROBABILITY & STATISTICS
             [
-                { q: "What is the probability of rolling a prime number on a standard 6-sided die?", o: ["1/6", "1/3", "1/2", "2/3"], a: 2 },
-                { q: "Find the median of the data set: 3, 7, 8, 5, 12, 14, 21.", o: ["5", "7", "8", "12"], a: 2 },
-                { q: "If the variance of a data set is 49, what is its standard deviation?", o: ["7", "14", "24.5", "9.8"], a: 0 },
-                { q: "The probability of drawing an Ace from a standard deck of 52 cards is:", o: ["1/13", "1/52", "4/13", "1/4"], a: 0 },
-                { q: "Find the mean of the numbers: 15, 20, 25, 30, 35.", o: ["22", "25", "27", "30"], a: 1 },
-                { q: "What is the mode of the following set: 4, 9, 4, 3, 9, 4, 7, 2?", o: ["2", "3", "4", "9"], a: 2 },
-                { q: "Two independent events have probabilities 0.5 and 0.4. What is the probability they both occur?", o: ["0.9", "0.1", "0.2", "0.05"], a: 2 },
-                { q: "The sum of all probabilities in a sample space is always equal to:", o: ["0", "0.5", "1", "100"], a: 2 },
-                { q: "A bag has 3 red and 7 blue balls. What is the chance of picking a red ball?", o: ["30%", "70%", "3/7", "50%"], a: 0 },
-                { q: "In statistics, a value that lies far outside the tracking range of other values is an:", o: ["Inlier", "Outlier", "Mean", "Variance"], a: 1 }
+                { q: "Find the roots of the quadratic matrix expression: x² - 5x + 6 = 0.", o: ["x = 1, 6", "x = 2, 3", "x = -2, -3", "x = 0, 5"], a: 1 },
+                { q: "Calculate the log base 10 mapping value profile of 1,000.", o: ["2", "3", "4", "5"], a: 1 },
+                { q: "What standard value tracks the slope metric of a line tracking across the equation y = -3x + 8?", o: ["8", "3", "-3", "-8"], a: 2 },
+                { q: "Calculate the exact distance tracking between coordinate point sets (0,0) and (6,8).", o: ["7 units", "10 units", "12 units", "14 units"], a: 1 },
+                { q: "What core geometric profile maps a polygon framework containing exactly eight congruent sides?", o: ["Hexagon", "Heptagon", "Octagon", "Decagon"], a: 2 },
+                { q: "Evaluate the standard mathematical tracking matrix product: (x + 3)(x - 3).", o: ["x² + 9", "x² - 9", "x² - 6x - 9", "x² + 6x + 9"], a: 1 },
+                { q: "What configuration name describes a standard angle measuring greater than 90° but less than 180°?", o: ["Acute Angle", "Right Angle", "Obtuse Angle", "Reflex Angle"], a: 2 },
+                { q: "Calculate the total summation matrix tracking structural values from 1 to 100 inclusive.", o: ["5050", "5000", "5150", "5500"], a: 0 },
+                { q: "What geometric expression defines a straight line path intersecting a circular perimeter at exactly two distinct points?", o: ["Tangent", "Secant", "Radius", "Arc Segment"], a: 1 },
+                { q: "What value is generated by calculating the mathematical value of 3⁻²?", o: ["-6", "-9", "1/6", "1/9"], a: 3 }
             ],
-            // SECTOR 5: MATHEMATICAL LOGIC & APPLICATION
             [
-                { q: "What is the next number in the series: 2, 6, 12, 20, 30, ...?", o: ["36", "40", "42", "46"], a: 2 },
-                { q: "A jacket costs $80 but is on a 25% discount sale. What is the sale price?", o: ["$55", "$60", "$65", "$70"], a: 1 },
-                { q: "How many subsets can be generated from a set containing 4 distinct elements?", o: ["4", "8", "16", "32"], a: 2 },
-                { q: "A clock shows 3:00. What is the internal angle between the hour and minute hands?", o: ["45°", "60°", "90°", "120°"], a: 2 },
-                { q: "If A is true and B is false, what is the value of the logic statement 'A AND B'?", o: ["True", "False", "Indeterminate", "Null"], a: 1 },
-                { q: "A father is 4 times older than his son. In 20 years, he will be twice as old. How old is the son now?", o: ["5", "10", "15", "20"], a: 1 },
-                { q: "What is the binary representation of the decimal number 13?", o: ["1011", "1101", "1110", "1111"], a: 1 },
-                { q: "How many seconds are there in exactly 2.5 hours?", o: ["6000", "7200", "9000", "10800"], a: 2 },
-                { q: "Which polygon has equal sides and equal internal angles?", o: ["Regular Polygon", "Irregular Polygon", "Asymmetric Polygon", "Convex Polygon"], a: 0 },
-                { q: "Convert the fraction 7/20 into a precise percentage metric.", o: ["28%", "35%", "42%", "70%"], a: 1 }
+                { q: "Calculate the first derivative matrix processing track of f(x) = 3x² at the point where x = 4.", o: ["12", "24", "36", "48"], a: 1 },
+                { q: "What trigonometric value calculation tracks the baseline behavior of sin(90°)?", o: ["0", "0.5", "1", "Undefined"], a: 2 },
+                { q: "If matrix vector A holds structural dimensions of 2x3 and B holds 3x4, what is the output size of AB?", o: ["2x3", "3x3", "2x4", "3x4"], a: 2 },
+                { q: "What is the total sum calculation of an infinite geometric progression sequence mapping 1 + 1/2 + 1/4 + 1/8...", o: ["1.5", "2", "2.5", "Infinity"], a: 1 },
+                { q: "What structural classification maps a number value format that cannot be expressed as a simple fraction ratio?", o: ["Rational", "Integer", "Irrational", "Natural"], a: 2 },
+                { q: "Calculate the definite integration processing loop of 2x dx evaluated cleanly across boundaries 1 to 3.", o: ["4", "6", "8", "10"], a: 2 },
+                { q: "What primary processing name tracks the peak occurring value configuration inside a statistical data set?", o: ["Mean", "Median", "Mode", "Variance"], a: 2 },
+                { q: "What parameter tracks the total diagonal metric calculation running through a square with side lengths measuring 1 unit?", o: ["1", "Square Root of 2", "2", "Square Root of 3"], a: 1 },
+                { q: "What structural algebraic field monitors equations containing complex imaginary number variants?", o: ["Real Analysis", "Complex Algebra", "Vector Calculus", "Discrete Matrices"], a: 1 },
+                { q: "What statistical calculation value explicitly tracks the square root derivation of variance parameters?", o: ["Mean Deviation", "Standard Deviation", "Range Distribution", "Covariance Trace"], a: 1 }
             ]
         ];
 
-        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 180;
+        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Maths - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
@@ -229,7 +243,7 @@
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
 
         function startQuiz() {
-            currentQuestionIndex = 0; userAnswers = new Array(10).fill(null); timeRemaining = 180; renderQuestion(); showView('quiz-view');
+            currentQuestionIndex = 0; userAnswers = new Array(10).fill(null); timeRemaining = 120; renderQuestion(); showView('quiz-view');
             clearInterval(quizTimer); updateTimerDisplay();
             quizTimer = setInterval(() => { timeRemaining--; updateTimerDisplay(); if (timeRemaining <= 0) { clearInterval(quizTimer); evaluateQuizSession(); } }, 1000);
         }
@@ -238,7 +252,7 @@
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
         function renderQuestion() {
-            const item = MATH_DATA[currentSectorIndex][currentQuestionIndex];
+            const item = MATHS_DATA[currentSectorIndex][currentQuestionIndex];
             document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
@@ -252,9 +266,9 @@
         }
         function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
         function evaluateQuizSession() {
-            const data = MATH_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            const data = MATHS_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Algebraic computation throughput verified." : "Calculation errors detected. Reset sector.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Quantitative matrices calculated and balanced perfectly." : "Statistical logic failures tracked. Re-index current sector.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

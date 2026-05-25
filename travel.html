@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physics Matrix | QuestEngine</title>
+    <title>Travel Matrix | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,17 +11,17 @@
     
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            --accent: #334155; 
-            --accent-hover: #0f172a;
+            --bg-primary: #fffbeb; /* Soft sandy glow */
+            --accent: #ca8a04;    /* Sunset Ochre Yellow */
+            --accent-hover: #a16207;
             --text-main: #0f172a;
             --text-muted: #475569;
-            --border-color: rgba(15, 23, 42, 0.15);
+            --border-color: rgba(202, 138, 4, 0.15);
             --success: #16a34a;
             --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
             --glass-bg: #ffffff;
-            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --glass-shadow: 0 10px 30px rgba(202, 138, 4, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
@@ -54,7 +54,7 @@
         .timer { color: var(--danger); }
         .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
-        .option-btn:hover { border-color: var(--accent); background: #f8fafc; }
+        .option-btn:hover { border-color: var(--accent); background: #fffbeb; }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
         .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
         .control-group { display: flex; gap: 8px; }
@@ -83,7 +83,7 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-atom"></i> Physics</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-compass"></i> Travel Matrix</a>
             <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
@@ -91,7 +91,7 @@
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
             <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current physical kinematics values will completely reset.</p>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current route navigation vectors will completely reset.</p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
                 <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
@@ -102,8 +102,8 @@
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>Physics Core Sectors</h2>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation quadrant. Each sector processes exactly 10 physics tracking models.</p>
+                <h2>Transit Exploration Quadrants</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a travel segment. Each grid cluster holds exactly 10 geopolitical markers.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -121,7 +121,7 @@
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
                 <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
-                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-map-location-dot" style="margin-right:4px;"></i> 10 Coordinates</div>
                     <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center;">
@@ -155,7 +155,7 @@
     <div id="results-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2>Analysis Completed</h2>
+                <h2>Itinerary Verified</h2>
                 <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
                 <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
@@ -168,76 +168,81 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. White Configuration.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Ochre Configuration.</p>
     </footer>
 
     <script>
-        const PHYSICS_DATA = [
+        const TRAVEL_DATA = [
+            // SECTOR 1: TOURIST TRAPS & NAVIGATION NAVS
             [
-                { q: "What is the standard metric SI unit used to measure force?", o: ["Joule", "Watt", "Newton", "Pascal"], a: 2 },
-                { q: "What constant acceleration value is caused by Earth's gravity at sea level?", o: ["8.5 m/s²", "9.8 m/s²", "10.5 m/s²", "12.0 m/s²"], a: 1 },
-                { q: "Which law states that for every action, there is an equal and opposite reaction?", o: ["Newton's 1st Law", "Newton's 2nd Law", "Newton's 3rd Law", "Law of Inertia"], a: 2 },
-                { q: "What operational scalar metric equals the total distance moved per unit of time?", o: ["Velocity", "Acceleration", "Speed", "Displacement"], a: 2 },
-                { q: "What tendency causes moving objects to resist a structural change in their state of motion?", o: ["Friction", "Inertia", "Velocity", "Gravity"], a: 1 },
-                { q: "Calculate the work done when a force of 10 N moves an object 5 meters.", o: ["15 Joules", "2 Joules", "50 Joules", "100 Joules"], a: 2 },
-                { q: "What parameter product is generated by multiplying the mass of an object by its velocity?", o: ["Force", "Kinetic Energy", "Momentum", "Work"], a: 2 },
-                { q: "What frictional interaction acts on objects moving through a liquid or gas medium?", o: ["Static Friction", "Sliding Friction", "Fluid Drag", "Rolling Friction"], a: 2 },
-                { q: "What simple structural machine uses a fulcrum mechanism to amplify mechanical force?", o: ["Pulley", "Lever", "Screw", "Wedge"], a: 1 },
-                { q: "What form of mechanical energy is held by a compressed mechanical spring system?", o: ["Kinetic Energy", "Thermal Energy", "Elastic Potential Energy", "Chemical Energy"], a: 2 }
+                { q: "Which overpopulated marketplace hub in Marrakech is famous for aggressive vendors and street performers?", o: ["Jemaa el-Fnaa", "Grand Bazaar", "Khan el-Khalili", "Chandni Chowk"], a: 0 },
+                { q: "What famous European landmark charges steep elevator fees despite being entirely visible from Champ de Mars?", o: ["Eiffel Tower", "Leaning Tower of Pisa", "Colosseum", "The Louvre"], a: 0 },
+                { q: "To avoid severe retail markups and artificial crowds, travelers are warned away from dining directly adjacent to which Venetian waterway?", o: ["Grand Canal", "Giudecca Canal", "Cannaregio Canal", "Murano Basin"], a: 0 },
+                { q: "What central London district is often criticized as a retail monoculture consumer crowd trap?", o: ["Piccadilly Circus", "Greenwich Village", "Richmond Park", "Hampstead Heath"], a: 0 },
+                { q: "Which New York plaza infrastructure is considered the quintessential domestic crowd gridlock zone?", o: ["Times Square", "Central Park West", "Battery Park", "Bryant Park"], a: 0 },
+                { q: "What standard operational strategy helps smart eco-tourists bypass artificial artisan souvenir scams in Southeast Asia?", o: ["Buying from state-certified co-ops", "Sourcing at hotel lobbies", "Airport duty-free shopping", "Tour bus designated stops"], a: 0 },
+                { q: "Which localized phenomenon involves inflating taxi fares specifically targeted at non-native passengers leaving transport hubs?", o: ["Long-Routing", "Buster Metering", "Surcharge Stacking", "Dynamic Surge Trap"], a: 0 },
+                { q: "What European castle model inspired the commercialized fantasy parks but features dense, artificial interior gift pathways?", o: ["Neuschwanstein Castle", "Bran Castle", "Chambord", "Edinburgh Castle"], a: 0 },
+                { q: "Which global structural wonder experiences intense morning gridlock due to single-path queue designs?", o: ["Machu Picchu", "The Pyramids", "Petra", "Taj Mahal"], a: 0 },
+                { q: "What practical tool helps independent walkers determine if an urban dining street is an authentic neighborhood option?", o: ["Absence of photo menus in English", "Presence of uniform host callers", "Proximity to transit terminals", "Sponsorship signage"], a: 0 }
             ],
+            // SECTOR 2: MONUMENTS & ARCHITECTURAL ANCHORS
             [
-                { q: "What method describes thermal heat movement via physical contact of fluid masses?", o: ["Conduction", "Convection", "Radiation", "Insulation"], a: 1 },
-                { q: "What wave form propagates particles back and forth parallel to the wave motion vector?", o: ["Transverse Wave", "Longitudinal Wave", "Electromagnetic Wave", "Surface Wave"], a: 1 },
-                { q: "What is the baseline velocity threshold of sound waves passing through room air?", o: ["150 m/s", "343 m/s", "1500 m/s", "300,000 m/s"], a: 1 },
-                { q: "Which thermodynamic principle states that energy cannot be created or destroyed?", o: ["Zeroth Law", "First Law", "Second Law", "Third Law"], a: 1 },
-                { q: "What parameter unit explicitly tracks structural frequency metrics?", o: ["Joule", "Hertz", "Decibel", "Meter"], a: 1 },
-                { q: "What phenomenon occurs when a moving source alters the observed pitch of its sound?", o: ["Refraction", "Diffraction", "Doppler Effect", "Resonance"], a: 2 },
-                { q: "What absolute parameter tracking index states maximum molecular kinetic arrest?", o: ["0° Celsius", "-100° Celsius", "0 Kelvin", "-273° Fahrenheit"], a: 2 },
-                { q: "What optical tracking result describes light rays changing trajectory angles when passing into glass?", o: ["Reflection", "Refraction", "Diffraction", "Polarization"], a: 1 },
-                { q: "What scale is utilized to map the log intensity profile of acoustic sound audio waves?", o: ["Hertz Scale", "Kelvin Scale", "Decibel Scale", "Pascal Scale"], a: 2 },
-                { q: "What parameter configuration defines a material that resists any thermal heat flow vectors?", o: ["Conductor", "Semiconductor", "Insulator", "Radiator"], a: 2 }
+                { q: "Which ancient amphitheater remains the largest stone-constructed structural arena from antiquity?", o: ["Colosseum", "Verona Arena", "Arles Amphitheatre", "Pula Arena"], a: 0 },
+                { q: "The iconic, white-domed Taj Mahal complex was erected adjacent to which major river system?", o: ["Ganges River", "Yamuna River", "Indus River", "Brahmaputra River"], a: 1 },
+                { q: "What structural style encapsulates the massive Angkor Wat temple system located within Cambodia?", o: ["Khmer Architecture", "Gothic Revival", "Dravidian Style", "Siam Classic"], a: 0 },
+                { q: "Which French landmark functions as a tribute to soldiers who fought in the Napoleonic Wars?", o: ["Arc de Triomphe", "Notre-Dame", "Sacre-Coeur", "Panthéon"], a: 0 },
+                { q: "What material makes up the external load-bearing blocks of the ancient Great Wall of China structures?", o: ["Tamped Earth and Stone", "Pure Granite Slabs", "Volcanic Ash Brick", "Cast Mortar"], a: 0 },
+                { q: "The giant Moai monolith statues are located on which isolated volcanic territory?", o: ["Easter Island", "Galapagos Islands", "Fiji", "Tahiti"], a: 0 },
+                { q: "Which early Mesoamerican city features the monumental Pyramid of the Sun architecture?", o: ["Teotihuacán", "Chichén Itzá", "Tikal", "Palenque"], a: 0 },
+                { q: "What structural restoration challenge faces the iconic leaning campanile tower located in Pisa, Italy?", o: ["Unstable alluvial silt foundation", "Tectonic plate shifts", "Sub-surface aquatic erosion", "Defective marble composition"], a: 0 },
+                { q: "Which modern architectural engineering feat dominates the harbor skyline of Sydney, Australia?", o: ["Sydney Opera House", "Harbour Bridge", "Sydney Tower Eye", "The Star Shell"], a: 0 },
+                { q: "The towering Burj Khalifa skyscraper structure utilizes which structural model layout to counter high wind loads?", o: ["Y-Shaped Buttressed Core", "Suspended Mass Damper", "Modular Steel Lattice", "Exoskeleton Webbing"], a: 0 }
             ],
+            // SECTOR 3: TRANSPORTATION NETWORKS
             [
-                { q: "What electrical tracking unit gauges circuit resistance parameters?", o: ["Volt", "Ampere", "Ohm", "Watt"], a: 2 },
-                { q: "What atomic structure element operates as the primary charge carriers through copper lines?", o: ["Protons", "Neutrons", "Electrons", "Positrons"], a: 2 },
-                { q: "What fundamental formula perfectly tracks electrical power output expressions?", o: ["P = V * I", "P = I * R", "P = V / R", "P = W * t"], a: 0 },
-                { q: "What circuit path breaks completely if one single element bulb burns down?", o: ["Parallel Circuit", "Series Circuit", "Integrated Circuit", "Short Circuit"], a: 1 },
-                { q: "What instrument is implemented into structural wiring blocks to measure operational current?", o: ["Voltmeter", "Ammeter", "Ohmmeter", "Galvanometer"], a: 1 },
-                { q: "What core rule governs that like magnetic fields push each other away?", o: ["Magnetic Induction", "Like Poles Repel", "Oersted Effect", "Faraday's Law"], a: 1 },
-                { q: "What component is optimized to structurally store electrical charge fields inside electrical systems?", o: ["Resistor", "Inductor", "Capacitor", "Diode"], a: 2 },
-                { q: "What distinct force profile lets an electrical field generate rotational physical work?", o: ["Lorentz Force", "Gravitational Force", "Centripetal Force", "Friction"], a: 0 },
-                { q: "What material behaves with absolute zero electrical tracking resistance fields at extreme low temps?", o: ["Conductor", "Semiconductor", "Superconductor", "Dielectric"], a: 2 },
-                { q: "What electrical system transforms structural high voltage values down to safe residential metrics?", o: ["Generator", "Motor", "Transformer", "Inverter"], a: 2 }
+                { q: "Which massive rail network spans over 9,000 kilometers across the continuous landmass of Eurasia?", o: ["Trans-Siberian Railway", "Orient Express Route", "Indian Pacific Axis", "The Silk Rail Line"], a: 0 },
+                { q: "What specialized high-speed train network operations are structurally monitored across Japan?", o: ["Shinkansen", "TGV Framework", "Maglev Express", "Eurostar Link"], a: 0 },
+                { q: "Which European urban center runs the oldest underground rapid transit subway system in the world?", o: ["Paris Metro", "London Underground", "Berlin U-Bahn", "Budapest Metro"], a: 1 },
+                { q: "What deep engineering channel connects the UK and France beneath the North Sea seabed?", o: ["The Channel Tunnel", "The Straits Core", "The Dover Link", "The EuroPass Tube"], a: 0 },
+                { q: "Which mega-airport hub functions as the primary international operations base for Emirates airlines?", o: ["Dubai International", "Doha Hamad", "London Heathrow", "Singapore Changi"], a: 0 },
+                { q: "What structural passage system allows marine freighters to bypass circumnavigating South America?", o: ["Panama Canal", "Suez Canal", "Kiel Canal", "Corinth Canal"], a: 0 },
+                { q: "Which transit token framework allows frictionless, multimodal tap access across the entire London network?", o: ["Oyster Card System", "Navigo Pass", "Suica Matrix", "MetroCard Link"], a: 0 },
+                { q: "What unique public transit system forms the backbone of urban transport across Venice?", o: ["Vaporetto Water Buses", "Gondola Fleets", "Strada Monorails", "Sub-Surface Trams"], a: 0 },
+                { q: "Which country has engineered the largest domestic high-speed rail layout by total route distance?", o: ["China", "France", "Germany", "Japan"], a: 0 },
+                { q: "What primary infrastructure asset distinguishes an international airport as a 'hub' within carrier routing models?", o: ["Banked connection schedule designs", "Dual-runway configuration", "Intermodal rail terminals", "Automated baggage sorting"], a: 0 }
             ],
+            // SECTOR 4: GEOPOLITICAL LOGISTICS & VISA REGIMES
             [
-                { q: "What is the absolute speed velocity threshold of light waves running inside a vacuum space?", o: ["300,000 m/s", "3,000,000 m/s", "300,000,000 m/s", "30,000,000 m/s"], a: 2 },
-                { q: "What mirror lens array geometry curves inwards to concentrate parallel incoming light rays?", o: ["Convex Mirror", "Concave Mirror", "Plane Mirror", "Cylindrical Mirror"], a: 1 },
-                { q: "What optical result maps out split white light rays spreading into spectrum color channels?", o: ["Interference", "Dispersion", "Total Internal Reflection", "Polarization"], a: 1 },
-                { q: "What specific lens profile rectifies standard hyperopia (farsightedness) sight paths?", o: ["Concave Lens", "Convex Lens", "Cylindrical Lens", "Bifocal Lens"], a: 1 },
-                { q: "What phenomenon maps out light fully reflecting backward inside a boundary fiber-optic cord?", o: ["Diffraction", "Refraction", "Total Internal Reflection", "Scattering"], a: 2 },
-                { q: "What distinct color profile maps out the longest visible wave metric lengths?", o: ["Violet", "Blue", "Green", "Red"], a: 3 },
-                { q: "What model architecture posits that light moves both as continuous wave tracks and packet photons?", o: ["Wave Theory", "Corpuscular Theory", "Wave-Particle Duality", "Quantum Chromodynamics"], a: 2 },
-                { q: "What optical tool utilizes dual convex lenses to map highly distant orbital objects?", o: ["Microscope", "Telescope", "Periscope", "Spectrometer"], a: 1 },
-                { q: "What structural parameter track tracks the height value calculation of optical wave structures?", o: ["Wavelength", "Frequency", "Amplitude", "Velocity"], a: 2 },
-                { q: "What color manifestation occurs when every visible spectrum wavelength reflects fully off a base object?", o: ["Black", "Grey", "White", "Transparent"], a: 2 }
+                { q: "Which mutual treaty framework eliminates internal border controls across 29 European nations?", o: ["Schengen Agreement", "Eurozone Treaty", "Maastricht Accord", "Geneva Convention"], a: 0 },
+                { q: "What digital system requires non-visa travelers to clear electronic security profiling before entering the US?", o: ["ESTA System", "ETIAS Portal", "Global Entry Matrix", "E-Visa Node"], a: 0 },
+                { q: "Which standard metric categorizes global passport strength across travel logistics databases?", o: ["The volume of visa-free destinations accessible", "Consular processing speed metrics", "Biometric chip generation encryption", "Diplomatic immunity rankings"], a: 0 },
+                { q: "What unique document format is required to legally operate a motor vehicle within international borders?", o: ["International Driving Permit (IDP)", "Cross-Border Transit Voucher", "Consular Endorsement Stamp", "Global License Matrix"], a: 0 },
+                { q: "Which specific health validation proof was historically institutionalized via the Yellow Card format?", o: ["Yellow Fever Vaccination", "Malaria Prophylaxis Track", "Typhoid Clear Certificate", "Cholera Antibody Profile"], a: 0 },
+                { q: "What digital security asset is embedded in modern passports to prevent identity cloning scams?", o: ["Biometric RFID Microchip", "Holographic Watermark Layer", "Magnetic Stripe Core", "Laser Etched Data Field"], a: 0 },
+                { q: "Which global entity manages code designations for airports, such as LAX or DXB?", o: ["IATA", "ICAO", "UNWTO", "FAA"], a: 0 },
+                { q: "What logistic procedure must commercial air passengers clear when crossing distinct sovereign custom lines?", o: ["Declaration of restricted agricultural and monetary assets", "Biometric weight registration", "Consular profile matching", "Luggage tariff bonding"], a: 0 },
+                { q: "What baseline insurance asset covers medical extraction protocols for wilderness or deep alpine hikers?", o: ["Medical Evacuation and Repatriation Rider", "Standard Collision Damage Waiver", "Basic Liability Cover", "Third-Party Indemnity Node"], a: 0 },
+                { q: "Which currency zone spans across diverse European nations, requiring unified monetary conversions?", o: ["Eurozone", "Schengen Ledger", "EFTA Matrix", "Nordic Bloc"], a: 0 }
             ],
+            // SECTOR 5: ADVENTURE GEOGRAPHY & ECOTRIPS
             [
-                { q: "Who formulated the foundational equation E = mc²?", o: ["Isaac Newton", "Niels Bohr", "Albert Einstein", "Max Planck"], a: 2 },
-                { q: "What atomic core component features a neutral operational charge signature?", o: ["Proton", "Electron", "Neutron", "Quark"], a: 2 },
-                { q: "What celestial phenomenon is an object with a gravitational field so intense that even light cannot escape?", o: ["White Dwarf", "Neutron Star", "Black Hole", "Red Giant"], a: 2 },
-                { q: "What specific process splits massive atomic cores like Uranium apart to release net atomic heat?", o: ["Nuclear Fusion", "Nuclear Fission", "Alpha Decay", "Beta Decay"], a: 1 },
-                { q: "What basic packets frame out the absolute foundational structure values of light fields?", o: ["Electrons", "Protons", "Photons", "Neutrinos"], a: 2 },
-                { q: "What reaction powers our solar sun core via joining Hydrogen items into Helium configurations?", o: ["Nuclear Fission", "Nuclear Fusion", "Chemical Combustion", "Radioactive Decay"], a: 1 },
-                { q: "Which subatomic components cluster together to construct protons and neutrons?", o: ["Leptons", "Quarks", "Gluons", "Bosons"], a: 1 },
-                { q: "What tracking dynamic states that particle positioning and exact velocity cannot be known simultaneously?", o: ["Relativity Principle", "Heisenberg Uncertainty Principle", "Pauli Exclusion Principle", "Photoelectric Law"], a: 1 },
-                { q: "What elemental force metric functions to lock atomic nuclei elements cleanly together?", o: ["Gravitational Force", "Weak Nuclear Force", "Electromagnetic Force", "Strong Nuclear Force"], a: 3 },
-                { q: "What radiation profile captures the peak frequency energy emission track within modern physics structures?", o: ["X-Rays", "Gamma Rays", "Ultraviolet Waves", "Microwaves"], a: 1 }
+                { q: "Which extreme trekking route follows the spine of the South American Andes to reach lost Incan cities?", o: ["The Inca Trail", "The W Trek", "The Huayhuash Circuit", "The Camino de Santiago"], a: 0 },
+                { q: "What active geographical system requires travelers to deploy specialized thermal wear to observe the Aurora Borealis?", o: ["Geomagnetic Solar Wind Patterns", "Atmospheric Refraction Grid", "Volcanic Ash Cloud Cover", "Tropospheric Jet Stream Shifts"], a: 0 },
+                { q: "Which unique eco-system requires strictly regulated boat landings to preserve indigenous giant tortoise populations?", o: ["Galapagos Islands", "Madagascar Ridge", "Socotra Archipelago", "Komodo National Park"], a: 0 },
+                { q: "What dynamic African route tracks the annual migration of millions of wildebeest and zebras?", o: ["Serengeti Ecosystem", "Kruger Perimeter", "Okavango Delta Axis", "Namib Desert Ridge"], a: 0 },
+                { q: "Which continuous footpath covers over 2,100 miles across the eastern mountain ridges of the United States?", o: ["Appalachian Trail", "Pacific Crest Trail", "Continental Divide Trail", "John Muir Trail"], a: 0 },
+                { q: "What unique logistical risk challenges divers exploring the Great Barrier Reef marine parks?", o: ["Stinger and box jellyfish seasonal migrations", "Sub-surface tectonic venting", "Abrupt oceanic shelf drop currents", "Coral bleaching toxic vapor zones"], a: 0 },
+                { q: "Which high-altitude destination requires slow ascent conditioning to prevent Acute Mountain Sickness (AMS)?", o: ["Lhasa, Tibet", "Quito, Ecuador", "La Paz, Bolivia", "All of the Above"], a: 3 },
+                { q: "What unique geographical wonder features deep limestone sinkholes popular with divers in Mexico's Yucatan?", o: ["Cenotes", "Fjord Channels", "Karst Canyons", "Caldera Basins"], a: 0 },
+                { q: "Which polar route challenges ships crossing the northern rim of North America via ice-breaker navigation?", o: ["Northwest Passage", "Suez Transit", "Bering Strait Corridor", "Magellan Route"], a: 0 },
+                { q: "What strict principle underpins responsible eco-tourism frameworks globally?", o: ["Leave No Trace (LNT)", "Carbon-Offset Bonding", "Sovereign Heritage Tariffs", "Community Dividend Structuring"], a: 0 }
             ]
         ];
 
         let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Physics - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Travel - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
         function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
@@ -245,14 +250,14 @@
         function startQuiz() {
             currentQuestionIndex = 0; userAnswers = new Array(10).fill(null); timeRemaining = 120; renderQuestion(); showView('quiz-view');
             clearInterval(quizTimer); updateTimerDisplay();
-            quizTimer = setInterval(() => { timeRemaining--; updateTimerDisplay(); if (timeRemaining <= 0) { clearInterval(quizTimer); evaluateQuizSession(); } }, 1000);
+            quizTimer = setInterval(() => { timeRemaining--; updateTimerDisplay(); if (timeRemaining <= 1) { clearInterval(quizTimer); evaluateQuizSession(); } }, 1000);
         }
         function updateTimerDisplay() {
             const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0'); const s = (timeRemaining % 60).toString().padStart(2, '0');
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
         function renderQuestion() {
-            const item = PHYSICS_DATA[currentSectorIndex][currentQuestionIndex];
+            const item = TRAVEL_DATA[currentSectorIndex][currentQuestionIndex];
             document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
@@ -266,9 +271,9 @@
         }
         function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
         function evaluateQuizSession() {
-            const data = PHYSICS_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            const data = TRAVEL_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Kinematic mass matrix parameters balanced successfully." : "Force vector anomalies discovered. Reset sector.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Route optimization mapping parameters satisfied." : "Itinerary conflicts detected. Recalibrate destination files.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

@@ -1,95 +1,109 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malayalam Kadamkathakal Matrix | QuestEngine</title>
+    <title>Malayalam Riddles | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gayathri:wght@400;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-primary: #fef9c3;
-            --accent: #ca8a04; 
-            --accent-hover: #a16207;
-            --text-main: #713f12;
-            --text-muted: #854d0e;
-            --border-color: rgba(202, 138, 4, 0.3);
+            --bg-primary: #fff7ed;
+            --accent: #ea580c; 
+            --accent-hover: #c2410c;
+            --text-main: #431407;
+            --text-muted: #7c2d12;
+            --border-color: rgba(234, 88, 12, 0.25);
             --success: #16a34a;
             --danger: #dc2626;
-            --font-sans: 'Poppins', 'Gayathri', sans-serif;
-            --glass-bg: rgba(255, 253, 230, 0.85);
-            --glass-shadow: 0 8px 32px 0 rgba(202, 138, 4, 0.06);
+            --font-sans: 'Poppins', sans-serif;
+            --glass-bg: rgba(255, 247, 237, 0.85);
+            --glass-shadow: 0 8px 32px 0 rgba(234, 88, 12, 0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
         body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
         .view { display: none; width: 100%; }
         .view.active-view { display: block; }
-        .view-container { max-width: 900px; margin: 120px auto 4rem; padding: 0 2rem; }
+        .view-container { max-width: 900px; margin: 100px auto 4rem; padding: 0 1rem; }
 
-        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 3.5rem 2rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
-        .level-grid { display: flex; justify-content: center; gap: 1.2rem; margin: 3rem 0; flex-wrap: wrap; }
-        .level-btn { width: 70px; height: 70px; border-radius: 16px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.4rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 2.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .level-grid { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+        .level-btn { width: 60px; height: 60px; border-radius: 14px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.25rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
 
-        .btn-primary { background: var(--accent); color: white; padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: white; padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
         .btn-primary:hover { background: var(--accent-hover); }
-        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; text-decoration: none; }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: white; padding: 2.5rem; border-radius: 16px; max-width: 400px; text-align: center; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; }
 
-        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 2rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); }
-        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 3rem; }
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.2rem; }
-        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 30px; font-weight: 700; }
+        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
+        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
+        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
-        .options-list { display: flex; flex-direction: column; gap: 1rem; }
-        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1.2rem 1.5rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 1.1rem; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
         .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-        .quiz-controls { display: flex; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
+        .control-group { display: flex; gap: 8px; }
 
-        .riddle-translation { font-size: 0.95rem; color: var(--text-muted); font-style: italic; margin-top: 0.5rem; display: block; }
-        .review-item { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .text-success { color: var(--success); font-weight: 600; }
         .text-danger { color: var(--danger); font-weight: 600; }
-        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: auto; }
+        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 1.5rem; text-align: center; margin-top: auto; font-size: 0.85rem; }
+
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.8rem 1rem; }
+            .logo { font-size: 1.3rem; }
+            .view-container { margin-top: 90px; }
+            .quiz-window { padding: 1.2rem 1rem; }
+            #questionText { font-size: 1.15rem !important; margin-bottom: 1.2rem !important; }
+            .option-btn { padding: 0.85rem 1rem; font-size: 0.9rem; }
+            .quiz-controls { flex-direction: column-reverse; width: 100%; }
+            .quiz-controls button, .control-group { width: 100%; }
+            .control-group button { flex: 1; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-brain"></i> കടങ്കഥകൾ Matrix</a>
-            <a href="index.html" class="btn-secondary" style="padding: 0.5rem 1.2rem;">Home Matrix</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-comments"></i> Malayalam Riddles</a>
+            <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
-            <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0;">Are you sure? Current progress configurations will be lost.</p>
-            <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
-            <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            <h3>നിർത്തലാക്കണോ?</h3>
+            <p style="margin:1rem 0; font-size: 0.9rem;">തീർച്ചയാണോ? നിലവിലെ എല്ലാ ഉത്തരങ്ങളും നഷ്ടപ്പെടും.</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Exit</button>
+            </div>
         </div>
     </div>
 
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>കടങ്കഥകൾ (Riddles) Sectors</h2>
-                <p style="margin-top: 0.5rem;">Select an analytical riddle quadrant. Each sector processes exactly 10 logic items.</p>
+                <h2>മലയാളം കടങ്കഥകൾ</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">ഒരു മേഖല തിരഞ്ഞെടുക്കുക. ഓരോന്നിലും 10 കടങ്കഥകൾ വീതം അടങ്ങിയിരിക്കുന്നു.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -97,7 +111,7 @@
                     <button class="level-btn" onclick="selectLevel(4)">4</button>
                     <button class="level-btn" onclick="selectLevel(5)">5</button>
                 </div>
-                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Return</a>
+                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> മടങ്ങുക</a>
             </div>
         </div>
     </div>
@@ -105,13 +119,15 @@
     <div id="pre-quiz-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2 id="preQuizTitle">Sector Registration</h2>
-                <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0;">
-                    <div><i class="fa-solid fa-clipboard-list"></i> 10 Questions</div>
-                    <div><i class="fa-solid fa-stopwatch"></i> 03:00 Minutes</div>
+                <h2 id="preQuizTitle">മേഖല രജിസ്ട്രേഷൻ</h2>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
+                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 എണ്ണം</div>
+                    <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 മിനിറ്റ്</div>
                 </div>
-                <button class="btn-secondary" onclick="showView('level-view')">Back</button>
-                <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Back</button>
+                    <button class="btn-primary" onclick="startQuiz()">ആരംഭിക്കുക</button>
+                </div>
             </div>
         </div>
     </div>
@@ -119,17 +135,16 @@
     <div id="quiz-view" class="view">
         <div class="quiz-window">
             <div class="quiz-header">
-                <span class="tracker-pill" id="questionTracker">Item 1/10</span>
-                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 03:00</span>
+                <span class="tracker-pill" id="questionTracker">ചോദ്യം 1/10</span>
+                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 02:00</span>
             </div>
-            <div>
-                <h3 id="questionText" style="font-size:1.5rem; margin-bottom:0.5rem; line-height: 1.4;">Loading...</h3>
-                <span id="questionTranslation" class="riddle-translation"></span>
-                <div class="options-list" id="optionsContainer" style="margin-top:1.5rem;"></div>
+            <div style="flex: 1;">
+                <h3 id="questionText" style="font-size:1.25rem; margin-bottom:1.5rem; font-weight: 600; line-height: 1.5;">Loading...</h3>
+                <div class="options-list" id="optionsContainer"></div>
             </div>
             <div class="quiz-controls">
-                <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
-                <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary" onclick="requestAbortQuiz()">Exit</button>
+                <div class="control-group">
                     <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
                     <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
                 </div>
@@ -140,98 +155,95 @@
     <div id="results-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2>Analysis Completed</h2>
-                <div style="font-size: 5rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
-                <p id="resultEvaluationMessage" style="margin-bottom: 2rem;"></p>
-                <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
-                <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                <h2>പരിശോധന പൂർത്തിയായി</h2>
+                <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
+                <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                </div>
                 <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. Yellow Configuration Matrix.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Malayalam Orange Configuration.</p>
     </footer>
 
     <script>
         const RIDDLES_DATA = [
-            // SECTOR 1
             [
-                { q: "അമ്മ കിടക്കും മകൾ ഓടും?", t: "Mother lies down, daughter runs?", o: ["അമ്മിണിയും കുഞ്ഞും (Grinding Stone)", "തീവണ്ടിയും പാളവും (Train and Track)", "നദിയും കടലും (River and Sea)", "കാറ്റും മഴയും (Wind and Rain)"], a: 0 },
-                { q: "ആകാശത്തുനിന്നും വീണ സുന്ദരിക്ക് ഒരൊറ്റക്കണ്ണ്?", t: "The beautiful lady who fell from the sky has only one eye?", o: ["നക്ഷത്രം (Star)", "തുള്ളി വെളളം (Water drop)", "കണ്ണീർ (Teardrop)", "തേങ്ങ (Coconut)"], a: 3 },
-                { q: "കറുപ്പൻ കാട്ടിൽ വെളുപ്പൻ കുതിര?", t: "White horse in a black forest?", o: ["പേൻ (Louse)", "പല്ല് (Tooth/Teeth)", "നക്ഷത്രം (Star)", "ചോറ് (Rice)"], a: 1 },
-                { q: "വെള്ളത്തിൽ ജനിക്കും വെള്ളത്തിൽ മരിക്കും വെള്ളത്തിലിട്ടാൽ അലിഞ്ഞുപോകും?", t: "Born in water, dies in water, dissolves if put in water?", o: ["പഞ്ചസാര (Sugar)", "മഞ്ഞുതുള്ളി (Dewdrop)", "ഉപ്പ് (Salt)", "കൽക്കണ്ടം (Sugar candy)"], a: 2 },
-                { q: "കണ്ണാടി കൂട്ടിൽ ഒരു മിന്നാമിന്നി?", t: "A firefly inside a glass cage?", o: ["കണ്ണ് (Eye)", "ബൾബ് (Electric Bulb)", "വിളക്ക് (Lamp)", "സൂര്യൻ (Sun)"], a: 1 },
-                { q: "തൊട്ടാൽ വാടും കുട്ടി?", t: "A child that wilts when touched?", o: ["തൊട്ടാവാടി (Touch-me-not plant)", "പൂവ് (Flower)", "ഇല (Leaf)", "മുല്ല (Jasmine)"], a: 0 },
-                { q: "പച്ചപ്പെട്ടിക്ക് അകത്ത് ചുവപ്പുപെട്ടി, ചുവപ്പുപെട്ടിക്ക് അകത്ത് കറുപ്പുമുത്തുകൾ?", t: "Red box inside a green box, black pearls inside the red box?", o: ["തക്കാളി (Tomato)", "പപ്പായ (Papaya)", "തണ്ണിമത്തൻ (Watermelon)", "മാതളനാരങ്ങ (Pomegranate)"], a: 2 },
-                { q: "കാലില്ലാതെ ഓടും കൈയില്ലാതെ അടിക്കും?", t: "Runs without legs, hits without hands?", o: ["പാമ്പ് (Snake)", "കാറ്റ് (Wind)", "വെള്ളം (Water)", "നിഴൽ (Shadow)"], a: 1 },
-                { q: "ഇരിക്കുമ്പോൾ ഉയരം കൂടും നിൽക്കുമ്പോൾ ഉയരം കുറയും?", t: "Height increases when sitting, decreases when standing?", o: ["പൂച്ച (Cat)", "തവള (Frog)", "നായ (Dog)", "കുരങ്ങൻ (Monkey)"], a: 2 },
-                { q: "വാലില്ലാക്കുരങ്ങന് നൂറുവോട്ട്?", t: "A tailless monkey gets a hundred votes?", o: ["നാണയം (Coin)", "പണം (Money)", "നൊട്ടോല (Rupee note)", "ലോട്ടറി (Lottery)"], a: 0 }
+                { q: "പച്ചക്കുപ്പായമിട്ട കാവൽക്കാരൻ, വയറുനിറയെ കല്ലുകൾ. ഇതാരാണ്?", o: ["മാങ്ങ", "ചക്ക", "പപ്പായ", "തണ്ണിമത്തൻ"], a: 1 },
+                { q: "അടിച്ചാൽ ചോര വരില്ല, എന്നാൽ വേദനിക്കും. ഇതെന്താണ്?", o: ["വെള്ളം", "കാറ്റ്", "മണ്ണ്", "നിഴൽ"], a: 1 },
+                { q: "കാലില്ലെങ്കിലും ഓടും, കൈയില്ലെങ്കിലും നീന്തും. ഇതാരാണ്?", o: ["പാമ്പ്", "മീൻ", "വെള്ളം", "തോണി"], a: 2 },
+                { q: "ആകാശത്തുനിന്നും വീഴുന്ന മുത്ത്, തൊട്ടാൽ അലിഞ്ഞുപോകും. ഇതെന്താണ്?", o: ["മഞ്ഞ്", "ആലിപ്പഴം", "മഴത്തുള്ളി", "മിന്നാമിന്നി"], a: 2 },
+                { q: "കണ്ണിൽ വിരലിട്ടാൽ വായ് തുറക്കുന്ന സാധനം?", o: ["കത്രിക", "പൂട്ടും താക്കോലും", "പെട്ടി", "കണ്ണട"], a: 0 },
+                { q: "അമ്മ നടക്കും മകൾ ഇരിക്കും, ഇതാരാണ്?", o: ["അമ്മിയും കുട്ടിയും", "തറിയും നാടയും", "ചരടും സൂചിയും", "ചക്കയും മാങ്ങയും"], a: 0 },
+                { q: "കറുത്ത പാറമേൽ വെളുത്ത കോഴി മുട്ടയിടുന്നു. ഇതെന്താണ്?", o: ["കരിങ്കല്ലും ചുണ്ണാമ്പും", "സ്ലേറ്റും ചോക്കും", "ആകാശവും നക്ഷത്രങ്ങളും", "കണ്ണും കാഴ്ചയും"], a: 1 },
+                { q: "വെള്ളത്തിൽ ജനിക്കും വെള്ളത്തിൽ മരിക്കും, വെള്ളത്തിൽ തൊട്ടാൽ അലിഞ്ഞുപോകും?", o: ["മഞ്ഞ്", "പഞ്ചസാര", "ഉപ്പ്", "കർപ്പൂരം"], a: 2 },
+                { q: "ആയിരം കിളികൾക്ക് ഒരു കൊമ്പ്. ഇതെന്താണ്?", o: ["ആൽമരം", "തെങ്ങ്", "വാഴപ്പഴക്കുല", "ചീര"], a: 2 },
+                { q: "അകത്തിട്ടാൽ തീയണയും, പുറത്തിട്ടാൽ പുകയുണ്ടാകും?", o: ["വിറക്", "കരി", "ചൂള", "ചാണകം"], a: 0 }
             ],
-            // SECTOR 2
             [
-                { q: "ആയിരം കിളികൾക്ക് ഒരു കൊക്ക്?", t: "One beak for a thousand birds?", o: ["വാഴക്കുല (Banana bunch)", "തെങ്ങിൻ കുല (Coconut bunch)", "നെൽക്കതിർ (Rice ear)", "മുന്തിരിക്കുല (Grape bunch)"], a: 0 },
-                { q: "ചെത്താത്ത വടി തിന്നാൻ നല്ല മധുരം?", t: "An uncarved stick that is very sweet to eat?", o: ["മുള (Bamboo)", "കരിമ്പ് (Sugarcane)", "മരച്ചീനി (Tapioca)", "ചേമ്പ് (Colocasia)"], a: 1 },
-                { q: "കടിച്ചാൽ പൊട്ടാത്ത മിഠായി?", t: "A candy that won't break when bitten?", o: ["കല്ല് (Stone)", "ഇരുമ്പ് (Iron)", "അണ്ടിപ്പരിപ്പ് (Cashew nut)", "മുത്ത് (Pearl)"], a: 0 },
-                { q: "വെട്ടാം പക്ഷേ മുറിക്കാൻ കഴിയില്ല?", t: "Can slash it, but cannot cut it?", o: ["മരം (Tree)", "കയർ (Rope)", "വെള്ളം (Water)", "നിഴൽ (Shadow)"], a: 2 },
-                { q: "അടിച്ചാൽ കരയുന്ന പെട്ടി?", t: "A box that cries when beaten?", o: ["ചെണ്ട (Drum)", "റേഡിയോ (Radio)", "ടെലിവിഷൻ (TV)", "മൃദംഗം (Mridangam)"], a: 0 },
-                { q: "ആന കേറാമല ആൾ കേറാമല അവിടെയൊരുണ്ട് വെളുത്ത തുള്ളി?", t: "A mountain where neither elephants nor humans can climb, but has a white drop?", o: ["മേഘം (Cloud)", "മുലപ്പാൽ (Breast milk)", "തേൻ (Honey)", "ചെത്തിപ്പൂവ് (Chethi flower)"], a: 1 },
-                { q: "ചുവന്ന കോട്ടയ്ക്ക് വെള്ള മതിൽ?", t: "A white wall around a red fortress?", o: ["ചുണ്ടുകൾ (Lips)", "പല്ലും നാക്കും (Teeth and Tongue)", "മാതളനാരങ്ങ (Pomegranate)", "തണ്ണിമത്തൻ (Watermelon)"], a: 1 },
-                { q: "കണ്ടാൽ അറിയാം കൊണ്ടാൽ അറിയില്ല?", t: "Known if seen, not felt if hit?", o: ["വെളിച്ചം (Light)", "ഇരുട്ട് (Darkness)", "നിഴൽ (Shadow)", "സ്വപ്നം (Dream)"], a: 2 },
-                { q: "അടി പാറ നടു വടി മിത കാട്?", t: "Rock at the bottom, stick in the middle, forest on top?", o: ["ചേമ്പ് (Colocasia)", "ഉള്ളി (Onion)", "തേങ്ങ (Coconut)", "പൈനാപ്പിൾ (Pineapple)"], a: 3 },
-                { q: "പകൽ മുഴുവൻ കാവൽക്കാരൻ രാത്രിയിൽ വെറും വടി?", t: "A guard all day, just a stick at night?", o: ["താക്കോൽ (Key)", "പൂട്ടും താക്കോലും (Lock)", "കതക് (Door)", "ചുരുൾ (Bolt)"], a: 3 }
+                { q: "വെളുത്ത കൊട്ടാരത്തിൽ മഞ്ഞക്കിളി. ഇതെന്താണ്?", o: ["തേങ്ങ", "മുട്ട", "നെയ്യ്", "താമര"], a: 1 },
+                { q: "ഇരിക്കുമ്പോൾ ഉയരം കൂടും, നിൽക്കുമ്പോൾ ഉയരം കുറയും?", o: ["പൂച്ച", "പട്ടി", "തവള", "മനുഷ്യൻ"], a: 1 },
+                { q: "വാലുണ്ട് പക്ഷിയല്ല, പറക്കും പാറ്റയല്ല. ഇതെന്താണ്?", o: ["പട്ടം", "വവ്വാൽ", "വിമാനം", "അമ്പ്"], a: 0 },
+                { q: "ഒരു കിണറ്റിൽ രണ്ട് തരം വെള്ളം. ഇതെന്താണ്?", o: ["ഇളനീർ", "മുട്ട", "ആലപ്പുഴ തണ്ണീർമുക്കം", "കുപ്പി"], a: 1 },
+                { q: "ആളുകൾ എന്നെ വാങ്ങും പക്ഷെ കഴിക്കില്ല. ഞാൻ ആരാണ്?", o: ["പാത്രം", "ചെരിപ്പ്", "വസ്ത്രം", "കണ്ണട"], a: 0 },
+                { q: "അച്ഛൻ ജനിച്ചിട്ടില്ല, മകൻ മേൽക്കൂരയിൽ നടക്കുന്നു?", o: ["തീയും പുകയു", "വിത്തും മുളയും", "മേഘവും മഴയും", "കല്ലും മണ്ണും"], a: 0 },
+                { q: "തൊട്ടാൽ വിടരും, പിടിച്ചാൽ വാടും. ഇതെന്താണ്?", o: ["താമര", "തൊട്ടാവാടി", "റോസാപ്പൂവ്", "മുല്ലപ്പൂവ്"], a: 1 },
+                { q: "കണ്ടാൽ അറിയാം, തൊട്ടാൽ അറിയില്ല. ഇതെന്താണ്?", o: ["കാറ്റ്", "വെളിച്ചം", "നിഴൽ", "സ്വപ്നം"], a: 2 },
+                { q: "ചുവന്ന പെട്ടിയിൽ കറുത്ത മുത്തുകൾ. ഇതെന്താണ്?", o: ["തണ്ണിമത്തൻ", "മാതളനാരങ്ങ", "പപ്പായ", "മുളക്"], a: 2 },
+                { q: "ഊതിയാൽ വീർക്കും, കുത്തിയാൽ പൊട്ടും?", o: ["ബലൂൺ", "കുമിള", "പന്ത്", "വയർ"], a: 0 }
             ],
-            // SECTOR 3
             [
-                { q: "ചത്ത മാട് പുല്ല് തിന്നുന്നു?", t: "A dead cow eats grass?", o: ["പായ (Mat)", "തുണയൻ (Broom)", "കത്രിക (Scissors)", "ചരട് (Thread)"], a: 1 },
-                { q: "ഓടും കുതിര ചാടും കുതിര വെള്ളം കണ്ടാൽ നിൽക്കും കുതിര?", t: "Running horse, jumping horse, stops when it sees water?", o: ["തവള (Frog)", "ചെരിപ്പ് (Slippers/Shoes)", "വണ്ടി (Cart)", "പന്ത് (Ball)"], a: 1 },
-                { q: "ആയിരം പേർക്ക് ഒരു വസ്ത്രം?", t: "One cloth for a thousand people?", o: ["പന്തൽ (Pandal canopy)", "ആകാശം (Sky)", "ഭൂമി (Earth)", "പായ (Mat)"], a: 0 },
-                { q: "കണ്ണുണ്ട് കാണില്ല ചിറകുണ്ട് പറക്കില്ല?", t: "Has eyes but can't see, has wings but can't fly?", o: ["മീൻ (Fish)", "കോഴി (Hen)", "ഈച്ച (Fly)", "പാവ (Doll)"], a: 0 },
-                { q: "ഊതിയാൽ വീർക്കും കുടുക്ക?", t: "A small pot that expands when blown?", o: ["ബലൂൺ (Balloon)", "കുമിള (Bubble)", "പന്ത് (Ball)", "കുടം (Pot)"], a: 0 },
-                { q: "തോലുരിച്ചാൽ കരച്ചിൽ വരും?", t: "Crying starts when the skin is peeled?", o: ["മുളക് (Chilli)", "സവാള/ഉള്ളി (Onion)", "ഇഞ്ചി (Ginger)", "വെളുത്തുള്ളി (Garlic)"], a: 1 },
-                { q: "ഒരു കുടക്കീഴിൽ ഒരു കൂട്ടം ആളുകൾ?", t: "A group of people under a single umbrella?", o: ["கூൺ (Mushroom)", "കുട (Umbrella)", "പൂക്കുല (Flower cluster)", "ആൽമരം (Banyan tree)"], a: 0 },
-                { q: "വലുതാകുന്തോറും ഭാരം കുറയുന്നത്?", t: "What loses weight as it grows larger?", o: ["ബലൂൺ (Balloon)", "കുഴി (Hole)", "പുക (Smoke)", "മേഘം (Cloud)"], a: 1 },
-                { q: "വെណ្តം കുടിക്കും തോറും ദാഹം കൂടുന്ന ആൾ?", t: "Who gets throat-dried the more water they drink?", o: ["മണൽ (Sand)", "തീ (Fire)", "ചെടി (Plant)", "കാവൽക്കാരൻ (Guard)"], a: 1 },
-                { q: "കറുത്ത പാറമേൽ വെളുത്ത വിത്ത്?", t: "White seeds on a black rock?", o: ["എള്ള് (Sesame)", "നക്ഷത്രങ്ങൾ (Stars in sky)", "പല്ല് (Teeth)", "എഴുത്തുപലക (Slate text)"], a: 3 }
+                { q: "ആരും കാണാത്ത തയ്യൽക്കാരൻ, ഇലകൾ തുന്നി വീടുണ്ടാക്കും?", o: ["തയ്യൽക്കാരൻ പക്ഷി", "ചിലന്തി", "ഉറുമ്പ്", "ഈയാംപാറ്റ"], a: 0 },
+                { q: "തലയുണ്ട് തൊപ്പിയുണ്ട്, പക്ഷെ മനുഷ്യനല്ല?", o: ["കുട", "കുപ്പി", "താക്കോൽ", "മെഴുകുതിരി"], a: 1 },
+                { q: "കറുത്ത കാട്ടിൽ വെളുത്ത വേട്ടക്കാരൻ. ഇതെന്താണ്?", o: ["ചോക്കും ബോർഡും", "തലയിലെ പേൻ", "പല്ലും നാക്കും", "കണ്ണിലെ കറുപ്പും വെളുപ്പും"], a: 1 },
+                { q: "വെളിച്ചം കണ്ടാൽ ഓടിയൊളിക്കും, ഇരുട്ടായാൽ പുറത്തിറങ്ങും?", o: ["മൂങ്ങ", "നിഴൽ", "വവ്വാൽ", "തവള"], a: 1 },
+                { q: "കാറ്റടിച്ചാൽ മരിക്കില്ല, വെള്ളം വീണാൽ മരിക്കും?", o: ["തീപ്പൊരി", "മെഴുകുതിരി", "തീ", "കടലാസ്"], a: 2 },
+                { q: "നനയുന്തോറും വലിപ്പം കുറയുന്ന സാധനം?", o: ["ഉപ്പ്", "സോപ്പ്", "പഞ്ചസാര", "തുണി"], a: 1 },
+                { q: "ഒരു കൊമ്പിൽ രണ്ട് പൂവ്, ഒന്ന് വാടും ഒന്ന് വിടരും (കണ്ണുകൾ)?", o: ["രാവും പകലും", "സൂര്യനും ചന്ദ്രനും", "ഇമ ചിമ്മൽ", "കണ്ണുകൾ"], a: 3 },
+                { q: "പോകുംതോറും നീളം കൂടുന്ന വഴി ഏതാണ്?", o: ["റോഡ്", "ആയുസ്സ്", "നൂൽ", "ചിന്ത"], a: 1 },
+                { q: "നാല് കാലുണ്ടെങ്കിലും നടക്കാൻ കഴിയില്ല?", o: ["കട്ടിൽ", "കസേര", "മേശ", "എല്ലാമും"], a: 3 },
+                { q: "ഓട്ടയുണ്ട് വെള്ളം ഒഴുക്കില്ല, നൂലില്ല തുന്നലുമില്ല?", o: ["ചായ അരിച്ചപ്പ", "വല", "തുണി", "ചെരിപ്പ്"], a: 1 }
             ],
-            // SECTOR 4
             [
-                { q: "എത്ര എടുത്താലും കൂടിക്കൊണ്ടിരിക്കുന്നത്?", t: "What keeps increasing the more you take from it?", o: ["പണം (Money)", "അറിവ് (Knowledge)", "കുഴി (Hole)", "വയസ്സ് (Age)"], a: 2 },
-                { q: "തല തലപ്പ് മാത്രം ഉണ്ട് ഉടലില്ല?", t: "Has a head but no body?", o: ["നാണയം (Coin)", "ഈറ്റ (Reed)", "തൊപ്പി (Hat)", "കുടം (Pot)"], a: 0 },
-                { q: "പിടിച്ചാൽ കയ്യിലൊതുങ്ങും വിട്ടാൽ പുരയൊതുങ്ങും?", t: "Fits in the hand when held, covers the house when let go?", o: ["തുണി (Cloth)", "പായ (Mat)", "വിളക്കുവെളിച്ചം (Lamp light)", "കുട (Umbrella)"], a: 2 },
-                { q: "പച്ചക്കുതിര പുറത്തുചാടും ചുവപ്പുക്കുതിര ഉള്ളിലിരിക്കും?", t: "Green horse jumps out, red horse stays inside?", o: ["വെറ്റിലയും അടയ്ക്കയും (Betel leaf and Arecanut)", "മുളക് (Chilli)", "മാമ്പഴം (Mango)", "തക്കാളി (Tomato)"], a: 0 },
-                { q: "വെളുത്ത വയലിൽ കറുത്ത വിത്ത്?", t: "Black seeds on a white field?", o: ["പേപ്പറും അക്ഷരങ്ങളും (Paper & Letters)", "എള്ള് (Sesame)", "കണ്ണ് (Eye)", "ആകാശം (Sky)"], a: 0 },
-                { q: "കാലില്ലാതെ ഓടും നാവില്ലാതെ സംസാരിക്കും?", t: "Runs without legs, speaks without a tongue?", o: ["കാറ്റ് (Wind)", "കത്ത് (Letter/Post)", "ഫോൺ (Phone)", "റേഡിയോ (Radio)"], a: 1 },
-                { q: "കൂട്ടിൽ കിടക്കും പക്ഷിക്കു ചിറകില്ല?", t: "The bird in the cage has no wings?", o: ["തത്ത (Parrot)", "നാക്ക് (Tongue)", "ഹൃദയം (Heart)", "കണ്ണ് (Eye)"], a: 1 },
-                { q: "അകത്തു പോയാൽ പുറത്തു വരില്ല?", t: "Once inside, it never comes out?", o: ["ഭക്ഷണം (Food)", "ശ്വാസം (Breath)", "മരണം (Death)", "കുഴി (Grave)"], a: 0 },
-                { q: "ഒരു കിണറ്റിൽ രണ്ട് തരം വെള്ളം?", t: "Two types of water in a single well?", o: ["ഇളനീർ (Tender coconut)", "മുട്ട (Egg)", "കിണർ (Well)", "കുപ്പി (Bottle)"], a: 1 },
-                { q: "വാലാട്ടുന്ന തുണി കഴുകൻ?", t: "A cloth washer that wags its tail?", o: ["നായ (Dog)", "പൂച്ച (Cat)", "പശു (Cow)", "കുരങ്ങൻ (Monkey)"], a: 0 }
+                { q: "എല്ലില്ലാത്ത ജീവിക്ക് മുള്ളുണ്ട് ഒട്ടു താനും?", o: ["കൈതച്ചക്ക", "മീൻ", "ചക്ക", "റോസാപ്പൂവ്"], a: 0 },
+                { q: "പകൽ മുഴുവൻ കാവൽക്കാരൻ, രാത്രിയായാൽ വിശ്രമം?", o: ["ചെരിപ്പ്", "പൂട്ട്", "നായ", "കുട"], a: 0 },
+                { q: "എത്ര കഴിച്ചാലും വയറു നിറയാത്ത സാധനം?", o: ["വെള്ളം", "காற்று", "അറിവ്", "അടിയും ചൂടും"], a: 3 },
+                { q: "വെള്ള വസ്ത്രം ധരിച്ച സുന്ദരി, രാത്രിയിൽ മാത്രം പുറത്തിറങ്ങും?", o: ["നിലാവ്", "മുല്ലപ്പൂവ്", "മെഴുകുതിരി", "നക്ഷത്രം"], a: 2 },
+                { q: "വായുമുണ്ട് പല്ലുമുണ്ട്, പക്ഷെ കടിക്കില്ല?", o: ["കീടനാശിനി", "ചീർപ്പ്", "കത്രിക", "വാഴപ്പഴം"], a: 1 },
+                { q: "വലിപ്പമേറിയ വാലുണ്ട് പക്ഷെ മൃഗമല്ല?", o: ["പട്ടം", "തീവണ്ടി", "നദി", "റോഡ്"], a: 1 },
+                { q: "കൈയിലുണ്ടാകും എന്നാൽ വിരലുകളില്ല?", o: ["ഗ്ലൗസ്", "വള", "നിഴൽ", "വാച്ച്"], a: 0 },
+                { q: "ചുവന്ന വനത്തിൽ മുപ്പത്തിരണ്ട് വെള്ള ആനകൾ?", o: ["പല്ലുകൾ", "നക്ഷത്രങ്ങൾ", "മുത്തുകൾ", "അരിമണികൾ"], a: 0 },
+                { q: "ഇരുമ്പ് തിന്നും കല്ല് കുടിക്കും, പക്ഷെ ജീവനില്ല?", o: ["അരം", "തുരുമ്പ്", "കടൽ", "വാഹനം"], a: 1 },
+                { q: "വലവീശും വേട്ടക്കാരനല്ല, വീടുണ്ടാക്കും തച്ചനുമല്ല?", o: ["ചിലന്തി", "മീൻപിടുത്തക്കാരൻ", "ഉറുമ്പ്", "പക്ഷി"], a: 0 }
             ],
-            // SECTOR 5
             [
-                { q: "വലിപ്പമേറും തോറും ഭാരം കുറയുന്നത്?", t: "What loses weight as its size increases?", o: ["ബലൂൺ (Balloon)", "തുള (Hole)", "പഞ്ഞി (Cotton)", "പുക (Smoke)"], a: 1 },
-                { q: "കണ്ണിൽ കുത്തിയാൽ വായ തുറക്കും?", t: "Pinch its eye and its mouth opens?", o: ["കത്രിക (Scissors)", "പൂട്ട് (Lock)", "ചാവി (Key)", "പെട്ടി (Box)"], a: 1 },
-                { q: "മുറ്റത്തു നിൽക്കും സുന്ദരിക്ക് നൂറു മക്കൾ?", t: "The beauty standing in the courtyard has a hundred children?", o: ["മുളക് (Chilli)", "ചേമ്പ് (Colocasia)", "തെങ്ങ് (Coconut tree)", "വാഴ (Banana tree)"], a: 2 },
-                { q: "അടി കരിമ്പ് നടു മുളക് തൊപ്പി വെള്ളി?", t: "Sugarcane base, chilli middle, silver hat?", o: ["മുള്ളങ്കി (Radish)", "തുമ്പപ്പൂ (Thumba flower)", "കപ്പളങ്ങ (Papaya)", "കൈതച്ചക്ക (Pineapple)"], a: 0 },
-                { q: "തിന്നാൻ വാങ്ങും പക്ഷേ തിന്നില്ല?", t: "Bought to eat, but never eaten?", o: ["പാത്രം (Plate/Vessel)", "കപ്പ (Tapioca)", "ചൂൽ (Broom)", "പഴം (Fruit)"], a: 0 },
-                { q: "പൂവില്ല കായില്ല എങ്കിലും തണലുണ്ട്?", t: "No flowers, no fruits, yet it gives shade?", o: ["കുട (Umbrella)", "മേഘം (Cloud)", "പന്തൽ (Pandal)", "വീട് (House)"], a: 0 },
-                { q: "ആകാശമിരുണ്ടാ മാലാഖച്ചിറക്?", t: "Angel wings when the sky turns dark?", o: ["മിന്നൽ (Lightning)", "കൊക്ക് (Crane bird)", "മഴത്തുള്ളി (Raindrop)", "ഈയാംപാറ്റ (Winged termites)"], a: 3 },
-                { q: "നടക്കുമ്പോൾ കൂടെ വരും പിടിച്ചാൽ കിട്ടില്ല?", t: "Walks along with you, but can't be caught?", o: ["നിഴൽ (Shadow)", "കാറ്റ് (Wind)", "വെളിച്ചം (Light)", "സ്വപ്നം (Dream)"], a: 0 },
-                { q: "വെള്ളം കുടിച്ചാൽ ചത്തുപോകുന്ന ആൾ?", t: "Who dies instantly if they drink water?", o: ["തീ (Fire)", "മണൽ (Sand)", "തുണി (Cloth)", "ഉപ്പ് (Salt)"], a: 0 },
-                { q: "നാലുകാലുള്ള മേശയ്ക്ക് നടക്കാൻ വയ്യ?", t: "The four-legged table cannot walk?", o: ["കട്ടിൽ (Bed)", "കസേര (Chair)", "മേശ (Table)", "ബെഞ്ച് (Bench)"], a: 2 }
+                { q: "പിടിച്ചാൽ കിട്ടില്ല, എന്നാൽ ഒപ്പമുണ്ടാകും?", o: ["നിഴൽ", "കാറ്റ്", "ആത്മാവ്", "ശ്വാസം"], a: 0 },
+                { q: "പച്ച വീടിനുള്ളിൽ ചുവന്ന മുറി, ചുവന്ന മുറിയിൽ കറുത്ത കുട്ടികൾ?", o: ["തണ്ണിമത്തൻ", "മാതളനാരങ്ങ", "പപ്പായ", "വഴുതനങ്ങ"], a: 0 },
+                { q: "കാലമില്ലെങ്കിലും ഓടും, വായുണ്ടെങ്കിലും സംസാരിക്കില്ല?", o: ["നദി", "ക്ലോക്ക്", "വാഹനം", "പണം"], a: 1 },
+                { q: "ഭക്ഷണം തരും പക്ഷെ സ്വയം കഴിക്കില്ല?", o: ["അടുപ്പ്", "പശു", "മരം", "ഭൂമി"], a: 2 },
+                { q: "ഓടുന്തോറും പിന്നിലാകുന്ന സാധനം?", o: ["ചുവടുകൾ", "നിഴൽ", "സമയം", "ശ്വാസം"], a: 0 },
+                { q: "കുളിച്ചാലും നനയാത്ത പക്ഷികൾ?", o: ["താറാവ്", "കൊക്ക്", "മീൻകൊത്തി", "കാക്ക"], a: 0 },
+                { q: "ഉടലുണ്ട് തലയില്ല, കൈയുണ്ട് വിരലില്ല?", o: ["കുപ്പായം", "വടി", "കസേര", "പ്രേതം"], a: 0 },
+                { q: "എണ്ണയിലിട്ടാൽ പൊട്ടുന്ന സാധനം?", o: ["കടുക്", "പപ്പടം", "ഉഴുന്ന്", "എല്ലാം"], a: 3 },
+                { q: "ആകാശം മുട്ടുന്ന മരം, ഇലകളില്ലാത്ത മരം?", o: ["പുക", "കൊടിമരം", "കെട്ടിടം", "മല"], a: 0 },
+                { q: "ഒരു വീട്ടിൽ അഞ്ച് സഹോദരന്മാർ, എല്ലാവർക്കും വ്യത്യസ്ത നീളം?", o: ["വിരലുകൾ", "മുറികൾ", "തൂണുകൾ", "കതകുകൾ"], a: 0 }
             ]
         ];
 
-        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 180;
+        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `കടങ്കഥകൾ - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Riddles - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
         function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
 
         function startQuiz() {
-            currentQuestionIndex = 0; userAnswers = new Array(10).fill(null); timeRemaining = 180; renderQuestion(); showView('quiz-view');
+            currentQuestionIndex = 0; userAnswers = new Array(10).fill(null); timeRemaining = 120; renderQuestion(); showView('quiz-view');
             clearInterval(quizTimer); updateTimerDisplay();
             quizTimer = setInterval(() => { timeRemaining--; updateTimerDisplay(); if (timeRemaining <= 0) { clearInterval(quizTimer); evaluateQuizSession(); } }, 1000);
         }
@@ -241,9 +253,8 @@
         }
         function renderQuestion() {
             const item = RIDDLES_DATA[currentSectorIndex][currentQuestionIndex];
-            document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
+            document.getElementById('questionTracker').innerText = `ചോദ്യം ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
-            document.getElementById('questionTranslation').innerText = `Translation: "${item.t}"`;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
             item.o.forEach((opt, idx) => {
                 const btn = document.createElement('button'); btn.className = `option-btn ${userAnswers[currentQuestionIndex] === idx ? 'selected' : ''}`;
@@ -257,14 +268,14 @@
         function evaluateQuizSession() {
             const data = RIDDLES_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 6 ? "Cultural riddle baseline solved successfully." : "Incomplete lateral calibration profile.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "മികച്ച വിജയം! ചിന്താശേഷി പ്രശംസനീയം." : "പരാജയം! വീണ്ടും ശ്രമിക്കുക.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {
             const container = document.getElementById('reviewSection'); container.innerHTML = "";
             data.forEach((item, idx) => {
                 const sel = userAnswers[idx]; const isCorrect = (sel === item.a); const div = document.createElement('div'); div.className = `review-item ${isCorrect ? 'correct' : 'wrong'}`;
-                div.innerHTML = `<h4>Riddle ${idx + 1}: ${item.q}</h4><p style='color:var(--text-muted);font-size:0.9rem;'>${item.t}</p><p>Selected: <span class='${isCorrect?'text-success':'text-danger'}'>${sel!==null?item.o[sel]:'Expired'}</span></p>${!isCorrect?`<p>Target Matrix: <span class='text-success'>${item.o[item.a]}</span></p>`:''}`;
+                div.innerHTML = `<h4>ചോദ്യം ${idx + 1}: ${item.q}</h4><p>തിരഞ്ഞെടുത്തത്: <span class='${isCorrect?'text-success':'text-danger'}'>${sel!==null?item.o[sel]:'Expired'}</span></p>${!isCorrect?`<p>ശരിയായ ഉത്തരം: <span class='text-success'>${item.o[item.a]}</span></p>`:''}`;
                 container.appendChild(div);
             });
         }

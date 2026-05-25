@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physics Matrix | QuestEngine</title>
+    <title>History Matrix | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,17 +11,17 @@
     
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            --accent: #334155; 
-            --accent-hover: #0f172a;
+            --bg-primary: #fdf8f6; /* Soft warm parchment tint */
+            --accent: #7c2d12;    /* Deep Rich Brown */
+            --accent-hover: #4c1d95;
             --text-main: #0f172a;
             --text-muted: #475569;
-            --border-color: rgba(15, 23, 42, 0.15);
+            --border-color: rgba(124, 45, 18, 0.15);
             --success: #16a34a;
             --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
             --glass-bg: #ffffff;
-            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --glass-shadow: 0 10px 30px rgba(124, 45, 18, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
@@ -40,7 +40,7 @@
         .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
 
         .btn-primary { background: var(--accent); color: white; padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
-        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-primary:hover { background: #62200a; }
         .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
@@ -54,7 +54,7 @@
         .timer { color: var(--danger); }
         .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
-        .option-btn:hover { border-color: var(--accent); background: #f8fafc; }
+        .option-btn:hover { border-color: var(--accent); background: #fdf8f6; }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
         .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
         .control-group { display: flex; gap: 8px; }
@@ -83,7 +83,7 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-atom"></i> Physics</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-monument"></i> History</a>
             <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
@@ -91,7 +91,7 @@
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
             <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current physical kinematics values will completely reset.</p>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current archival timeline progress values will completely reset.</p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
                 <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
@@ -102,8 +102,8 @@
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>Physics Core Sectors</h2>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation quadrant. Each sector processes exactly 10 physics tracking models.</p>
+                <h2>History Core Sectors</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation quadrant. Each sector processes exactly 10 historiographical matrix items.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -168,76 +168,81 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. White Configuration.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Brown Configuration.</p>
     </footer>
 
     <script>
-        const PHYSICS_DATA = [
+        const HISTORY_DATA = [
+            // SECTOR 1: ANCIENT CIVILIZATIONS & CLASSICAL ERAS
             [
-                { q: "What is the standard metric SI unit used to measure force?", o: ["Joule", "Watt", "Newton", "Pascal"], a: 2 },
-                { q: "What constant acceleration value is caused by Earth's gravity at sea level?", o: ["8.5 m/s²", "9.8 m/s²", "10.5 m/s²", "12.0 m/s²"], a: 1 },
-                { q: "Which law states that for every action, there is an equal and opposite reaction?", o: ["Newton's 1st Law", "Newton's 2nd Law", "Newton's 3rd Law", "Law of Inertia"], a: 2 },
-                { q: "What operational scalar metric equals the total distance moved per unit of time?", o: ["Velocity", "Acceleration", "Speed", "Displacement"], a: 2 },
-                { q: "What tendency causes moving objects to resist a structural change in their state of motion?", o: ["Friction", "Inertia", "Velocity", "Gravity"], a: 1 },
-                { q: "Calculate the work done when a force of 10 N moves an object 5 meters.", o: ["15 Joules", "2 Joules", "50 Joules", "100 Joules"], a: 2 },
-                { q: "What parameter product is generated by multiplying the mass of an object by its velocity?", o: ["Force", "Kinetic Energy", "Momentum", "Work"], a: 2 },
-                { q: "What frictional interaction acts on objects moving through a liquid or gas medium?", o: ["Static Friction", "Sliding Friction", "Fluid Drag", "Rolling Friction"], a: 2 },
-                { q: "What simple structural machine uses a fulcrum mechanism to amplify mechanical force?", o: ["Pulley", "Lever", "Screw", "Wedge"], a: 1 },
-                { q: "What form of mechanical energy is held by a compressed mechanical spring system?", o: ["Kinetic Energy", "Thermal Energy", "Elastic Potential Energy", "Chemical Energy"], a: 2 }
+                { q: "Which code represent the oldest surviving unified legal framework written in ancient Mesopotamia?", o: ["The Code of Hammurabi", "The Twelve Tables", "The Justinian Code", "The Edicts of Ashoka"], a: 0 },
+                { q: "What city-state layout fought against Athens during the Peloponnesian War?", o: ["Thebes", "Sparta", "Troy", "Corinth"], a: 1 },
+                { q: "Who reigned as the first official emperor of the Roman Empire?", o: ["Julius Caesar", "Nero", "Marcus Aurelius", "Augustus Caesar"], a: 3 },
+                { q: "What ancient engineering marvel was constructed during the Qin Dynasty to safeguard northern territorial borders?", o: ["The Grand Canal", "The Terracotta Army Base", "The Great Wall of China", "The Silk Road Outpost"], a: 2 },
+                { q: "The historic Rosetta Stone discovery served as the structural key to translating which script form?", o: ["Cuneiform", "Linear B", "Sanskrit", "Egyptian Hieroglyphics"], a: 3 },
+                { q: "Which empire established the absolute Pax Romana baseline across the Mediterranean basin?", o: ["Persian Empire", "Macedonian Empire", "Roman Empire", "Carthaginian Republic"], a: 2 },
+                { q: "The legendary Battle of Marathon was contested between which two geopolitical powers?", o: ["Greeks and Persians", "Romans and Carthaginians", "Spartans and Athenians", "Egyptians and Hittites"], a: 0 },
+                { q: "What distinct ancient river system valley fostered the urban layouts of Mohenjo-Daro and Harappa?", o: ["Nile River Valley", "Yellow River Valley", "Indus River Valley", "Tigris-Euphrates Basin"], a: 2 },
+                { q: "Which ancient ruler unified vast global tracts stretching from Greece to northwestern India before age 30?", o: ["Cyrus the Great", "Alexander the Great", "Julius Caesar", "Xerxes I"], a: 1 },
+                { q: "What primary monotheistic world faith system trace roots to the ancient kingdom of Israel?", o: ["Zoroastrianism", "Judaism", "Buddhism", "Hinduism"], a: 1 }
             ],
+            // SECTOR 2: MEDIEVAL CHRONOLOGIES & EMPIRES
             [
-                { q: "What method describes thermal heat movement via physical contact of fluid masses?", o: ["Conduction", "Convection", "Radiation", "Insulation"], a: 1 },
-                { q: "What wave form propagates particles back and forth parallel to the wave motion vector?", o: ["Transverse Wave", "Longitudinal Wave", "Electromagnetic Wave", "Surface Wave"], a: 1 },
-                { q: "What is the baseline velocity threshold of sound waves passing through room air?", o: ["150 m/s", "343 m/s", "1500 m/s", "300,000 m/s"], a: 1 },
-                { q: "Which thermodynamic principle states that energy cannot be created or destroyed?", o: ["Zeroth Law", "First Law", "Second Law", "Third Law"], a: 1 },
-                { q: "What parameter unit explicitly tracks structural frequency metrics?", o: ["Joule", "Hertz", "Decibel", "Meter"], a: 1 },
-                { q: "What phenomenon occurs when a moving source alters the observed pitch of its sound?", o: ["Refraction", "Diffraction", "Doppler Effect", "Resonance"], a: 2 },
-                { q: "What absolute parameter tracking index states maximum molecular kinetic arrest?", o: ["0° Celsius", "-100° Celsius", "0 Kelvin", "-273° Fahrenheit"], a: 2 },
-                { q: "What optical tracking result describes light rays changing trajectory angles when passing into glass?", o: ["Reflection", "Refraction", "Diffraction", "Polarization"], a: 1 },
-                { q: "What scale is utilized to map the log intensity profile of acoustic sound audio waves?", o: ["Hertz Scale", "Kelvin Scale", "Decibel Scale", "Pascal Scale"], a: 2 },
-                { q: "What parameter configuration defines a material that resists any thermal heat flow vectors?", o: ["Conductor", "Semiconductor", "Insulator", "Radiator"], a: 2 }
+                { q: "What critical text document was signed by King John of England in 1215 to curtail monarchical authority?", o: ["The English Bill of Rights", "The Magna Carta", "The Treaty of Verdun", "The Edict of Nantes"], a: 1 },
+                { q: "Which systemic epidemic swept through fourteenth-century Europe, wiping out nearly half its population?", o: ["The Justiniac Plague", "The Black Death", "Smallpox Epidemic", "Cholera Pandemic"], a: 1 },
+                { q: "What capital city layout fell to Ottoman forces in 1453, collapsing the Byzantine Empire?", o: ["Rome", "Alexandria", "Constantinople", "Athens"], a: 2 },
+                { q: "Who consolidated expansive Western and Central European domains to be crowned Holy Roman Emperor in 800 AD?", o: ["Charlemagne", "Clovis I", "Charles Martel", "Louis the Pious"], a: 0 },
+                { q: "What prominent non-state warrior class controlled feudal military regimes across medieval Japan?", o: ["Ninja Agents", "Samurai Warriors", "Shogun Dictators", "Ronin Mercenaries"], a: 1 },
+                { q: "The long-standing Hundred Years' War was contested between which two monarchical realms?", o: ["Spain and Portugal", "France and England", "Germany and Italy", "Austria and Hungary"], a: 1 },
+                { q: "Which nomadic leader engineered the largest contiguous land empire in global history?", o: ["Kublai Khan", "Attila the Hun", "Genghis Khan", "Tamerlane"], a: 2 },
+                { q: "What baseline trade vector system linked merchants from East Asia to European markets throughout the Middle Ages?", o: ["The Trans-Saharan Route", "The Silk Road", "The Spice Sea Matrix", "The Amber Path"], a: 1 },
+                { q: "Who rose from peasant origins to lead French military forces during the Siege of Orléans?", o: ["Joan of Arc", "Eleanor of Aquitaine", "Mary de Bohun", "Catherine of Valois"], a: 0 },
+                { q: "What structural socio-economic framework governed labor and land allocations across medieval Europe?", o: ["Mercantilism", "Feudalism", "Early Capitalism", "Industrial Socialism"], a: 1 }
             ],
+            // SECTOR 3: RENAISSANCE TO INDUSTRIAL REVOLUTION
             [
-                { q: "What electrical tracking unit gauges circuit resistance parameters?", o: ["Volt", "Ampere", "Ohm", "Watt"], a: 2 },
-                { q: "What atomic structure element operates as the primary charge carriers through copper lines?", o: ["Protons", "Neutrons", "Electrons", "Positrons"], a: 2 },
-                { q: "What fundamental formula perfectly tracks electrical power output expressions?", o: ["P = V * I", "P = I * R", "P = V / R", "P = W * t"], a: 0 },
-                { q: "What circuit path breaks completely if one single element bulb burns down?", o: ["Parallel Circuit", "Series Circuit", "Integrated Circuit", "Short Circuit"], a: 1 },
-                { q: "What instrument is implemented into structural wiring blocks to measure operational current?", o: ["Voltmeter", "Ammeter", "Ohmmeter", "Galvanometer"], a: 1 },
-                { q: "What core rule governs that like magnetic fields push each other away?", o: ["Magnetic Induction", "Like Poles Repel", "Oersted Effect", "Faraday's Law"], a: 1 },
-                { q: "What component is optimized to structurally store electrical charge fields inside electrical systems?", o: ["Resistor", "Inductor", "Capacitor", "Diode"], a: 2 },
-                { q: "What distinct force profile lets an electrical field generate rotational physical work?", o: ["Lorentz Force", "Gravitational Force", "Centripetal Force", "Friction"], a: 0 },
-                { q: "What material behaves with absolute zero electrical tracking resistance fields at extreme low temps?", o: ["Conductor", "Semiconductor", "Superconductor", "Dielectric"], a: 2 },
-                { q: "What electrical system transforms structural high voltage values down to safe residential metrics?", o: ["Generator", "Motor", "Transformer", "Inverter"], a: 2 }
+                { q: "What German inventor pioneered mechanical movable type printing around 1440?", o: ["Johannes Gutenberg", "Albrecht Dürer", "John Locke", "Erasmus"], a: 0 },
+                { q: "What theological action initiated the Protestant Reformation in 1517?", o: ["The Diet of Worms", "Martin Luther pinning the 95 Theses", "The Council of Trent", "The Act of Supremacy"], a: 1 },
+                { q: "Which navigator's fleet executed the first recorded global ocean circumnavigation?", o: ["Christopher Columbus", "Vasco da Gama", "Ferdinand Magellan", "James Cook"], a: 2 },
+                { q: "What economic doctrine focused on maximizing national bullion reserves through export surpluses?", o: ["Feudalism", "Laissez-Faire", "Mercantilism", "Physiocracy"], a: 2 },
+                { q: "What conflict concluded in 1648 with the landmark Treaties of Westphalia?", o: ["The Hundred Years' War", "The War of the Spanish Succession", "The Thirty Years' War", "The Seven Years' War"], a: 2 },
+                { q: "Which political philosopher authored the foundational 1651 social contract text 'Leviathan'?", o: ["John Locke", "Thomas Hobbes", "Jean-Jacques Rousseau", "Voltaire"], a: 1 },
+                { q: "What invention revolutionized nineteenth-century factory automation and transit links?", o: ["The Spinning Jenny", "The Cotton Gin", "The Steam Engine", "The Water Frame"], a: 2 },
+                { q: "What political upheaval in 1789 dissolved absolute monarchical structures under the Bourbon dynasty?", o: ["The Glorious Revolution", "The American Revolution", "The French Revolution", "The July Revolution"], a: 2 },
+                { q: "Who established code adjustments across conquered territories to build the First French Empire?", o: ["Louis XIV", "Robespierre", "Napoleon Bonaparte", "Louis XVI"], a: 2 },
+                { q: "What landmark document, drafted in Philadelphia in 1776, renounced British imperial rule?", o: ["The Articles of Confederation", "The US Constitution", "The Declaration of Independence", "The Treaty of Paris"], a: 2 }
             ],
+            // SECTOR 4: GLOBAL COLLISIONS & WORLD WARS
             [
-                { q: "What is the absolute speed velocity threshold of light waves running inside a vacuum space?", o: ["300,000 m/s", "3,000,000 m/s", "300,000,000 m/s", "30,000,000 m/s"], a: 2 },
-                { q: "What mirror lens array geometry curves inwards to concentrate parallel incoming light rays?", o: ["Convex Mirror", "Concave Mirror", "Plane Mirror", "Cylindrical Mirror"], a: 1 },
-                { q: "What optical result maps out split white light rays spreading into spectrum color channels?", o: ["Interference", "Dispersion", "Total Internal Reflection", "Polarization"], a: 1 },
-                { q: "What specific lens profile rectifies standard hyperopia (farsightedness) sight paths?", o: ["Concave Lens", "Convex Lens", "Cylindrical Lens", "Bifocal Lens"], a: 1 },
-                { q: "What phenomenon maps out light fully reflecting backward inside a boundary fiber-optic cord?", o: ["Diffraction", "Refraction", "Total Internal Reflection", "Scattering"], a: 2 },
-                { q: "What distinct color profile maps out the longest visible wave metric lengths?", o: ["Violet", "Blue", "Green", "Red"], a: 3 },
-                { q: "What model architecture posits that light moves both as continuous wave tracks and packet photons?", o: ["Wave Theory", "Corpuscular Theory", "Wave-Particle Duality", "Quantum Chromodynamics"], a: 2 },
-                { q: "What optical tool utilizes dual convex lenses to map highly distant orbital objects?", o: ["Microscope", "Telescope", "Periscope", "Spectrometer"], a: 1 },
-                { q: "What structural parameter track tracks the height value calculation of optical wave structures?", o: ["Wavelength", "Frequency", "Amplitude", "Velocity"], a: 2 },
-                { q: "What color manifestation occurs when every visible spectrum wavelength reflects fully off a base object?", o: ["Black", "Grey", "White", "Transparent"], a: 2 }
+                { q: "The assassination of which public figure sparked the localized alliances that ignited World War I?", o: ["Archduke Franz Ferdinand", "Tsar Nicholas II", "Kaiser Wilhelm II", "King George V"], a: 0 },
+                { q: "What global international assembly was organized post-WWI to avert future global warfare?", o: ["The United Nations", "The League of Nations", "The Warsaw Pact Council", "The Atlantic Charter"], a: 1 },
+                { q: "What exact event on October 29, 1929, signaled the start of the Great Depression?", o: ["The collapse of the Credit Anstalt", "The Wall Street Market Crash", "The invocation of the Smoot-Hawley Tariff", "The hyperinflation of the Weimar Mark"], a: 1 },
+                { q: "What sudden military operation on December 7, 1941, brought the United States into WWII?", o: ["The Invasion of Poland", "The Blitzkrieg of France", "The Attack on Pearl Harbor", "Operation Barbarossa"], a: 2 },
+                { q: "Which international treaty framework imposed heavy structural and economic reparations on Germany post-WWI?", o: ["The Treaty of Utrecht", "The Treaty of Versailles", "The Treaty of Brest-Litovsk", "The Locarno Pact"], a: 1 },
+                { q: "What code name identified the massive multi-nation amphibious landing in Normandy on June 6, 1944?", o: ["Operation Overlord", "Operation Sea Lion", "Operation Torch", "Operation Market Garden"], a: 0 },
+                { q: "What major geopolitical realignment divided European sectors into competing ideological blocs post-1945?", o: ["The League of Nations Split", "The Cold War Matrix", "The Concert of Europe", "The Congress of Vienna System"], a: 1 },
+                { q: "Which systemic programmatic genocide targeted six million European Jews during WWII?", o: ["The Armenian Massacres", "The Holodomor", "The Holocaust", "The Rwandan Catastrophe"], a: 2 },
+                { q: "What programmatic financial strategy funneled billions in US economic aid to rebuild Western Europe post-WWII?", o: ["The Truman Doctrine", "The Marshall Plan", "The Dawes Plan Strategy", "The Lend-Lease Act Matrix"], a: 1 },
+                { q: "Which technological breakthrough brought an end to WWII hostilities in August 1945?", o: ["The deployment of Radar arrays", "The splitting of the Atom / Atomic Bomb", "The assembly of long-range Rockets", "The encryption code break at Bletchley"], a: 1 }
             ],
+            // SECTOR 5: CONTEMPORARY GLOBALISM & INDEPENDENCE ERAS
             [
-                { q: "Who formulated the foundational equation E = mc²?", o: ["Isaac Newton", "Niels Bohr", "Albert Einstein", "Max Planck"], a: 2 },
-                { q: "What atomic core component features a neutral operational charge signature?", o: ["Proton", "Electron", "Neutron", "Quark"], a: 2 },
-                { q: "What celestial phenomenon is an object with a gravitational field so intense that even light cannot escape?", o: ["White Dwarf", "Neutron Star", "Black Hole", "Red Giant"], a: 2 },
-                { q: "What specific process splits massive atomic cores like Uranium apart to release net atomic heat?", o: ["Nuclear Fusion", "Nuclear Fission", "Alpha Decay", "Beta Decay"], a: 1 },
-                { q: "What basic packets frame out the absolute foundational structure values of light fields?", o: ["Electrons", "Protons", "Photons", "Neutrinos"], a: 2 },
-                { q: "What reaction powers our solar sun core via joining Hydrogen items into Helium configurations?", o: ["Nuclear Fission", "Nuclear Fusion", "Chemical Combustion", "Radioactive Decay"], a: 1 },
-                { q: "Which subatomic components cluster together to construct protons and neutrons?", o: ["Leptons", "Quarks", "Gluons", "Bosons"], a: 1 },
-                { q: "What tracking dynamic states that particle positioning and exact velocity cannot be known simultaneously?", o: ["Relativity Principle", "Heisenberg Uncertainty Principle", "Pauli Exclusion Principle", "Photoelectric Law"], a: 1 },
-                { q: "What elemental force metric functions to lock atomic nuclei elements cleanly together?", o: ["Gravitational Force", "Weak Nuclear Force", "Electromagnetic Force", "Strong Nuclear Force"], a: 3 },
-                { q: "What radiation profile captures the peak frequency energy emission track within modern physics structures?", o: ["X-Rays", "Gamma Rays", "Ultraviolet Waves", "Microwaves"], a: 1 }
+                { q: "Who led the multi-decade nonviolent resistance movement to secure India's independence in 1947?", o: ["Jawaharlal Nehru", "Subhas Chandra Bose", "Mahatma Gandhi", "Bhagat Singh"], a: 2 },
+                { q: "What proxy conflict fought from 1950 to 1953 concluded with a permanent armistice split along the 38th parallel?", o: ["The Vietnam War", "The Korean War", "The Suez Crisis", "The Malayan Emergency"], a: 1 },
+                { q: "What defensive military alliance matrix was constructed by Western nations in 1949 to balance Soviet expansion?", o: ["The Warsaw Pact", "SEATO Alignment", "The North Atlantic Treaty Organization (NATO)", "The COMECON Bloc"], a: 2 },
+                { q: "Which global structural flashpoint in October 1962 brought the US and USSR closest to nuclear war?", o: ["The Berlin Blockade", "The Cuban Missile Crisis", "The U-2 Reconnaissance Incident", "The Hungarian Uprising"], a: 1 },
+                { q: "What visual and structural barrier collapsed in November 1989, signaling the impending dissolution of the Soviet Bloc?", o: ["The Iron Curtain Line", "The Maginot Line Border", "The Berlin Wall", "The Panmunjom Fence"], a: 2 },
+                { q: "Who was inaugurated as South Africa's first democratically elected president following the dismantling of Apartheid?", o: ["F.W. de Klerk", "Desmond Tutu", "Nelson Mandela", "Thabo Mbeki"], a: 2 },
+                { q: "The historical 1993 Oslo Accords set up a transitional peace framework between which two entities?", o: ["Iran and Iraq", "Israel and the Palestine Liberation Organization (PLO)", "United States and Vietnam", "North and South Korea"], a: 1 },
+                { q: "What definitive international organization was activated in 1995 to replace the GATT trade monitoring system?", o: ["The International Monetary Fund", "The World Bank Group", "The World Trade Organization (WTO)", "The G7 Summit Coalition"], a: 2 },
+                { q: "In what year did the formal dissolution of the Soviet Union occur, fragmenting it into 15 sovereign nations?", o: ["1989", "1991", "1993", "1995"], a: 1 },
+                { q: "What regional economic treaty group activated a single unified currency system across Europe in 1999/2002?", o: ["The European Free Trade Association", "The COMECON Council", "The European Union (Eurozone)", "The North Atlantic Trade Alliance"], a: 2 }
             ]
         ];
 
         let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Physics - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `History - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
         function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
@@ -252,7 +257,7 @@
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
         function renderQuestion() {
-            const item = PHYSICS_DATA[currentSectorIndex][currentQuestionIndex];
+            const item = HISTORY_DATA[currentSectorIndex][currentQuestionIndex];
             document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
@@ -266,9 +271,9 @@
         }
         function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
         function evaluateQuizSession() {
-            const data = PHYSICS_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            const data = HISTORY_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Kinematic mass matrix parameters balanced successfully." : "Force vector anomalies discovered. Reset sector.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Archival historical timelines mapped correctly." : "Chronological placement errors detected. Reset target quadrant.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

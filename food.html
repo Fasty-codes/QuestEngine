@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cognitive Puzzles | QuestEngine</title>
+    <title>Food Matrix | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,22 +11,22 @@
     
     <style>
         :root {
-            --bg-primary: #f1f5f9;
-            --accent: #64748b; 
-            --accent-hover: #475569;
-            --text-main: #1e293b;
-            --text-muted: #334155;
-            --border-color: rgba(100, 116, 139, 0.25);
+            --bg-primary: #f0fdf4; /* Soft olive tint */
+            --accent: #166534;    /* Deep Sage Green */
+            --accent-hover: #14532d;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: rgba(22, 101, 52, 0.15);
             --success: #16a34a;
             --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
-            --glass-bg: rgba(241, 245, 249, 0.85);
-            --glass-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.06);
+            --glass-bg: #ffffff;
+            --glass-shadow: 0 10px 30px rgba(22, 101, 52, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
         body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-        header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
+        header { position: fixed; top: 0; left: 0; width: 100%; background: #ffffff; backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
@@ -45,21 +45,21 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; border: 1px solid var(--border-color); }
 
         #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
         .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
         .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
-        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
+        .tracker-pill, .timer { background: #f1f5f9; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
         .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
-        .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
+        .option-btn:hover { border-color: var(--accent); background: #f0fdf4; }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
         .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
         .control-group { display: flex; gap: 8px; }
 
-        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .text-success { color: var(--success); font-weight: 600; }
@@ -83,15 +83,15 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-brain"></i> Cognitive Puzzles</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-wheat-awn"></i> Food Matrix</a>
             <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
-            <h3>Terminate Session?</h3>
-            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Your current analytical steps will be completely lost.</p>
+            <h3>Terminate Evaluation?</h3>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current culinary analytics will completely reset.</p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
                 <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
@@ -102,8 +102,8 @@
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>Cognitive Core Sectors</h2>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation matrix quadrant. Each sector processes exactly 10 cognitive evaluations.</p>
+                <h2>Culinary Knowledge Quadrants</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a gastronomy sector. Each partition processes exactly 10 culinary vectors.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -121,7 +121,7 @@
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
                 <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
-                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-utensils" style="margin-right:4px;"></i> 10 Recipe Vectors</div>
                     <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center;">
@@ -168,76 +168,81 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. Slate Configuration.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Olive Configuration.</p>
     </footer>
 
     <script>
-        const COGNITIVE_DATA = [
+        const FOOD_DATA = [
+            // SECTOR 1: CULINARY WORLD RECORDS
             [
-                { q: "Which word does NOT belong with the others?", o: ["Leopard", "Cougar", "Cheetah", "Wolf"], a: 3 },
-                { q: "If all Bloops are Razzies and all Razzies are Lizzies, then all Bloops are definitely Lizzies.", o: ["True", "False", "Inconclusive", "None"], a: 0 },
-                { q: "Look at this series: 2, 4, 8, 16, 32, ... What number should come next?", o: ["48", "56", "64", "72"], a: 2 },
-                { q: "A man climbs up a 10-meter pole. Each day he climbs 3 meters and slips back 2 meters. How many days will it take him to reach the top?", o: ["7 days", "8 days", "9 days", "10 days"], a: 1 },
-                { q: "Choose the word that is most opposite to 'Artificial'.", o: ["Genuine", "Natural", "Synthetic", "Truthful"], a: 1 },
-                { q: "If Mary's father has five daughters: Nana, Nene, Nini, Nono, what is the fifth daughter's name?", o: ["Nunu", "Mary", "Nany", "Nina"], a: 1 },
-                { q: "Look at this series: 12, 11, 13, 12, 14, 13, ... What number should come next?", o: ["10", "16", "15", "12"], a: 2 },
-                { q: "Which shape can be formed by joining two identical right-angled triangles along their hypotenuse?", o: ["Rectangle", "Circle", "Pentagon", "Trapezoid"], a: 0 },
-                { q: "An electric train is moving north at 100mph. The wind is blowing from the west at 20mph. Which way does the smoke blow?", o: ["East", "South", "West", "There is no smoke"], a: 3 },
-                { q: "A clock shows 03:15. If the clock is rotated 90 degrees counter-clockwise, where does the minute hand point?", o: ["Up (12)", "Down (6)", "Left (9)", "Right (3)"], a: 0 }
+                { q: "According to official metrics, what is verified as the most expensive spice by weight globally?", o: ["Vanilla Bean", "Saffron", "Cardamom", "True Cinnamon"], a: 1 },
+                { q: "Which nation claims the record for constructing the tallest structurally documented chocolate fountain?", o: ["Belgium", "Switzerland", "Germany", "United States"], a: 3 },
+                { q: "What item holds the world record for the highest concentration of capsaicinoids ever produced naturally?", o: ["Ghost Pepper", "Carolina Reaper", "Pepper X", "Trinidad Scorpion"], a: 2 },
+                { q: "The record-holding largest pizza ever baked was completed using which specific diet adaptation strategy?", o: ["Gluten-Free", "Vegan Base", "Dehydrated Dough", "Sugar-Free Crust"], a: 0 },
+                { q: "Which city holds the record for hosting the largest corporate seafood auction site globally?", o: ["Tokyo", "Sydney", "Seattle", "Rejavik"], a: 0 },
+                { q: "What style of food production set a record by crafting a single continuous noodle line measuring over 3,000 meters?", o: ["Italian Spaghetti", "Chinese Lamian", "Japanese Udon", "Korean Naengmyeon"], a: 1 },
+                { q: "Which country holds the record for consuming the highest amount of cheese per person annually?", o: ["France", "Switzerland", "Greece", "Denmark"], a: 0 },
+                { q: "The oldest verified structural sample of edible butter, recovered from an Irish peat bog, dates back roughly how many years?", o: ["500 Years", "1,000 Years", "2,000 Years", "5,000 Years"], a: 2 },
+                { q: "Which luxury fruit can command thousands of dollars per single unit at seasonal Japanese auctions?", o: ["Yubari King Melon", "Ruby Roman Grapes", "Sekai-Ichi Apples", "Densuke Watermelon"], a: 0 },
+                { q: "What commercial fast-food franchise holds the global record for operating the highest volume of physical retail points?", o: ["Subway", "McDonald's", "Starbucks", "KFC"], a: 0 }
             ],
+            // SECTOR 2: INGREDIENTS & SCIENTIFIC IDENTITIES
             [
-                { q: "Find the odd pattern out from the list.", o: ["AEZ", "CGX", "EIV", "GKT"], a: 2 },
-                { q: "If blue means green, green means yellow, and yellow means red, what color is the clear sky?", o: ["Blue", "Green", "Yellow", "Red"], a: 1 },
-                { q: "Look at this series: 7, 10, 8, 11, 9, 12, ... What number should come next?", o: ["7", "10", "12", "13"], a: 1 },
-                { q: "Which word is a synonym for 'Meticulous'?", o: ["Careless", "Detailed", "Fast", "Messy"], a: 1 },
-                { q: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", o: ["100 minutes", "50 minutes", "5 minutes", "1 minute"], a: 2 },
-                { q: "Some months have 30 days, some have 31. How many months have 28 days?", o: ["1 month", "6 months", "4 months", "All 12 months"], a: 3 },
-                { q: "If you develop a track running directly backwards from Z to A, what is the 5th letter from the start?", o: ["V", "W", "U", "X"], a: 0 },
-                { q: "A brother and sister were born in different years but their birthdays are on the same day. The brother is 4 years older. In how many years will he be twice her age?", o: ["When she is 2", "When she is 4", "When she is 8", "Never"], a: 1 },
-                { q: "What matches the relationship: 'Book is to Reading as Fork is to...'?", o: ["Stabbing", "Eating", "Cooking", "Cutting"], a: 1 },
-                { q: "If you turn a standard right-hand glove inside out, what does it fit?", o: ["Left hand", "Right hand", "Neither", "Both"], a: 0 }
+                { q: "What fundamental chemical reaction triggers the browning of sugars and amino acids under heat?", o: ["Gelatinization", "Maillard Reaction", "Fermentation", "Saponification"], a: 1 },
+                { q: "Which distinct compound gives hot chili peppers their signature burning chemical sensation?", o: ["Piperine", "Capsaicin", "Allicin", "Curcumin"], a: 1 },
+                { q: "What traditional thickener agent is built by combining equal parts flour and fat together?", o: ["Roux", "Slurry", "Slake", "Liaison"], a: 0 },
+                { q: "What naturally occurring plant protein framework is responsible for providing elasticity to bread dough?", o: ["Albumin", "Casein", "Gluten", "Zein"], a: 2 },
+                { q: "Which structural element causes an avocado to oxidize and turn brown quickly after being cut open?", o: ["Polyphenol Oxidase", "Citric Breakdown", "Lactic Activation", "Amylase Decay"], a: 0 },
+                { q: "What type of edible mushroom species is highly prized and must be located using trained animals?", o: ["Shiitake", "Truffle", "Morel", "Chanterelle"], a: 1 },
+                { q: "What key ingredient acts as the structural foundation for traditional Japanese umami dashi broth?", o: ["Miso Paste", "Kombu Kelp & Katsuobushi", "Shiitake Stems", "Mirin Rice Wine"], a: 1 },
+                { q: "Which specific oil component displays the highest concentration of monounsaturated fatty acids?", o: ["Coconut Oil", "Olive Oil", "Canola Oil", "Palm Oil"], a: 1 },
+                { q: "What active leavening gas compound is produced when baking soda reacts with an acidic ingredient?", o: ["Nitrogen", "Oxygen", "Carbon Dioxide", "Hydrogen"], a: 2 },
+                { q: "Which botanical herb group yields the distinct flavor footprint required for authentic pesto alla Genovese?", o: ["Flat Leaf Parsley", "Sweet Basil", "Fresh Oregano", "Rosemary Needles"], a: 1 }
             ],
+            // SECTOR 3: WINE & VITICULTURE SYSTEMS
             [
-                { q: "Find the next item: 1, 3, 6, 10, 15, ...", o: ["18", "21", "24", "27"], a: 1 },
-                { q: "If A is taller than B, and B is taller than C, then C is taller than A.", o: ["True", "False", "Inconclusive", "N/A"], a: 1 },
-                { q: "Which word does NOT belong with the others?", o: ["Guitar", "Violin", "Flute", "Cello"], a: 2 },
-                { q: "A farmer has 17 sheep. All but 9 die. How many live sheep are left?", o: ["8", "9", "17", "0"], a: 1 },
-                { q: "What is the missing number? 3, 5, 9, 17, ...", o: ["25", "30", "33", "36"], a: 2 },
-                { q: "If 'GRID' is coded as 'HSIE', what is the code for 'LAMP'?", o: ["MBNO", "MBNQ", "MCOQ", "MANQ"], a: 1 },
-                { q: "If you spin a coin 3 times and it lands on heads every time, what is the probability it lands on heads the 4th time?", o: ["1/16", "1/2", "1/8", "1/4"], a: 1 },
-                { q: "John's mother had three children. The first was named April, the second was named May. What was the name of the third?", o: ["June", "John", "July", "Must be June"], a: 1 },
-                { q: "A box has 6 red marbles and 6 blue marbles. How many must you pull out blindly to guarantee a matching pair?", o: ["2", "3", "7", "12"], a: 1 },
-                { q: "Which asset matches: 'Tree is to Forest as Bricks are to...'?", o: ["Wall", "Mud", "Worker", "House"], a: 0 }
+                { q: "Which primary grape variety serves as the legal backbone for traditional red wines from the Burgundy region?", o: ["Cabernet Sauvignon", "Merlot", "Pinot Noir", "Syrah"], a: 2 },
+                { q: "What environmental term describes the collective impact of soil, climate, and topography on a vineyard?", o: ["Brix Matrix", "Terroir", "Veraison", "Decantage"], a: 1 },
+                { q: "Which specialized European nation produces authentic, sweet Port wine within the Douro Valley?", o: ["Spain", "Italy", "Portugal", "France"], a: 2 },
+                { q: "What distinct sensory defect gives wine an unpleasant damp, cardboard-like odor profile?", o: ["Oxidation", "Cork Taint (TCA)", "Volatile Acidity", "Reduction"], a: 1 },
+                { q: "Which French sparkling wine classification rules dictate that grapes can only be sourced from a designated northern province?", o: ["Prosecco", "Cava", "Champagne", "Crémant"], a: 2 },
+                { q: "What specific metric tool is utilized by viticulturists to calculate sugar concentrations inside wine grapes?", o: ["Hydrometer Scale", "Brix Refractometer", "pH Test Strip", "Titration Gauge"], a: 1 },
+                { q: "Which white grape variety is highly revered for its intense acidity and distinct petrol aroma notes when aged?", o: ["Chardonnay", "Sauvignon Blanc", "Riesling", "Pinot Grigio"], a: 2 },
+                { q: "What chemical compound group located in grape skins provides structural astringency and bitterness?", o: ["Esters", "Sulfites", "Tannins", "Tartrates"], a: 2 },
+                { q: "The historic 'Judgment of Paris' tasting event in 1976 put which region on the global wine map?", o: ["Napa Valley", "Mendoza", "Barossa Valley", "Tuscany"], a: 0 },
+                { q: "What style of dessert wine is created by harvesting grapes that have frozen entirely on the vine?", o: ["Sauternes", "Sherry", "Ice Wine (Eiswein)", "Madeira"], a: 2 }
             ],
+            // SECTOR 4: REGIONAL DISHES & TRADITIONS
             [
-                { q: "Identify the missing value in this matrix sequence: 40, 38, 35, 31, ...", o: ["28", "27", "26", "25"], a: 2 },
-                { q: "If all squares are rectangles, and all rectangles have four sides, then all squares have four sides.", o: ["True", "False", "Sometimes", "Inconclusive"], a: 0 },
-                { q: "What occurs once in a minute, twice in a moment, but never in a thousand years?", o: ["The letter M", "The clock second hand", "A lightning flash", "An echo"], a: 0 },
-                { q: "If a doctor gives you 3 pills and tells you to take one every half hour, how long do they last?", o: ["30 mins", "1 hour", "1.5 hours", "2 hours"], a: 1 },
-                { q: "Which word does NOT match the group?", o: ["Steering wheel", "Engine", "Tire", "Car"], a: 3 },
-                { q: "A rope ladder hangs over the side of a ship. The bottom rung rests exactly on the water. If the tide rises 1 meter per hour, where is the bottom rung after 3 hours?", o: ["3 meters under", "1 meter under", "Still on the water line", "Dry"], a: 2 },
-                { q: "Find the odd string out: J2K, L4M, N6O, P7Q", o: ["J2K", "L4M", "N6O", "P7Q"], a: 3 },
-                { q: "How many letters are in the alphabet sequence that are placed directly between G and L?", o: ["3", "4", "5", "6"], a: 1 },
-                { q: "What pattern matches: 'Light is to Darkness as Knowledge is to...'?", o: ["School", "Ignorance", "Books", "Wisdom"], a: 1 },
-                { q: "You enter a dark cabin with one match. There is a candle, a wood stove, and an oil lamp. What do you light first?", o: ["Candle", "Stove", "Lamp", "The Match"], a: 3 }
+                { q: "Which classic Italian noodle dish relies purely on pecorino romano cheese and coarse black pepper?", o: ["Carbonara", "Cacio e Pepe", "Marinara", "Alfredo"], a: 1 },
+                { q: "What distinct botanical component provides the bright yellow hue to a Spanish seafood paella?", o: ["Turmeric", "Saffron", "Paprika", "Anatto"], a: 1 },
+                { q: "Which Southeast Asian country is celebrated as the birthplace of traditional Pho noodle soup?", o: ["Thailand", "Vietnam", "Cambodia", "Malaysia"], a: 1 },
+                { q: "What specialized Mexican sauce configuration utilizes chocolate combined with diverse chili pods?", o: ["Salsa Verde", "Mole Poblano", "Chipotle Glaze", "Adobo Paste"], a: 1 },
+                { q: "Which North African staple consists of steamed semolina pearls traditionally topped with rich stews?", o: ["Bulgur", "Couscous", "Polenta", "Quinoa"], a: 1 },
+                { q: "What classic French slow-cooked beef stew is braised specifically in red wine with pearl onions?", o: ["Coq au Vin", "Boeuf Bourguignon", "Cassoulet", "Pot-au-Feu"], a: 1 },
+                { q: "Which country features the traditional layered pastry dessert known as Baklava in its heritage cuisine?", o: ["Greece / Turkey", "Italy", "Egypt", "Iran"], a: 0 },
+                { q: "What distinct raw seafood preparation method utilizes fresh citrus juices to chemically cook the fish structural proteins?", o: ["Sashimi", "Ceviche", "Tartare", "Carpaccio"], a: 1 },
+                { q: "Which regional American city engineered the distinct dark-roux seafood stew known as Gumbo?", o: ["New Orleans", "Charleston", "Savannah", "Miami"], a: 0 },
+                { q: "What iconic Indian street food features a hollow fried crisp filled with spiced water and potatoes?", o: ["Samosa", "Pani Puri", "Aloo Tikki", "Pakora"], a: 1 }
             ],
+            // SECTOR 5: GLOBAL BEVERAGES & GASTRONOMY MISC
             [
-                { q: "Evaluate this matrix tracking pattern: 80, 10, 70, 15, 60, ...", o: ["20", "25", "50", "55"], a: 0 },
-                { q: "If all lemons are sour and everything yellow is a lemon, then everything yellow must be sour.", o: ["True", "False", "Inconclusive", "N/A"], a: 0 },
-                { q: "Which item is the odd one out?", o: ["Eagle", "Hawk", "Ostrich", "Falcon"], a: 2 },
-                { q: "How many total cubic 1-inch blocks can fit inside a larger cubic box that measures exactly 3 inches on all sides?", o: ["9", "18", "27", "36"], a: 2 },
-                { q: "If Tomorrow is Thursday, what was the day before Yesterday?", o: ["Monday", "Sunday", "Tuesday", "Saturday"], a: 1 },
-                { q: "What sequence code continues: A1, B2, C4, D8, ...", o: ["E10", "E12", "E16", "E20"], a: 2 },
-                { q: "A bag has 3 green apples and 4 red apples. If you remove 2 apples, what is the minimum number of red apples remaining?", o: ["1", "2", "3", "4"], a: 1 },
-                { q: "Which target choice is the direct synonym of 'Procrastinate'?", o: ["Advance", "Delay", "Create", "Accelerate"], a: 1 },
-                { q: "Which word can mean both a type of fruit and a matching color?", o: ["Apple", "Orange", "Grape", "Banana"], a: 1 },
-                { q: "What matches the relationship: 'Fish is to Water as Bird is to...'?", o: ["Tree", "Sky", "Nest", "Feather"], a: 1 }
+                { q: "Which distinct species of coffee bean accounts for the majority of global specialty production?", o: ["Robusta", "Arabica", "Liberica", "Excelsa"], a: 1 },
+                { q: "What Japanese green tea is prepared by grinding whole tea leaves into a fine luminous powder?", o: ["Sencha", "Matcha", "Genmaicha", "Hojicha"], a: 1 },
+                { q: "Which plant base serves as the raw starting material for crafting artisanal blue agave Tequila?", o: ["Sugar Cane", "Weber Blue Agave", "Sorghum Stalk", "Cassava Root"], a: 1 },
+                { q: "What style of top-fermented beer includes dense, complex roasted malt properties like Guinness?", o: ["Lager", "Pilsner", "Stout", "Pale Ale"], a: 2 },
+                { q: "Which fermented milk beverage originated in the Caucasus mountains using specialized starter grains?", o: ["Kombucha", "Kefir", "Ayran", "Buttermilk"], a: 1 },
+                { q: "What non-alcoholic carbonated drink contains quinine, originally utilized to ward off malaria?", o: ["Club Soda", "Tonic Water", "Ginger Ale", "Seltzer"], a: 1 },
+                { q: "Which country popularized the smoke-dried black tea variety known worldwide as Lapsang Souchong?", o: ["India", "Sri Lanka", "China", "Japan"], a: 2 },
+                { q: "What dynamic culinary technique traps liquid flavors inside delicate gel spheres using sodium alginate?", o: ["Dehydration", "Spherification", "Sous-Vide", "Emulsification"], a: 1 },
+                { q: "Which European country created the strict Michelin Star rating standard to evaluate luxury restaurants?", o: ["United Kingdom", "Germany", "Italy", "France"], a: 3 },
+                { q: "What traditional Mexican hot beverage is thickened using nixtamalized corn masa dough?", o: ["Horchata", "Atole", "Champurrado", "Tejate"], a: 1 }
             ]
         ];
 
         let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Cognitive - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Gastronomy - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
         function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
@@ -252,7 +257,7 @@
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
         function renderQuestion() {
-            const item = COGNITIVE_DATA[currentSectorIndex][currentQuestionIndex];
+            const item = FOOD_DATA[currentSectorIndex][currentQuestionIndex];
             document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
@@ -266,9 +271,9 @@
         }
         function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
         function evaluateQuizSession() {
-            const data = COGNITIVE_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            const data = FOOD_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Cognitive logic metrics verified within standard parameters." : "Logical pattern anomalies detected. Reset current quadrant.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Culinary framework vectors balance successfully." : "Flavor profiling anomalies detected. Reset sector path.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

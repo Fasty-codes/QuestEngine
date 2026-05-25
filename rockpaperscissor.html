@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestEngine Arcade | Rock Paper Scissors</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #d97706;
+            --accent-light: #fef3c7;
+            --border: #e2e8f0;
+            --radius-lg: 24px;
+            --radius-md: 14px;
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
+        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-top: 90px; }
+
+        nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 1000; height: 70px; }
+        .nav-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--accent); }
+
+        main { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        .score-board { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 600px; display: flex; justify-content: space-around; text-align: center; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02); margin-bottom: 3rem; position: relative; overflow: hidden; }
+        .score-board::before { content: ""; position: absolute; top:0; left:0; width:100%; height:4px; background: var(--accent); }
+        .score-node h2 { font-size: 2.5rem; font-weight: 800; color: var(--text-main); }
+        .score-node p { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+
+        .arena { display: flex; gap: 4rem; align-items: center; justify-content: center; margin-bottom: 4rem; width: 100%; }
+        .arena-card { background: var(--surface); border: 1px solid var(--border); width: 160px; height: 160px; border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 3.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); position: relative; }
+        .arena-card span { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); position: absolute; bottom: 12px; }
+
+        .choices-grid { display: flex; gap: 1.5rem; }
+        .choice-btn { background: var(--surface); border: 1px solid var(--border); width: 90px; height: 90px; border-radius: 50%; font-size: 2rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .choice-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-4px); background: var(--accent-light); }
+
+        .result-banner { margin-top: 2.5rem; font-size: 1.5rem; font-weight: 800; text-align: center; min-height: 40px; }
+
+        footer { background: #0f172a; color: #94a3b8; width: 100%; padding: 2rem; text-align: center; font-size: 0.9rem; margin-top: auto; }
+        
+        @media (max-width: 640px) {
+            .arena { gap: 1.5rem; }
+            .arena-card { width: 120px; height: 120px; font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="score-board">
+            <div class="score-node">
+                <h2 id="player-score">0</h2>
+                <p>Player Index</p>
+            </div>
+            <div style="font-size: 1.5rem; display: flex; align-items: center; font-weight: 800; color: var(--border);">VS</div>
+            <div class="score-node">
+                <h2 id="bot-score">0</h2>
+                <p>System Core</p>
+            </div>
+        </div>
+
+        <div class="arena">
+            <div class="arena-card" id="player-card">
+                <i class="fa-solid fa-question" style="color:var(--border);"></i>
+                <span>Player</span>
+            </div>
+            <div class="arena-card" id="bot-card">
+                <i class="fa-solid fa-question" style="color:var(--border);"></i>
+                <span>System</span>
+            </div>
+        </div>
+
+        <div class="choices-grid">
+            <button class="choice-btn" onclick="executeTurn('rock')"><i class="fa-solid fa-hand-fist"></i></button>
+            <button class="choice-btn" onclick="executeTurn('paper')"><i class="fa-solid fa-hand"></i></button>
+            <button class="choice-btn" onclick="executeTurn('scissors')"><i class="fa-solid fa-hand-scissors"></i></button>
+        </div>
+
+        <div class="result-banner" id="game-result">Select an operational vector to begin.</div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 QuestEngine Platform System. All metrics active.</p>
+    </footer>
+
+    <script>
+        let pScore = 0;
+        let bScore = 0;
+        const iconMap = {
+            rock: 'fa-solid fa-hand-fist',
+            paper: 'fa-solid fa-hand',
+            scissors: 'fa-solid fa-hand-scissors'
+        };
+
+        function executeTurn(playerChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const botChoice = choices[Math.floor(Math.random() * 3)];
+
+            // Update UI Icons dynamically
+            document.getElementById('player-card').innerHTML = `<i class="${iconMap[playerChoice]}"></i><span>Player</span>`;
+            document.getElementById('bot-card').innerHTML = `<i class="${iconMap[botChoice]}"></i><span>System</span>`;
+
+            let result = "";
+            if (playerChoice === botChoice) {
+                result = "Operational Draw.";
+            } else if (
+                (playerChoice === 'rock' && botChoice === 'scissors') ||
+                (playerChoice === 'paper' && botChoice === 'rock') ||
+                (playerChoice === 'scissors' && botChoice === 'paper')
+            ) {
+                result = "Vector successful. Player wins cycle!";
+                pScore++;
+            } else {
+                result = "System core bypassed node. Bot wins cycle.";
+                bScore++;
+            }
+
+            document.getElementById('player-score').innerText = pScore;
+            document.getElementById('bot-score').innerText = bScore;
+            document.getElementById('game-result').innerText = result;
+        }
+    </script>
+</body>
+</html>

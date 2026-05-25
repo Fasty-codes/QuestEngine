@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physics Matrix | QuestEngine</title>
+    <title>Health Matrix | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,17 +11,17 @@
     
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            --accent: #334155; 
-            --accent-hover: #0f172a;
+            --bg-primary: #f0fdfa; /* Clean teal breath */
+            --accent: #0d9488;    /* Vitality Teal */
+            --accent-hover: #115e59;
             --text-main: #0f172a;
             --text-muted: #475569;
-            --border-color: rgba(15, 23, 42, 0.15);
+            --border-color: rgba(13, 148, 136, 0.15);
             --success: #16a34a;
             --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
             --glass-bg: #ffffff;
-            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --glass-shadow: 0 10px 30px rgba(13, 148, 136, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
@@ -54,7 +54,7 @@
         .timer { color: var(--danger); }
         .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
-        .option-btn:hover { border-color: var(--accent); background: #f8fafc; }
+        .option-btn:hover { border-color: var(--accent); background: #f0fdfa; }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
         .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
         .control-group { display: flex; gap: 8px; }
@@ -83,7 +83,7 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-atom"></i> Physics</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-heart-pulse"></i> Health Matrix</a>
             <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
@@ -91,7 +91,7 @@
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
             <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current physical kinematics values will completely reset.</p>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current physiological data profiling steps will completely reset.</p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
                 <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
@@ -102,8 +102,8 @@
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>Physics Core Sectors</h2>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation quadrant. Each sector processes exactly 10 physics tracking models.</p>
+                <h2>Biomedical Diagnostic Quadrants</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a physiological validation index. Each sector structures exactly 10 metabolism parameters.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -121,7 +121,7 @@
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
                 <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
-                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-dna" style="margin-right:4px;"></i> 10 Metabolic Scales</div>
                     <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center;">
@@ -155,7 +155,7 @@
     <div id="results-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2>Analysis Completed</h2>
+                <h2>Diagnostic Parameters Verified</h2>
                 <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
                 <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
@@ -168,76 +168,81 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. White Configuration.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Teal Configuration.</p>
     </footer>
 
     <script>
-        const PHYSICS_DATA = [
+        const HEALTH_DATA = [
+            // SECTOR 1: NUTRITION & MACRONUTRIENT BALANCE
             [
-                { q: "What is the standard metric SI unit used to measure force?", o: ["Joule", "Watt", "Newton", "Pascal"], a: 2 },
-                { q: "What constant acceleration value is caused by Earth's gravity at sea level?", o: ["8.5 m/s²", "9.8 m/s²", "10.5 m/s²", "12.0 m/s²"], a: 1 },
-                { q: "Which law states that for every action, there is an equal and opposite reaction?", o: ["Newton's 1st Law", "Newton's 2nd Law", "Newton's 3rd Law", "Law of Inertia"], a: 2 },
-                { q: "What operational scalar metric equals the total distance moved per unit of time?", o: ["Velocity", "Acceleration", "Speed", "Displacement"], a: 2 },
-                { q: "What tendency causes moving objects to resist a structural change in their state of motion?", o: ["Friction", "Inertia", "Velocity", "Gravity"], a: 1 },
-                { q: "Calculate the work done when a force of 10 N moves an object 5 meters.", o: ["15 Joules", "2 Joules", "50 Joules", "100 Joules"], a: 2 },
-                { q: "What parameter product is generated by multiplying the mass of an object by its velocity?", o: ["Force", "Kinetic Energy", "Momentum", "Work"], a: 2 },
-                { q: "What frictional interaction acts on objects moving through a liquid or gas medium?", o: ["Static Friction", "Sliding Friction", "Fluid Drag", "Rolling Friction"], a: 2 },
-                { q: "What simple structural machine uses a fulcrum mechanism to amplify mechanical force?", o: ["Pulley", "Lever", "Screw", "Wedge"], a: 1 },
-                { q: "What form of mechanical energy is held by a compressed mechanical spring system?", o: ["Kinetic Energy", "Thermal Energy", "Elastic Potential Energy", "Chemical Energy"], a: 2 }
+                { q: "Which macronutrient exhibits the highest energy density, yielding 9 calories per gram?", o: ["Carbohydrates", "Proteins", "Lipids (Fats)", "Organic Acids"], a: 2 },
+                { q: "What specific class of organic compounds must be acquired through diet because the body cannot synthesize them?", o: ["Essential Amino Acids", "Non-Essential Peptides", "Saturated Lipids", "Endogenous Monosaccharides"], a: 0 },
+                { q: "Which water-soluble vitamin acts as an essential cofactor for collagen synthesis and antioxidant defense?", o: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin K"], a: 1 },
+                { q: "What primary polysaccharide storage format forms the carbohydrate reserves built inside human liver tissues?", o: ["Amylose", "Glycogen", "Cellulose", "Chitin"], a: 1 },
+                { q: "Which mineral is structurally required inside red blood cells to synthesize hemoglobin molecules?", o: ["Calcium", "Magnesium", "Iron", "Zinc"], a: 2 },
+                { q: "What index scores carbohydrate items based on their localized velocity of blood glucose elevation?", o: ["Glycemic Index (GI)", "Metabolic Rate Factor", "Brix Index", "Caloric Density Coefficient"], a: 0 },
+                { q: "Which fat-soluble vitamin structures are critically necessary for normal physiological blood clotting cascades?", o: ["Vitamin E", "Vitamin B12", "Vitamin A", "Vitamin K"], a: 3 },
+                { q: "What specialized lipid structure is highly present in salmon and seeds, offering anti-inflammatory cardioprotection?", o: ["Omega-3 Fatty Acids", "Trans-Fatty Matrix", "Lauric Acid Chains", "Saturated Stearates"], a: 0 },
+                { q: "Which dietary component remains entirely undigested by human enzymes but preserves gastrointestinal tract motility?", o: ["Insoluble Fiber", "Complex Glycans", "Casein Aggregates", "Resistant Dextrins"], a: 0 },
+                { q: "What physiological state occurs when severe protein deficiency exists despite adequate total caloric intake?", o: ["Marasmus", "Kwashiorkor", "Ketoacidosis", "Scurvy"], a: 1 }
             ],
+            // SECTOR 2: KINESIOLOGY & FITNESS PHYSIOLOGY
             [
-                { q: "What method describes thermal heat movement via physical contact of fluid masses?", o: ["Conduction", "Convection", "Radiation", "Insulation"], a: 1 },
-                { q: "What wave form propagates particles back and forth parallel to the wave motion vector?", o: ["Transverse Wave", "Longitudinal Wave", "Electromagnetic Wave", "Surface Wave"], a: 1 },
-                { q: "What is the baseline velocity threshold of sound waves passing through room air?", o: ["150 m/s", "343 m/s", "1500 m/s", "300,000 m/s"], a: 1 },
-                { q: "Which thermodynamic principle states that energy cannot be created or destroyed?", o: ["Zeroth Law", "First Law", "Second Law", "Third Law"], a: 1 },
-                { q: "What parameter unit explicitly tracks structural frequency metrics?", o: ["Joule", "Hertz", "Decibel", "Meter"], a: 1 },
-                { q: "What phenomenon occurs when a moving source alters the observed pitch of its sound?", o: ["Refraction", "Diffraction", "Doppler Effect", "Resonance"], a: 2 },
-                { q: "What absolute parameter tracking index states maximum molecular kinetic arrest?", o: ["0° Celsius", "-100° Celsius", "0 Kelvin", "-273° Fahrenheit"], a: 2 },
-                { q: "What optical tracking result describes light rays changing trajectory angles when passing into glass?", o: ["Reflection", "Refraction", "Diffraction", "Polarization"], a: 1 },
-                { q: "What scale is utilized to map the log intensity profile of acoustic sound audio waves?", o: ["Hertz Scale", "Kelvin Scale", "Decibel Scale", "Pascal Scale"], a: 2 },
-                { q: "What parameter configuration defines a material that resists any thermal heat flow vectors?", o: ["Conductor", "Semiconductor", "Insulator", "Radiator"], a: 2 }
+                { q: "What molecule functions as the direct, primary cellular energy currency during short-burst anaerobic exercise?", o: ["Adenosine Triphosphate (ATP)", "Phosphocreatine Core", "Glucose-6-Phosphate", "Lactate Matrix"], a: 0 },
+                { q: "Which skeletal muscle fiber classification displays high mitochondrial density and handles aerobic endurance activities?", o: ["Type IIx Fibers", "Type IIa Fibers", "Type I (Slow-Twitch) Fibers", "Fast-Glycolytic Elements"], a: 2 },
+                { q: "What physiological metric captures the maximum volume of oxygen an individual can utilize during exhaustive exercise?", o: ["VO2 Max", "Respiratory Exchange Ratio", "Tidal Volume Limit", "Cardiac Output Peak"], a: 0 },
+                { q: "Which type of muscular contraction generates constant tension while changing muscle length?", o: ["Isometric Contraction", "Isotonic Contraction", "Isokinetic Shift", "Eccentric Balance"], a: 1 },
+                { q: "What process describes the microscopic cellular expansion of individual muscle fibers following progressive resistance training?", o: ["Hyperplasia", "Hypertrophy", "Atrophy", "Metaplasia"], a: 1 },
+                { q: "Which primary metabolic pathway handles energy clearance during a continuous, sub-maximal 5K running trial?", o: ["Oxidative Phosphorylation", "Glycolysis", "ATP-PCr System", "Fermentation Cascade"], a: 0 },
+                { q: "What physiological threshold marks the abrupt accumulation of lactic acid within active muscle tissues?", o: ["Aerobic Floor", "Lactate Threshold", "Glycolytic Maximum", "VO2 Baseline"], a: 1 },
+                { q: "Which joint configuration provides the widest rotational range of motion, seen in the human shoulder?", o: ["Hinge Joint", "Ball-and-Socket Joint", "Pivot Mechanism", "Saddle Framework"], a: 1 },
+                { q: "What target training metric utilizes a percentage calculation based on an individual's age subtracted from 220?", o: ["Maximum Heart Rate (MHR)", "Basal Metabolic Rate", "Stroke Volume Index", "Recovery Heart Velocity"], a: 0 },
+                { q: "Which core element defines the baseline principle of progressive overload in strength development?", o: ["Systematically increasing training stimulus over time", "Varying daily exercise selections randomly", "Prioritizing high-velocity ballistic movements", "Maintaining uniform workload parameters"], a: 0 }
             ],
+            // SECTOR 3: HUMAN ANATOMY & PHYSIOLOGICAL CIRCUITS
             [
-                { q: "What electrical tracking unit gauges circuit resistance parameters?", o: ["Volt", "Ampere", "Ohm", "Watt"], a: 2 },
-                { q: "What atomic structure element operates as the primary charge carriers through copper lines?", o: ["Protons", "Neutrons", "Electrons", "Positrons"], a: 2 },
-                { q: "What fundamental formula perfectly tracks electrical power output expressions?", o: ["P = V * I", "P = I * R", "P = V / R", "P = W * t"], a: 0 },
-                { q: "What circuit path breaks completely if one single element bulb burns down?", o: ["Parallel Circuit", "Series Circuit", "Integrated Circuit", "Short Circuit"], a: 1 },
-                { q: "What instrument is implemented into structural wiring blocks to measure operational current?", o: ["Voltmeter", "Ammeter", "Ohmmeter", "Galvanometer"], a: 1 },
-                { q: "What core rule governs that like magnetic fields push each other away?", o: ["Magnetic Induction", "Like Poles Repel", "Oersted Effect", "Faraday's Law"], a: 1 },
-                { q: "What component is optimized to structurally store electrical charge fields inside electrical systems?", o: ["Resistor", "Inductor", "Capacitor", "Diode"], a: 2 },
-                { q: "What distinct force profile lets an electrical field generate rotational physical work?", o: ["Lorentz Force", "Gravitational Force", "Centripetal Force", "Friction"], a: 0 },
-                { q: "What material behaves with absolute zero electrical tracking resistance fields at extreme low temps?", o: ["Conductor", "Semiconductor", "Superconductor", "Dielectric"], a: 2 },
-                { q: "What electrical system transforms structural high voltage values down to safe residential metrics?", o: ["Generator", "Motor", "Transformer", "Inverter"], a: 2 }
+                { q: "Which individual organ remains the largest by surface area and total mass within the human body blueprint?", o: ["Liver", "Skin (Integumentary System)", "Brain", "Small Intestine"], a: 1 },
+                { q: "What structural valve separates the left atrium from the left ventricle inside the human heart?", o: ["Tricuspid Valve", "Mitral (Bicuspid) Valve", "Pulmonary Valve", "Aortic Valve"], a: 1 },
+                { q: "Which functional microscopic cell networks execute the primary filtration workload inside the kidneys?", o: ["Alveoli Units", "Nephrons", "Neurons", "Hepatocytes"], a: 1 },
+                { q: "What specialized tissue connects skeletal muscle bodies securely onto corresponding bone structures?", o: ["Ligaments", "Tendons", "Fascia Planes", "Cartilage Slabs"], a: 1 },
+                { q: "Which distinct cranial nerve regulates parasympathetic control vectors over cardiac and digestive functions?", o: ["Optic Nerve (CN II)", "Vagus Nerve (CN X)", "Trigeminal Nerve (CN V)", "Facial Nerve (CN VII)"], a: 1 },
+                { q: "What long bone structure serves as the largest, heaviest structural support pillar inside the human thigh?", o: ["Tibia", "Fibula", "Femur", "Humerus"], a: 2 },
+                { q: "Which segment of the human gastrointestinal tract executes the absolute majority of nutrient absorption?", o: ["Duodenum", "Small Intestine", "Large Intestine (Colon)", "Stomach Vault"], a: 1 },
+                { q: "What specialized endocrine gland structures release primary stress hormones like epinephrine and cortisol?", o: ["Pituitary Gland", "Thyroid Axis", "Adrenal Glands", "Pancreas Nodes"], a: 2 },
+                { q: "Which structural element acts as the primary chemical neurotransmitter across neuromuscular junctions?", o: ["Dopamine", "Serotonin", "Acetylcholine", "GABA"], a: 2 },
+                { q: "What cellular components make up the structural blood elements responsible for initiating coagulation matrices?", o: ["Erythrocytes", "Leukocytes", "Platelets (Thrombocytes)", "Plasma Lymphatics"], a: 2 }
             ],
+            // SECTOR 4: ENDOCRINOLOGY & CELLULAR METABOLISM
             [
-                { q: "What is the absolute speed velocity threshold of light waves running inside a vacuum space?", o: ["300,000 m/s", "3,000,000 m/s", "300,000,000 m/s", "30,000,000 m/s"], a: 2 },
-                { q: "What mirror lens array geometry curves inwards to concentrate parallel incoming light rays?", o: ["Convex Mirror", "Concave Mirror", "Plane Mirror", "Cylindrical Mirror"], a: 1 },
-                { q: "What optical result maps out split white light rays spreading into spectrum color channels?", o: ["Interference", "Dispersion", "Total Internal Reflection", "Polarization"], a: 1 },
-                { q: "What specific lens profile rectifies standard hyperopia (farsightedness) sight paths?", o: ["Concave Lens", "Convex Lens", "Cylindrical Lens", "Bifocal Lens"], a: 1 },
-                { q: "What phenomenon maps out light fully reflecting backward inside a boundary fiber-optic cord?", o: ["Diffraction", "Refraction", "Total Internal Reflection", "Scattering"], a: 2 },
-                { q: "What distinct color profile maps out the longest visible wave metric lengths?", o: ["Violet", "Blue", "Green", "Red"], a: 3 },
-                { q: "What model architecture posits that light moves both as continuous wave tracks and packet photons?", o: ["Wave Theory", "Corpuscular Theory", "Wave-Particle Duality", "Quantum Chromodynamics"], a: 2 },
-                { q: "What optical tool utilizes dual convex lenses to map highly distant orbital objects?", o: ["Microscope", "Telescope", "Periscope", "Spectrometer"], a: 1 },
-                { q: "What structural parameter track tracks the height value calculation of optical wave structures?", o: ["Wavelength", "Frequency", "Amplitude", "Velocity"], a: 2 },
-                { q: "What color manifestation occurs when every visible spectrum wavelength reflects fully off a base object?", o: ["Black", "Grey", "White", "Transparent"], a: 2 }
+                { q: "Which pancreatic hormone lowers systemic blood sugar levels by facilitating cellular glucose uptake?", o: ["Glucagon", "Insulin", "Somatostatin", "Cortisol"], a: 1 },
+                { q: "What foundational rate represents the baseline energy expenditure required to sustain vital functions at rest?", o: ["Active Metabolic Burn", "Basal Metabolic Rate (BMR)", "Thermal Effect of Food", "Respiratory Quotient"], a: 1 },
+                { q: "Which structural organ processes nutrients from the digestive tract before releasing them to the systemic circulation?", o: ["Spleen", "Liver", "Pancreas", "Gallbladder"], a: 1 },
+                { q: "What active thyroid hormone regulates global systemic metabolic pacing across human tissues?", o: ["Calcitonin", "Thyroxine (T4)", "Parathyroid Hormone", "Thyrotropin"], a: 1 },
+                { q: "Which metabolic pathways handle cellular energy synthesis when glycogen storage levels are exhausted?", o: ["Gluconeogenesis", "Glycogenolysis", "Lipogenesis Matrix", "Glycolytic Flux"], a: 0 },
+                { q: "What hormone triggers the degradation of adipose lipids to mobilize circulating free fatty acids?", o: ["Insulin", "Growth Hormone", "Leptin", "Epinephrine / Glucagon"], a: 3 },
+                { q: "Which organelle serves as the principal site for aerobic ATP production within human cells?", o: ["Ribosome", "Lysosome", "Mitochondrion", "Golgi Apparatus"], a: 2 },
+                { q: "What specialized adipose tissue functions as a premier thermo-insulator while storing energy excess?", o: ["White Adipose Tissue", "Brown Adipose Tissue", "Visceral Fibrosis", "Subcutaneous Matrix"], a: 0 },
+                { q: "Which hormone regulates long-term energy balance by suppressing appetite pathways in the hypothalamus?", o: ["Ghrelin", "Leptin", "Orexin", "Cortistatin"], a: 1 },
+                { q: "What chemical waste molecule accumulates inside muscles when pyruvate is processed in low-oxygen conditions?", o: ["Urea", "Lactic Acid", "Creatinine", "Uric Acid"], a: 1 }
             ],
+            // SECTOR 5: EPIDEMIOLOGY & PUBLIC PREVENTATIVE HEALTH
             [
-                { q: "Who formulated the foundational equation E = mc²?", o: ["Isaac Newton", "Niels Bohr", "Albert Einstein", "Max Planck"], a: 2 },
-                { q: "What atomic core component features a neutral operational charge signature?", o: ["Proton", "Electron", "Neutron", "Quark"], a: 2 },
-                { q: "What celestial phenomenon is an object with a gravitational field so intense that even light cannot escape?", o: ["White Dwarf", "Neutron Star", "Black Hole", "Red Giant"], a: 2 },
-                { q: "What specific process splits massive atomic cores like Uranium apart to release net atomic heat?", o: ["Nuclear Fusion", "Nuclear Fission", "Alpha Decay", "Beta Decay"], a: 1 },
-                { q: "What basic packets frame out the absolute foundational structure values of light fields?", o: ["Electrons", "Protons", "Photons", "Neutrinos"], a: 2 },
-                { q: "What reaction powers our solar sun core via joining Hydrogen items into Helium configurations?", o: ["Nuclear Fission", "Nuclear Fusion", "Chemical Combustion", "Radioactive Decay"], a: 1 },
-                { q: "Which subatomic components cluster together to construct protons and neutrons?", o: ["Leptons", "Quarks", "Gluons", "Bosons"], a: 1 },
-                { q: "What tracking dynamic states that particle positioning and exact velocity cannot be known simultaneously?", o: ["Relativity Principle", "Heisenberg Uncertainty Principle", "Pauli Exclusion Principle", "Photoelectric Law"], a: 1 },
-                { q: "What elemental force metric functions to lock atomic nuclei elements cleanly together?", o: ["Gravitational Force", "Weak Nuclear Force", "Electromagnetic Force", "Strong Nuclear Force"], a: 3 },
-                { q: "What radiation profile captures the peak frequency energy emission track within modern physics structures?", o: ["X-Rays", "Gamma Rays", "Ultraviolet Waves", "Microwaves"], a: 1 }
+                { q: "What metric evaluates individual structural mass relative to height, though it lacks body fat composition clarity?", o: ["Body Mass Index (BMI)", "DEXA Percentage", "Bioimpedance Score", "Hydrostatic Value"], a: 0 },
+                { q: "Which biological mechanism describes long-term physiological adaptation to chronic environmental stress?", o: ["Allostasis", "Homeostasis", "Apoptosis", "Autophagy"], a: 0 },
+                { q: "What sleep phase is essential for cognitive consolidation and neurological restoration?", o: ["Stage 1 NREM", "Stage 3 Deep NREM", "REM Sleep", "Both 1 & 2"], a: 2 },
+                { q: "Which arterial measurement parameter captures the peak pressure exerted during cardiac ventricular contraction?", o: ["Diastolic Blood Pressure", "Systolic Blood Pressure", "Mean Arterial Core", "Pulse Wave Velocity"], a: 1 },
+                { q: "What physiological response protects tissues from acute injury but can cause systemic damage when chronic?", o: ["Inflammation", "Phagocytosis", "Angiogenesis", "Fibrosis"], a: 0 },
+                { q: "Which primary immune cells adaptively coordinate targeted antibody defenses against specific viral pathogens?", o: ["Neutrophils", "Macrophages", "T and B Lymphocytes", "Eosinophils"], a: 2 },
+                { q: "What distinct physiological shift occurs during long-duration cardiovascular fasting when ketones enter circulation?", o: ["Metabolic Ketosis", "Respiratory Acidosis", "Hypoglycemic Shock", "Gluco-Saturation"], a: 0 },
+                { q: "Which structural lipid component travels via high-density carrier proteins to clear arterial plaque buildup?", o: ["LDL Cholesterol", "HDL Cholesterol", "VLDL Matrix", "Triglycerides"], a: 1 },
+                { q: "What parameter defines a chronic resting blood pressure metric consistently tracking above 130/80 mmHg?", o: ["Arteriosclerosis", "Hypertension", "Bradycardia", "Aneurism Profile"], a: 1 },
+                { q: "Which component of preventative health optimization decreases systemic risk for type 2 diabetes?", o: ["Maintaining peripheral insulin sensitivity", "Sustaining high resting pulse rates", "Elevating sedentary time blocks", "Restricting hydration volume scales"], a: 0 }
             ]
         ];
 
         let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Physics - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Physiology - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
         function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
@@ -252,7 +257,7 @@
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
         function renderQuestion() {
-            const item = PHYSICS_DATA[currentSectorIndex][currentQuestionIndex];
+            const item = HEALTH_DATA[currentSectorIndex][currentQuestionIndex];
             document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
@@ -266,9 +271,9 @@
         }
         function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
         function evaluateQuizSession() {
-            const data = PHYSICS_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            const data = HEALTH_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Kinematic mass matrix parameters balanced successfully." : "Force vector anomalies discovered. Reset sector.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Physiological calibration parameters verified successfully." : "Metabolic anomalies identified. Reset targeted sector data paths.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

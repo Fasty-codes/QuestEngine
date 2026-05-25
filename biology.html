@@ -11,76 +11,91 @@
     
     <style>
         :root {
-            --bg-primary: #d1fae5;
-            --accent: #10b981; 
-            --accent-hover: #059669;
-            --text-main: #064e3b;
-            --text-muted: #047857;
-            --border-color: rgba(16, 185, 129, 0.25);
-            --success: #059669;
-            --danger: #b91c1c;
+            --bg-primary: #f0fdf4;
+            --accent: #16a34a; 
+            --accent-hover: #15803d;
+            --text-main: #14532d;
+            --text-muted: #166534;
+            --border-color: rgba(22, 163, 74, 0.25);
+            --success: #15803d;
+            --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
-            --glass-bg: rgba(240, 253, 244, 0.8);
-            --glass-shadow: 0 8px 32px 0 rgba(16, 185, 129, 0.06);
+            --glass-bg: rgba(240, 253, 244, 0.85);
+            --glass-shadow: 0 8px 32px 0 rgba(22, 163, 74, 0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
         body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
         .view { display: none; width: 100%; }
         .view.active-view { display: block; }
-        .view-container { max-width: 900px; margin: 120px auto 4rem; padding: 0 2rem; }
+        .view-container { max-width: 900px; margin: 100px auto 4rem; padding: 0 1rem; }
 
-        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 3.5rem 2rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
-        .level-grid { display: flex; justify-content: center; gap: 1.2rem; margin: 3rem 0; flex-wrap: wrap; }
-        .level-btn { width: 70px; height: 70px; border-radius: 16px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.4rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 2.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .level-grid { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+        .level-btn { width: 60px; height: 60px; border-radius: 14px; background: white; border: 2px solid var(--border-color); color: var(--accent); font-size: 1.25rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
 
-        .btn-primary { background: var(--accent); color: white; padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: white; padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
         .btn-primary:hover { background: var(--accent-hover); }
-        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 600; border-radius: 8px; text-decoration: none; }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: white; padding: 2.5rem; border-radius: 16px; max-width: 400px; text-align: center; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; }
 
-        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 2rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); }
-        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 3rem; }
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.2rem; }
-        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 30px; font-weight: 700; }
+        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
+        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
+        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
-        .options-list { display: flex; flex-direction: column; gap: 1rem; }
-        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1.2rem 1.5rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
         .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-        .quiz-controls { display: flex; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
+        .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
+        .control-group { display: flex; gap: 8px; }
 
-        .review-item { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .text-success { color: var(--success); font-weight: 600; }
         .text-danger { color: var(--danger); font-weight: 600; }
-        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: auto; }
+        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 1.5rem; text-align: center; margin-top: auto; font-size: 0.85rem; }
+
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.8rem 1rem; }
+            .logo { font-size: 1.3rem; }
+            .view-container { margin-top: 90px; }
+            .quiz-window { padding: 1.2rem 1rem; }
+            #questionText { font-size: 1.15rem !important; margin-bottom: 1.2rem !important; }
+            .option-btn { padding: 0.85rem 1rem; font-size: 0.9rem; }
+            .quiz-controls { flex-direction: column-reverse; width: 100%; }
+            .quiz-controls button, .control-group { width: 100%; }
+            .control-group button { flex: 1; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-dna"></i> Biology Matrix</a>
-            <a href="index.html" class="btn-secondary" style="padding: 0.5rem 1.2rem;">Home Matrix</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-dna"></i> Biology</a>
+            <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
             <h3>Terminate Evaluation?</h3>
-            <p style="margin:1rem 0;">Are you sure? Current life science tracking metrics will reset.</p>
-            <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
-            <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current biological tracking metrics will completely reset.</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
+            </div>
         </div>
     </div>
 
@@ -88,7 +103,7 @@
         <div class="view-container">
             <div class="level-container">
                 <h2>Biology Core Sectors</h2>
-                <p style="margin-top: 0.5rem;">Select an evaluation quadrant. Each sector maps exactly 10 life science questions.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation quadrant. Each sector maps 10 physiological biology modules.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -96,7 +111,7 @@
                     <button class="level-btn" onclick="selectLevel(4)">4</button>
                     <button class="level-btn" onclick="selectLevel(5)">5</button>
                 </div>
-                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left"></i> Return</a>
+                <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Return</a>
             </div>
         </div>
     </div>
@@ -105,12 +120,14 @@
         <div class="view-container">
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
-                <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0;">
-                    <div><i class="fa-solid fa-clipboard-list"></i> 10 Questions</div>
-                    <div><i class="fa-solid fa-stopwatch"></i> 02:00 Minutes</div>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
+                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
-                <button class="btn-secondary" onclick="showView('level-view')">Back</button>
-                <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Back</button>
+                    <button class="btn-primary" onclick="startQuiz()">Initialize Engine</button>
+                </div>
             </div>
         </div>
     </div>
@@ -121,13 +138,13 @@
                 <span class="tracker-pill" id="questionTracker">Item 1/10</span>
                 <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 02:00</span>
             </div>
-            <div>
-                <h3 id="questionText" style="font-size:1.35rem; margin-bottom:1.5rem;">Loading...</h3>
+            <div style="flex: 1;">
+                <h3 id="questionText" style="font-size:1.25rem; margin-bottom:1.5rem; font-weight: 600; line-height: 1.4;">Loading...</h3>
                 <div class="options-list" id="optionsContainer"></div>
             </div>
             <div class="quiz-controls">
                 <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
-                <div style="display: flex; gap: 10px;">
+                <div class="control-group">
                     <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
                     <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
                 </div>
@@ -139,10 +156,12 @@
         <div class="view-container">
             <div class="pre-quiz-card">
                 <h2>Analysis Completed</h2>
-                <div style="font-size: 5rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
-                <p id="resultEvaluationMessage" style="margin-bottom: 2rem;"></p>
-                <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
-                <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
+                <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Performance</button>
+                </div>
                 <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
             </div>
         </div>
@@ -154,70 +173,65 @@
 
     <script>
         const BIOLOGY_DATA = [
-            // SECTOR 1
             [
-                { q: "What is widely designated as the structural powerhouse of the cell?", o: ["Nucleus", "Ribosome", "Mitochondria", "Golgi Body"], a: 2 },
-                { q: "Which green pigment molecule captures radiant solar energy inside plant leaves?", o: ["Carotene", "Chlorophyll", "Hemoglobin", "Xanthophyll"], a: 1 },
-                { q: "What is the primary operational gas released by autotrophic plants during active photosynthesis?", o: ["Carbon Dioxide", "Nitrogen", "Oxygen", "Methane"], a: 2 },
-                { q: "How many chromosome units are native to standard human somatic body cells?", o: ["23", "44", "46", "48"], a: 2 },
-                { q: "Which blood vessel track delivers oxygenated fluid away from the heart muscle?", o: ["Veins", "Arteries", "Capillaries", "Venules"], a: 1 },
-                { q: "What double-helix macro-molecule holds structural genetic execution maps inside cell systems?", o: ["RNA", "DNA", "ATP", "Protein"], a: 1 },
-                { q: "Which vital structural organ is primarily infected by pulmonary Tuberculosis bacteria?", o: ["Liver", "Kidneys", "Lungs", "Heart"], a: 2 },
-                { q: "What foundational macromolecule strings are generated by linkage configurations of amino acids?", o: ["Lipids", "Carbohydrates", "Proteins", "Nucleic Acids"], a: 2 },
-                { q: "What is the absolute longest skeletal bone assembly inside the human frame?", o: ["Humerus", "Femur", "Tibia", "Radius"], a: 1 },
-                { q: "Which single-celled eukaryotic organism structure group reproduces primarily through binary fission?", o: ["Viruses", "Amoeba", "Fungi", "Algae"], a: 1 }
+                { q: "What organelle is traditionally designated as the energy powerhouse of a cell?", o: ["Nucleus", "Mitochondrion", "Ribosome", "Chloroplast"], a: 1 },
+                { q: "What molecule stores the structural genetic blueprints inside cell nuclei?", o: ["RNA", "Proteins", "DNA", "Lipids"], a: 2 },
+                { q: "What biological system mechanism lets green leaf systems transform ambient sunlight into sugars?", o: ["Respiration", "Photosynthesis", "Fermentation", "Transpiration"], a: 1 },
+                { q: "What structural green molecule tracks absorption vectors inside chloroplast centers?", o: ["Carotene", "Xanthophyll", "Chlorophyll", "Hemoglobin"], a: 2 },
+                { q: "What basic structural unit serves as the baseline architectural foundation of all living systems?", o: ["Tissue", "Cell", "Organ", "Atom"], a: 1 },
+                { q: "Which cell variant features a true bound nucleus and complex internal membranes?", o: ["Prokaryote", "Eukaryote", "Virus", "Bacteria"], a: 1 },
+                { q: "What passive physical balancing process moves water across thin permeable cell lines?", o: ["Active Transport", "Osmosis", "Endocytosis", "Mitosis"], a: 1 },
+                { q: "What primary operational carbohydrate byproduct comes out of active photosynthesis tracks?", o: ["Sucrose", "Starch", "Glucose", "Cellulose"], a: 2 },
+                { q: "What complex protein molecules act as structural biological catalysts to accelerate internal cell tasks?", o: ["Hormones", "Enzymes", "Vitamins", "Antibodies"], a: 1 },
+                { q: "What internal structural framework component supports cell physical architecture metrics?", o: ["Cell Wall", "Cytoskeleton", "Plasma Membrane", "Cytoplasm"], a: 1 }
             ],
-            // SECTOR 2
             [
-                { q: "What core structural polysaccharide forms the rigid cell walls of terrestrial plants?", o: ["Glycogen", "Starch", "Cellulose", "Chitin"], a: 2 },
-                { q: "Which specific blood cell layout operates directly as an immune defense mechanism?", o: ["Red Blood Cells", "White Blood Cells", "Platelets", "Plasma"], a: 1 },
-                { q: "What specialized plant tissue conduit moves synthesized organic solutes from leaves downwards?", o: ["Xylem", "Phloem", "Cambium", "Cortex"], a: 1 },
-                { q: "Where does the biochemical processing cycle of transcription happen inside eukaryotic cells?", o: ["Cytoplasm", "Nucleus", "Ribosome", "Lysosome"], a: 1 },
-                { q: "Which metabolic organ system produces human digestive bile juices?", o: ["Pancreas", "Gallbladder", "Liver", "Stomach"], a: 2 },
-                { q: "What baseline system layout represents the master tracking unit of biological heredity?", o: ["Cell", "Gene", "Chromosome", "Nucleotide"], a: 1 },
-                { q: "Which standard chemical element acts as the binding core of human hemoglobin?", o: ["Magnesium", "Calcium", "Iron", "Zinc"], a: 2 },
-                { q: "What specialized mechanism lets liquid move across selectively permeable barriers along concentration gradient changes?", o: ["Active Transport", "Osmosis", "Endocytosis", "Phagocytosis"], a: 1 },
-                { q: "Which endocrine gland module triggers early human flight-or-fight response adrenaline?", o: ["Thyroid", "Pituitary", "Adrenal", "Pancreas"], a: 2 },
-                { q: "What specific vitamin deficiency causes standard night blindness conditions?", o: ["Vitamin C", "Vitamin D", "Vitamin B12", "Vitamin A"], a: 3 }
+                { q: "What structural fluid element circulates hemoglobin molecules to oxygenate tissue arrays?", o: ["White Blood Cells", "Red Blood Cells", "Platelets", "Plasma"], a: 1 },
+                { q: "Which anatomical pumping node pushes freshly oxygenated blood into major structural system circuits?", o: ["Right Atrium", "Right Ventricle", "Left Atrium", "Left Ventricle"], a: 3 },
+                { q: "What specialized body organs filter out systemic chemical wastes to modulate internal water levels?", o: ["Lungs", "Liver", "Kidneys", "Pancreas"], a: 2 },
+                { q: "What physiological structure element triggers essential signals down peripheral human neural paths?", o: ["Neuron", "Nephron", "Alveolus", "Osteocyte"], a: 0 },
+                { q: "What internal feedback matrix allows living systems to sustain optimal balanced stability parameters?", o: ["Metabolism", "Homeostasis", "Thermoregulation", "Glycolysis"], a: 1 },
+                { q: "What master biological control gland synthesizes hormones to monitor general metabolic speeds?", o: ["Pituitary Gland", "Thyroid Gland", "Adrenal Gland", "Pancreas"], a: 1 },
+                { q: "What primary internal organ produces bile compounds to break down heavy dietary lipid components?", o: ["Stomach", "Gallbladder", "Liver", "Small Intestine"], a: 2 },
+                { q: "What protective physical system element functions to shield internal structural arrays from external germs?", o: ["Skeletal System", "Integumentary System", "Lymphatic System", "Endocrine System"], a: 1 },
+                { q: "What thin mechanical sheet drives air movement configurations directly inside human pulmonary tracks?", o: ["Trachea", "Alveoli", "Diaphragm", "Pleura"], a: 2 },
+                { q: "What key systemic structural engine produces crucial insulin molecules to manage internal sugar parameters?", o: ["Liver", "Spleen", "Pancreas", "Duodenum"], a: 2 }
             ],
-            // SECTOR 3
             [
-                { q: "What specific nitrogenous base structure matches with Adenine inside standard DNA chains?", o: ["Cytosine", "Guanine", "Thymine", "Uracil"], a: 2 },
-                { q: "Which dynamic life phase zone tracks the entire biological volume inhabited on Earth?", o: ["Lithosphere", "Hydrosphere", "Atmosphere", "Biosphere"], a: 3 },
-                { q: "What distinct taxonomic rank is immediately superior to the 'Genus' class structure?", o: ["Species", "Family", "Order", "Class"], a: 1 },
-                { q: "Which human organ structure processes variable blood filtration to create urine output?", o: ["Liver", "Urinary Bladder", "Kidney", "Spleen"], a: 2 },
-                { q: "What basic structural compound constructs fungal outer cell walls?", o: ["Cellulose", "Peptidoglycan", "Chitin", "Keratin"], a: 2 },
-                { q: "Which specific vector micro-organism spreads standard Malaria protozoa infections?", o: ["Anopheles Mosquito", "Aedes Mosquito", "Housefly", "Tick"], a: 0 },
-                { q: "What biological cell division mechanism yields exactly four non-identical haploid gametes?", o: ["Mitosis", "Meiosis", "Amitosis", "Budding"], a: 1 },
-                { q: "Which complex fluid tissue structure links peripheral sensory systems directly back to human brain tracks?", o: ["Muscle", "Epithelium", "Nerve", "Connective tissue"], a: 2 },
-                { q: "What major chamber layout inside mammalian hearts pumps blood into global systemic circulation?", o: ["Left Atrium", "Right Atrium", "Left Ventricle", "Right Ventricle"], a: 2 },
-                { q: "Which biological mechanism describes a symbiotic balance where one organism benefits while the other is unaffected?", o: ["Mutualism", "Parasitism", "Commensalism", "Competition"], a: 2 }
+                { q: "Who is globally recognized as the historical founding father of classical genetic inheritance principles?", o: ["Charles Darwin", "Gregor Mendel", "Louis Pasteur", "Alexander Fleming"], a: 1 },
+                { q: "What alternate expression states are potential configurations for a single genetic trait locator?", o: ["Chromosomes", "Alleles", "Phenotypes", "Genotypes"], a: 1 },
+                { q: "How many physical chromosomes make up the baseline structure standard inside human body cells?", o: ["23", "46", "48", "50"], a: 1 },
+                { q: "What cell division pathway produces exact matching replica double cell configurations?", o: ["Meiosis", "Mitosis", "Binary Fission", "Budding"], a: 1 },
+                { q: "What terminal genetic cross processing constructs unique half-set germ cells for sexual pairings?", o: ["Mitosis", "Meiosis", "Cytokinesis", "Interphase"], a: 1 },
+                { q: "What structural physical dynamic is mapped fully out within an organisms outward visual traits?", o: ["Genotype", "Phenotype", "Allele", "Mutation"], a: 1 },
+                { q: "What molecular structure configuration outlines the physical design model of a DNA chain?", o: ["Single Helix", "Double Helix", "Triple Helix", "Beta Sheet"], a: 1 },
+                { q: "What specific nucleic acid base alternative replaces standard Thymine lines inside matching RNA constructs?", o: ["Adenine", "Guanine", "Cytosine", "Uracil"], a: 3 },
+                { q: "What structural genetic dynamic describes an sudden layout shift tracking inside a chromosome base?", o: ["Recombination", "Mutation", "Translation", "Transcription"], a: 1 },
+                { q: "What tracking tool is utilized to map out the mathematical probability of a hybrid trait cross?", o: ["Pedigree Chart", "Punnett Square", "Karyotype", "Venn Diagram"], a: 1 }
             ],
-            // SECTOR 4
             [
-                { q: "What specific metabolic enzyme acts as the initial protein digester within the human stomach cavity?", o: ["Amylase", "Lipase", "Pepsin", "Trypsin"], a: 2 },
-                { q: "Which plant hormone family acts as the primary chemical regulator driving cell elongation?", o: ["Auxins", "Gibberellins", "Cytokinins", "Ethylene"], a: 0 },
-                { q: "What primary classification category outlines non-vascular seedless plant modules like mosses?", o: ["Pteridophytes", "Bryophytes", "Gymnosperms", "Angiosperms"], a: 1 },
-                { q: "Which distinct biochemical pathway is common to both aerobic and anaerobic cellular respiration cascades?", o: ["Krebs Cycle", "Electron Transport Chain", "Glycolysis", "Calvin Cycle"], a: 2 },
-                { q: "What specialized macrophage cells monitor immune defense within neurological tissue spaces?", o: ["Astrocytes", "Microglia", "Oligodendrocytes", "Schwann Cells"], a: 1 },
-                { q: "Which structural valve controls backward fluid leakage from the right ventricle into the right atrium?", o: ["Bicuspid Valve", "Tricuspid Valve", "Aortic Valve", "Pulmonary Valve"], a: 1 },
-                { q: "What cellular organelle platform acts as the operational processor for hydrolytic auto-digestion?", o: ["Peroxisome", "Lysosome", "Centrosome", "Glyoxysome"], a: 1 },
-                { q: "Which base replaces Thymine during translation transformations into RNA strands?", o: ["Adenine", "Guanine", "Cytosine", "Uracil"], a: 3 },
-                { q: "What anatomical framework connects skeletal bones together at standard physical joints?", o: ["Tendon", "Ligament", "Cartilage", "Fascia"], a: 1 },
-                { q: "Which biological kingdom covers extreme, membrane-variant methane-producing microbes?", o: ["Archaea", "Eubacteria", "Protista", "Fungi"], a: 0 }
+                { q: "What foundational mechanism drives systemic population adjustments via selecting localized survival traits?", o: ["Genetic Drift", "Natural Selection", "Gene Flow", "Mutation Pressure"], a: 1 },
+                { q: "What evolutionary architecture charts separate ancestral tracking networks visually across time brackets?", o: ["Phylogenetic Tree", "Food Web", "Ecological Pyramid", "Taxonomic Key"], a: 0 },
+                { q: "What unique environmental dynamic binds two diverse lifeforms into mutually helpful survival pairings?", o: ["Parasitism", "Commensalism", "Mutualism", "Competition"], a: 2 },
+                { q: "What structural tier sets up the absolute base of any functional ecological energy chain?", o: ["Primary Consumers", "Secondary Consumers", "Producers", "Decomposers"], a: 2 },
+                { q: "What unique taxonomic category tier sets up the peak structural heading right above Kingdom classes?", o: ["Phylum", "Class", "Order", "Domain"], a: 3 },
+                { q: "What specialized tracking term charts out the distinct functional survival role held by a lifeform in its system?", o: ["Habitat", "Ecosystem", "Niche", "Biome"], a: 2 },
+                { q: "What specific environmental zone profiles contain extensive evergreen networks facing persistent cold regimes?", o: ["Tundra", "Taiga", "Savanna", "Chaparral"], a: 1 },
+                { q: "What evolutionary process describes non-related organisms independently evolving matching visual traits?", o: ["Divergent Evolution", "Convergent Evolution", "Coevolution", "Adaptive Radiation"], a: 1 },
+                { q: "What critical environmental compound is cycled directly through organic layers via transpiration vectors?", o: ["Carbon", "Nitrogen", "Water", "Phosphorus"], a: 2 },
+                { q: "What metric tracks the absolute summation of diverse life variations spanning across a localized habitat block?", o: ["Biomass", "Biodiversity", "Population Density", "Carrying Capacity"], a: 1 }
             ],
-            // SECTOR 5
             [
-                { q: "What explicit functional unit handles structural filtration processing inside human kidneys?", o: ["Neuron", "Nephron", "Alveolus", "Lobule"], a: 1 },
-                { q: "Which master endocrine module controls secondary hormonal activities from the cranial base?", o: ["Hypothalamus", "Pituitary Gland", "Thyroid Gland", "Pineal Body"], a: 1 },
-                { q: "What ecological mechanism calculates total dry organic mass tracking across trophic steps?", o: ["Energy Pyramid", "Biomass Pyramid", "Numbers Pyramid", "Productivity Chart"], a: 1 },
-                { q: "Which specific phase inside standard Mitosis cycles separates sister chromatids toward polar fields?", o: ["Prophase", "Metaphase", "Anaphase", "Telophase"], a: 2 },
-                { q: "What distinct physiological dynamic tracks an organism maintaining constant internal equilibrium thresholds?", o: ["Metabolism", "Homeostasis", "Osmoregulation", "Thermoregulation"], a: 1 },
-                { q: "Which fluid structural path returns lymphatic drainage back into core venous channels?", o: ["Thoracic Duct", "Aorta", "Vena Cava", "Hepatic Portal"], a: 0 },
-                { q: "What specific phenotypic expression occurs when distinct co-dominant alleles reveal both profiles simultaneously?", o: ["Incomplete Dominance", "Codominance", "Epistasis", "Pleiotropy"], a: 1 },
-                { q: "Which dynamic vitamin structure coordinates blood clotting processes via prothrombin interactions?", o: ["Vitamin A", "Vitamin E", "Vitamin K", "Vitamin D"], a: 2 },
-                { q: "What specialized cell type alters stoma pore geometry across plant leaf surfaces?", o: ["Epidermal Cells", "Guard Cells", "Mesophyll Cells", "Trichomes"], a: 1 },
-                { q: "Which evolutionary principle tracks anatomical variations that share embryonic origins but execute disparate tasks?", o: ["Analogous Structures", "Homologous Structures", "Vestigial Structures", "Atavistic Markers"], a: 1 }
+                { q: "What primary classification group lacks independent cell layouts and requires hosts to replicate traits?", o: ["Bacteria", "Fungi", "Viruses", "Protozoa"], a: 2 },
+                { q: "What carbohydrate compound structures the rigid physical exterior shells of fungi cell formats?", o: ["Cellulose", "Chitin", "Peptidoglycan", "Glycogen"], a: 1 },
+                { q: "What microscopic tracking classification features single-cell setups devoid of bound nuclear nodes?", o: ["Prokaryotes", "Eukaryotes", "Algae", "Helminths"], a: 0 },
+                { q: "Who is historically credited with capturing the landmark clinical discovery of penicillin compounds?", o: ["Robert Koch", "Louis Pasteur", "Alexander Fleming", "Edward Jenner"], a: 2 },
+                { q: "What functional structural node allows bacterial lines to shift core traits laterally between adjacent single cells?", o: ["Flagellum", "Plasmid", "Ribosome", "Capsule"], a: 1 },
+                { q: "What specialized defense system components are engineered internally to intercept foreign viral items?", o: ["Antigens", "Antibodies", "Hormones", "Antibiotics"], a: 1 },
+                { q: "What specific pathogen form causes standard infectious influenza outbreaks?", o: ["Bacterium", "Virus", "Fungus", "Prion"], a: 1 },
+                { q: "What specialized metabolic processing network drives food text adjustments without using oxygen lines?", o: ["Aerobic Respiration", "Fermentation", "Photosynthesis", "Beta Oxidation"], a: 1 },
+                { q: "What structural node elements anchor bacterial cell bodies securely down on underlying organic surfaces?", o: ["Flagella", "Pili", "Cilia", "Pseudopodia"], a: 1 },
+                { q: "What primary white blood cell classification structures direct target responses against toxic germ items?", o: ["Erythrocytes", "Lymphocytes", "Thrombocytes", "Basophils"], a: 1 }
             ]
         ];
 
@@ -254,7 +268,7 @@
         function evaluateQuizSession() {
             const data = BIOLOGY_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Biological matrix diagnostic complete. Strong comprehension profile." : "Cellular alignment below threshold parameters. Review recommended.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Physiological evaluation matrix cleared cleanly." : "Cellular imbalance tracked. Reset target sector.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

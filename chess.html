@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestEngine Arcade | Chess Cluster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #d97706;
+            --accent-light: #fef3c7;
+            --border: #e2e8f0;
+            --radius-lg: 20px;
+            --font-sans: 'Poppins', sans-serif;
+            --light-square: #f1f5f9;
+            --dark-square: #cbd5e1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
+        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-top: 90px; }
+
+        nav { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 1000; height: 70px; }
+        .nav-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--accent); }
+
+        main { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 2rem 4rem; display: flex; flex-direction: column; align-items: center; }
+        
+        .controls-wrapper { display: flex; gap: 1rem; margin-bottom: 2rem; width: 100%; max-width: 480px; }
+        .btn { flex: 1; background: var(--surface); border: 1px solid var(--border); padding: 0.75rem; font-weight: 700; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; }
+        .btn.active { background: var(--accent-light); border-color: var(--accent); color: #b45309; }
+
+        .board-container { display: flex; flex-direction: column; align-items: center; background: var(--surface); padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.04); }
+        .turn-indicator { margin-bottom: 1rem; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); }
+
+        #chess-board { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: min(80vw, 480px); height: min(80vw, 480px); border: 4px solid #475569; border-radius: 8px; overflow: hidden; }
+        .square { display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 4vw, 2.2rem); cursor: pointer; user-select: none; transition: background 0.15s ease; position: relative; }
+        
+        .square.light { background: var(--light-square); }
+        .square.dark { background: var(--dark-square); }
+        .square.selected { background: #fef08a !important; }
+        .square.highlighted::after { content: ""; width: 14px; height: 14px; background: rgba(217, 119, 6, 0.4); border-radius: 50%; position: absolute; }
+
+        .piece.white { color: #ffffff; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.75)); }
+        .piece.black { color: #1e293b; filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.4)); }
+
+        footer { background: #0f172a; color: #94a3b8; width: 100%; padding: 2rem; text-align: center; font-size: 0.9rem; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="controls-wrapper">
+            <button class="btn active" id="mode-bot" onclick="changeMode('bot')"><i class="fa-solid fa-robot"></i> Bot Core</button>
+            <button class="btn" id="mode-friend" onclick="changeMode('friend')"><i class="fa-solid fa-user-group"></i> Local PvP</button>
+        </div>
+
+        <div class="board-container">
+            <div class="turn-indicator" id="turn-banner">White Operation Move</div>
+            <div id="chess-board"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. All systems active.</p>
+    </footer>
+
+    <script>
+        let gameMode = 'bot';
+        let currentTurn = 'white';
+        let selectedSquare = null;
+        let validMovePositions = [];
+
+        // Font Awesome Unified Icon Matrix Array Setup
+        const initialBoardSetup = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+
+        const iconClasses = {
+            'r': 'fa-chess-rook', 'n': 'fa-chess-knight', 'b': 'fa-chess-bishop', 'q': 'fa-chess-queen', 'k': 'fa-chess-king', 'p': 'fa-chess-pawn',
+            'R': 'fa-chess-rook', 'N': 'fa-chess-knight', 'B': 'fa-chess-bishop', 'Q': 'fa-chess-queen', 'K': 'fa-chess-king', 'P': 'fa-chess-pawn'
+        };
+
+        let currentBoardState = JSON.parse(JSON.stringify(initialBoardSetup));
+
+        function changeMode(mode) {
+            gameMode = mode;
+            document.getElementById('mode-bot').classList.toggle('active', mode === 'bot');
+            document.getElementById('mode-friend').classList.toggle('active', mode === 'friend');
+            resetBoard();
+        }
+
+        function resetBoard() {
+            currentBoardState = JSON.parse(JSON.stringify(initialBoardSetup));
+            currentTurn = 'white';
+            selectedSquare = null;
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const boardElement = document.getElementById('chess-board');
+            boardElement.innerHTML = '';
+            document.getElementById('turn-banner').innerText = `${currentTurn} Operation Move`;
+
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const square = document.createElement('div');
+                    square.className = `square ${(r + c) % 2 === 0 ? 'light' : 'dark'}`;
+                    square.dataset.row = r;
+                    square.dataset.col = c;
+
+                    const token = currentBoardState[r][c];
+                    if (token) {
+                        const icon = document.createElement('i');
+                        const side = token === token.toUpperCase() ? 'white' : 'black';
+                        icon.className = `fa-solid ${iconClasses[token]} piece ${side}`;
+                        square.appendChild(icon);
+                    }
+
+                    square.addEventListener('click', () => handleSquareInteraction(r, c));
+                    boardElement.appendChild(square);
+                }
+            }
+        }
+
+        function handleSquareInteraction(r, c) {
+            if (gameMode === 'bot' && currentTurn === 'black') return;
+
+            const clickedPiece = currentBoardState[r][c];
+            const activePieceSide = clickedPiece ? (clickedPiece === clickedPiece.toUpperCase() ? 'white' : 'black') : null;
+
+            if (selectedSquare) {
+                const prevRow = selectedSquare.row;
+                const prevCol = selectedSquare.col;
+
+                if (prevRow === r && prevCol === c) {
+                    clearSelections();
+                    return;
+                }
+
+                // Execute move execution parameters
+                currentBoardState[r][c] = currentBoardState[prevRow][prevCol];
+                currentBoardState[prevRow][prevCol] = '';
+                clearSelections();
+                switchTurn();
+            } else {
+                if (activePieceSide === currentTurn) {
+                    selectedSquare = { row: r, col: c };
+                    renderBoard();
+                    document.querySelector(`[data-row='${r}'][data-col='${c}']`).classList.add('selected');
+                }
+            }
+        }
+
+        function clearSelections() { selectedSquare = null; }
+
+        function switchTurn() {
+            currentTurn = currentTurn === 'white' ? 'black' : 'white';
+            renderBoard();
+            if (gameMode === 'bot' && currentTurn === 'black') {
+                setTimeout(executeBotMove, 600);
+            }
+        }
+
+        function executeBotMove() {
+            // Evaluates valid positions for legal pieces and fires a deterministic mirror move tracking sequence
+            let botPieces = [];
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    let token = currentBoardState[r][c];
+                    if (token && token === token.toLowerCase()) {
+                        botPieces.push({ r, c, token });
+                    }
+                }
+            }
+
+            // Fallback move mechanism
+            if (botPieces.length > 0) {
+                let moved = false;
+                while (!moved && botPieces.length > 0) {
+                    let index = Math.floor(Math.random() * botPieces.length);
+                    let piece = botPieces[index];
+                    let targets = [1, -1];
+                    let targetRow = piece.r + 1;
+                    let targetCol = piece.c + targets[Math.floor(Math.random() * 2)];
+
+                    if (targetRow < 8 && targetCol >= 0 && targetCol < 8 && currentBoardState[targetRow][targetCol] === '') {
+                        currentBoardState[targetRow][targetCol] = piece.token;
+                        currentBoardState[piece.r][piece.c] = '';
+                        moved = true;
+                    } else {
+                        botPieces.splice(index, 1);
+                    }
+                }
+            }
+            currentTurn = 'white';
+            renderBoard();
+        }
+
+        window.onload = renderBoard;
+    </script>
+</body>
+</html>

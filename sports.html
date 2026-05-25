@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cognitive Puzzles | QuestEngine</title>
+    <title>Sports Matrix | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,22 +11,22 @@
     
     <style>
         :root {
-            --bg-primary: #f1f5f9;
-            --accent: #64748b; 
-            --accent-hover: #475569;
-            --text-main: #1e293b;
-            --text-muted: #334155;
-            --border-color: rgba(100, 116, 139, 0.25);
+            --bg-primary: #f0f4f8; /* Athletic Ice Blue Tint */
+            --accent: #1d4ed8;    /* Stadium Royal Blue */
+            --accent-hover: #1e40af;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: rgba(29, 78, 216, 0.15);
             --success: #16a34a;
             --danger: #dc2626;
             --font-sans: 'Poppins', sans-serif;
-            --glass-bg: rgba(241, 245, 249, 0.85);
-            --glass-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.06);
+            --glass-bg: #ffffff;
+            --glass-shadow: 0 10px 30px rgba(29, 78, 216, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
         body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-        header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
+        header { position: fixed; top: 0; left: 0; width: 100%; background: #ffffff; backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid var(--accent); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
@@ -45,21 +45,21 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); backdrop-filter: blur(8px); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; border: 1px solid var(--border-color); }
 
         #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
         .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
         .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
-        .tracker-pill, .timer { background: var(--bg-primary); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
+        .tracker-pill, .timer { background: #f1f5f9; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
         .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
-        .option-btn:hover { border-color: var(--accent); background: var(--bg-primary); }
+        .option-btn:hover { border-color: var(--accent); background: #f0f4f8; }
         .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
         .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
         .control-group { display: flex; gap: 8px; }
 
-        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; }
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .text-success { color: var(--success); font-weight: 600; }
@@ -83,15 +83,15 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-brain"></i> Cognitive Puzzles</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-trophy"></i> Sports Matrix</a>
             <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
-            <h3>Terminate Session?</h3>
-            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Your current analytical steps will be completely lost.</p>
+            <h3>Terminate Evaluation?</h3>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Current match statistics and record validation values will completely reset.</p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
                 <button class="btn-primary" onclick="confirmExitQuiz()">Yes, Abort</button>
@@ -102,8 +102,8 @@
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>Cognitive Core Sectors</h2>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select an evaluation matrix quadrant. Each sector processes exactly 10 cognitive evaluations.</p>
+                <h2>Athletic Evaluation Quadrants</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a sports analytics cluster. Each stadium ring processes exactly 10 track records.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
@@ -121,7 +121,7 @@
             <div class="pre-quiz-card">
                 <h2 id="preQuizTitle">Sector Registration</h2>
                 <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
-                    <div><i class="fa-solid fa-clipboard-list" style="margin-right:4px;"></i> 10 Items</div>
+                    <div><i class="fa-solid fa-medal" style="margin-right:4px;"></i> 10 Analytics Parameters</div>
                     <div><i class="fa-solid fa-stopwatch" style="margin-right:4px;"></i> 02:00 Min</div>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center;">
@@ -155,7 +155,7 @@
     <div id="results-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2>Analysis Completed</h2>
+                <h2>Evaluation Completed</h2>
                 <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
                 <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
@@ -168,76 +168,81 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 QuestEngine Platform Ecosystem. Slate Configuration.</p>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. Royal Blue Configuration.</p>
     </footer>
 
     <script>
-        const COGNITIVE_DATA = [
+        const SPORTS_DATA = [
+            // SECTOR 1: OLYMPIC HISTORY
             [
-                { q: "Which word does NOT belong with the others?", o: ["Leopard", "Cougar", "Cheetah", "Wolf"], a: 3 },
-                { q: "If all Bloops are Razzies and all Razzies are Lizzies, then all Bloops are definitely Lizzies.", o: ["True", "False", "Inconclusive", "None"], a: 0 },
-                { q: "Look at this series: 2, 4, 8, 16, 32, ... What number should come next?", o: ["48", "56", "64", "72"], a: 2 },
-                { q: "A man climbs up a 10-meter pole. Each day he climbs 3 meters and slips back 2 meters. How many days will it take him to reach the top?", o: ["7 days", "8 days", "9 days", "10 days"], a: 1 },
-                { q: "Choose the word that is most opposite to 'Artificial'.", o: ["Genuine", "Natural", "Synthetic", "Truthful"], a: 1 },
-                { q: "If Mary's father has five daughters: Nana, Nene, Nini, Nono, what is the fifth daughter's name?", o: ["Nunu", "Mary", "Nany", "Nina"], a: 1 },
-                { q: "Look at this series: 12, 11, 13, 12, 14, 13, ... What number should come next?", o: ["10", "16", "15", "12"], a: 2 },
-                { q: "Which shape can be formed by joining two identical right-angled triangles along their hypotenuse?", o: ["Rectangle", "Circle", "Pentagon", "Trapezoid"], a: 0 },
-                { q: "An electric train is moving north at 100mph. The wind is blowing from the west at 20mph. Which way does the smoke blow?", o: ["East", "South", "West", "There is no smoke"], a: 3 },
-                { q: "A clock shows 03:15. If the clock is rotated 90 degrees counter-clockwise, where does the minute hand point?", o: ["Up (12)", "Down (6)", "Left (9)", "Right (3)"], a: 0 }
+                { q: "In which city did the modern Olympic Games originate in 1896?", o: ["Paris", "Rome", "Athens", "London"], a: 2 },
+                { q: "What do the five interlinked rings on the official Olympic flag structurally represent?", o: ["The founding decades", "The five primary sports", "The five inhabited continents", "The five original athlete cohorts"], a: 2 },
+                { q: "Which legendary swimmer holds the absolute record for the most Olympic gold medals with 23 wins?", o: ["Michael Phelps", "Mark Spitz", "Ryan Lochte", "Ian Thorpe"], a: 0 },
+                { q: "Which nation has hosted the highest total number of modern Summer Olympic Games?", o: ["United Kingdom", "Germany", "Japan", "United States"], a: 3 },
+                { q: "What structural adjustment caused the cancellation of the Olympic Games scheduled for 1916, 1940, and 1944?", o: ["Economic Depressions", "Global World Wars", "Pandemic Outbreaks", "Boycott Declarations"], a: 1 },
+                { q: "Which iconic gymnast recorded the first perfect 10.0 score in Olympic history at Montreal 1976?", o: ["Simone Biles", "Nadia Comăneci", "Olga Korbut", "Mary Lou Retton"], a: 1 },
+                { q: "In what year did the Winter Olympic Games debut as a separate seasonal tracking cycle?", o: ["1900", "1912", "1924", "1936"], a: 2 },
+                { q: "Which track and field superstar shattered racial paradigms by securing four gold medals at Berlin 1936?", o: ["Jesse Owens", "Carl Lewis", "Jim Thorpe", "Usain Bolt"], a: 0 },
+                { q: "What historic practice dictates that Greece always enters first during the Parade of Nations at the Opening Ceremony?", o: ["Alphabetical precedence", "Honoring the ancient origins of the Games", "Random draw legacy rule", "Host nation designation policy"], a: 1 },
+                { q: "Which female track phenom, nicknamed 'The Flo-Jo', still holds the 100m and 200m world records set in 1988?", o: ["Wilma Rudolph", "Florence Griffith-Joyner", "Jackie Joyner-Kersee", "Marion Jones"], a: 1 }
             ],
+            // SECTOR 2: RULES AND REGULATIONS
             [
-                { q: "Find the odd pattern out from the list.", o: ["AEZ", "CGX", "EIV", "GKT"], a: 2 },
-                { q: "If blue means green, green means yellow, and yellow means red, what color is the clear sky?", o: ["Blue", "Green", "Yellow", "Red"], a: 1 },
-                { q: "Look at this series: 7, 10, 8, 11, 9, 12, ... What number should come next?", o: ["7", "10", "12", "13"], a: 1 },
-                { q: "Which word is a synonym for 'Meticulous'?", o: ["Careless", "Detailed", "Fast", "Messy"], a: 1 },
-                { q: "If 5 machines take 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", o: ["100 minutes", "50 minutes", "5 minutes", "1 minute"], a: 2 },
-                { q: "Some months have 30 days, some have 31. How many months have 28 days?", o: ["1 month", "6 months", "4 months", "All 12 months"], a: 3 },
-                { q: "If you develop a track running directly backwards from Z to A, what is the 5th letter from the start?", o: ["V", "W", "U", "X"], a: 0 },
-                { q: "A brother and sister were born in different years but their birthdays are on the same day. The brother is 4 years older. In how many years will he be twice her age?", o: ["When she is 2", "When she is 4", "When she is 8", "Never"], a: 1 },
-                { q: "What matches the relationship: 'Book is to Reading as Fork is to...'?", o: ["Stabbing", "Eating", "Cooking", "Cutting"], a: 1 },
-                { q: "If you turn a standard right-hand glove inside out, what does it fit?", o: ["Left hand", "Right hand", "Neither", "Both"], a: 0 }
+                { q: "What constitutes a 'technical foul' in professional basketball regulations?", o: ["Illegal physical contact during a shot", "Violating the 24-second shot clock", "Unsportsmanlike conduct or structural rule violations without contact", "Stepping out of boundary lines with the ball"], a: 2 },
+                { q: "How many field players from one single soccer team are legally allowed on the pitch during active play?", o: ["9 Players", "10 Players", "11 Players", "12 Players"], a: 2 },
+                { q: "In professional tennis, what exact term identifies a score matrix tied at 40-40?", o: ["Deuce", "Love-All", "Advantage", "Tiebreak"], a: 0 },
+                { q: "In American Football, how many yards must an offensive unit gain across 4 downs to secure a new first down?", o: ["5 Yards", "10 Yards", "15 Yards", "20 Yards"], a: 1 },
+                { q: "What rule parameter forces a soccer player to be penalized if they are closer to the opponent's goal line than the ball and the second-to-last defender when the ball is passed?", o: ["Handball Clause", "Offside Rule", "Indirect Free Kick Protocol", "Corner Kick Variance"], a: 1 },
+                { q: "How many strikes cleanly thrown into the strike zone result in a baseball batter striking out?", o: ["2 Strikes", "3 Strikes", "4 Strikes", "5 Strikes"], a: 1 },
+                { q: "In ice hockey regulations, what term identifies a minor infraction penalty that sends a player to the box for 2 minutes?", o: ["Icing", "Offsides", "Minor Penalty", "Power Play Activation"], a: 2 },
+                { q: "What is the maximum standard operational score attainable in a single frame of professional bowling?", o: ["10 Points", "20 Points", "30 Points", "100 Points"], a: 2 },
+                { q: "In professional golf tournament tracking, what term defines finishing a hole exactly two strokes under par?", o: ["Birdie", "Eagle", "Albatross", "Bogey"], a: 1 },
+                { q: "What specific parameter prompts a referee to issue a red card in rugby union?", o: ["A minor strategic offside", "Severe foul play, violent conduct, or a second yellow card", "An unintentional high tackle", "Knocking the ball forward with hands"], a: 1 }
             ],
+            // SECTOR 3: LEGENDARY ATHLETES
             [
-                { q: "Find the next item: 1, 3, 6, 10, 15, ...", o: ["18", "21", "24", "27"], a: 1 },
-                { q: "If A is taller than B, and B is taller than C, then C is taller than A.", o: ["True", "False", "Inconclusive", "N/A"], a: 1 },
-                { q: "Which word does NOT belong with the others?", o: ["Guitar", "Violin", "Flute", "Cello"], a: 2 },
-                { q: "A farmer has 17 sheep. All but 9 die. How many live sheep are left?", o: ["8", "9", "17", "0"], a: 1 },
-                { q: "What is the missing number? 3, 5, 9, 17, ...", o: ["25", "30", "33", "36"], a: 2 },
-                { q: "If 'GRID' is coded as 'HSIE', what is the code for 'LAMP'?", o: ["MBNO", "MBNQ", "MCOQ", "MANQ"], a: 1 },
-                { q: "If you spin a coin 3 times and it lands on heads every time, what is the probability it lands on heads the 4th time?", o: ["1/16", "1/2", "1/8", "1/4"], a: 1 },
-                { q: "John's mother had three children. The first was named April, the second was named May. What was the name of the third?", o: ["June", "John", "July", "Must be June"], a: 1 },
-                { q: "A box has 6 red marbles and 6 blue marbles. How many must you pull out blindly to guarantee a matching pair?", o: ["2", "3", "7", "12"], a: 1 },
-                { q: "Which asset matches: 'Tree is to Forest as Bricks are to...'?", o: ["Wall", "Mud", "Worker", "House"], a: 0 }
+                { q: "Which basketball phenomenon, universally known as 'His Airness', won six NBA championships with the Chicago Bulls?", o: ["LeBron James", "Kobe Bryant", "Michael Jordan", "Magic Johnson"], a: 2 },
+                { q: "Who is widely revered as 'The King of Football' after securing three FIFA World Cups with Brazil?", o: ["Diego Maradona", "Pelé", "Lionel Messi", "Cristiano Ronaldo"], a: 1 },
+                { q: "Which Jamaican sprinter earned the title of fastest man alive with a 100m world record time of 9.58 seconds?", o: ["Yohan Blake", "Asafa Powell", "Usain Bolt", "Tyson Gay"], a: 2 },
+                { q: "Which boxing icon iconically proclaimed he could 'float like a butterfly, sting like a bee'?", o: ["Mike Tyson", "Muhammad Ali", "Joe Frazier", "Sugar Ray Leonard"], a: 1 },
+                { q: "Which tennis icon holds the record for the most Grand Slam men's singles titles in the Open Era?", o: ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Pete Sampras"], a: 2 },
+                { q: "Which female tennis trailblazer secured 23 Grand Slam singles titles, dominating the modern era?", o: ["Steffi Graf", "Serena Williams", "Martina Navratilova", "Venus Williams"], a: 1 },
+                { q: "Who holds the absolute NHL career scoring record, universally referred to as 'The Great One'?", o: ["Wayne Gretzky", "Mario Lemieux", "Sidney Crosby", "Alex Ovechkin"], a: 0 },
+                { q: "Which Argentinian soccer magician completed his legacy track by lifting the 2022 FIFA World Cup in Qatar?", o: ["Cristiano Ronaldo", "Neymar Jr.", "Diego Maradona", "Lionel Messi"], a: 3 },
+                { q: "Which legendary Formula 1 driver holds a record-tying seven World Championships alongside Lewis Hamilton?", o: ["Ayrton Senna", "Michael Schumacher", "Sebastian Vettel", "Alain Prost"], a: 1 },
+                { q: "Which multi-sport athlete won Olympic gold medals in 1912 and also played professional baseball and football?", o: ["Jim Thorpe", "Babe Ruth", "Ty Cobb", "Jim Brown"], a: 0 }
             ],
+            // SECTOR 4: TEAM MASCOTS & IDENTITIES
             [
-                { q: "Identify the missing value in this matrix sequence: 40, 38, 35, 31, ...", o: ["28", "27", "26", "25"], a: 2 },
-                { q: "If all squares are rectangles, and all rectangles have four sides, then all squares have four sides.", o: ["True", "False", "Sometimes", "Inconclusive"], a: 0 },
-                { q: "What occurs once in a minute, twice in a moment, but never in a thousand years?", o: ["The letter M", "The clock second hand", "A lightning flash", "An echo"], a: 0 },
-                { q: "If a doctor gives you 3 pills and tells you to take one every half hour, how long do they last?", o: ["30 mins", "1 hour", "1.5 hours", "2 hours"], a: 1 },
-                { q: "Which word does NOT match the group?", o: ["Steering wheel", "Engine", "Tire", "Car"], a: 3 },
-                { q: "A rope ladder hangs over the side of a ship. The bottom rung rests exactly on the water. If the tide rises 1 meter per hour, where is the bottom rung after 3 hours?", o: ["3 meters under", "1 meter under", "Still on the water line", "Dry"], a: 2 },
-                { q: "Find the odd string out: J2K, L4M, N6O, P7Q", o: ["J2K", "L4M", "N6O", "P7Q"], a: 3 },
-                { q: "How many letters are in the alphabet sequence that are placed directly between G and L?", o: ["3", "4", "5", "6"], a: 1 },
-                { q: "What pattern matches: 'Light is to Darkness as Knowledge is to...'?", o: ["School", "Ignorance", "Books", "Wisdom"], a: 1 },
-                { q: "You enter a dark cabin with one match. There is a candle, a wood stove, and an oil lamp. What do you light first?", o: ["Candle", "Stove", "Lamp", "The Match"], a: 3 }
+                { q: "Which aggressive aquatic predator serves as the official mascot and team identity for the NHL franchise based in San Jose?", o: ["Bruins", "Sharks", "Kraken", "Avalanche"], a: 1 },
+                { q: "What fictional, lime-green creature serves as the iconic mascot for the Philadelphia Phillies baseball club?", o: ["The Phillie Phanatic", "Mr. Met", "The San Diego Chicken", "Wally the Green Monster"], a: 0 },
+                { q: "Which NFL franchise features a steel blue and silver star emblem on their helmets, known as 'America's Team'?", o: ["New England Patriots", "Dallas Cowboys", "Pittsburgh Steelers", "San Francisco 49ers"], a: 1 },
+                { q: "What avian predator identity is shared by the premier league football team based in Crystal Palace and the NFL team in Philadelphia?", o: ["Falcons", "Hawks", "Eagles", "Ravens"], a: 2 },
+                { q: "Which major collegiate athletic program tracks competition under the historical mascot name 'The Fighting Irish'?", o: ["Ohio State", "Notre Dame", "Michigan", "Alabama"], a: 1 },
+                { q: "What exact wildlife mascot identity tracks the NBA team based in Memphis?", o: ["Timberwolves", "Bucks", "Grizzlies", "Raptors"], a: 2 },
+                { q: "The MLB franchise in Toronto uses which colorful bird as its structural logo identity?", o: ["Blue Jay", "Cardinal", "Oriole", "Blackhawk"], a: 0 },
+                { q: "What mythical figure represents the Boston Celtics' official visual mascot character?", o: ["Lucky the Leprechaun", "The Triton", "The Minotaur", "The Centurion"], a: 0 },
+                { q: "Which English Premier League giants are colloquially identified by their historic nickname, 'The Red Devils'?", o: ["Liverpool FC", "Arsenal FC", "Manchester United", "Chelsea FC"], a: 2 },
+                { q: "What physical animal identity represents the NBA team from Milwaukee, matching their antlered logo?", o: ["Bulls", "Mavericks", "Timberwolves", "Bucks"], a: 3 }
             ],
+            // SECTOR 5: GLOBAL TOURNAMENTS & HISTORIC MOMENTS
             [
-                { q: "Evaluate this matrix tracking pattern: 80, 10, 70, 15, 60, ...", o: ["20", "25", "50", "55"], a: 0 },
-                { q: "If all lemons are sour and everything yellow is a lemon, then everything yellow must be sour.", o: ["True", "False", "Inconclusive", "N/A"], a: 0 },
-                { q: "Which item is the odd one out?", o: ["Eagle", "Hawk", "Ostrich", "Falcon"], a: 2 },
-                { q: "How many total cubic 1-inch blocks can fit inside a larger cubic box that measures exactly 3 inches on all sides?", o: ["9", "18", "27", "36"], a: 2 },
-                { q: "If Tomorrow is Thursday, what was the day before Yesterday?", o: ["Monday", "Sunday", "Tuesday", "Saturday"], a: 1 },
-                { q: "What sequence code continues: A1, B2, C4, D8, ...", o: ["E10", "E12", "E16", "E20"], a: 2 },
-                { q: "A bag has 3 green apples and 4 red apples. If you remove 2 apples, what is the minimum number of red apples remaining?", o: ["1", "2", "3", "4"], a: 1 },
-                { q: "Which target choice is the direct synonym of 'Procrastinate'?", o: ["Advance", "Delay", "Create", "Accelerate"], a: 1 },
-                { q: "Which word can mean both a type of fruit and a matching color?", o: ["Apple", "Orange", "Grape", "Banana"], a: 1 },
-                { q: "What matches the relationship: 'Fish is to Water as Bird is to...'?", o: ["Tree", "Sky", "Nest", "Feather"], a: 1 }
+                { q: "How often is the FIFA Men's World Cup tournament cycled globally?", o: ["Every 2 years", "Every 3 years", "Every 4 years", "Every 5 years"], a: 2 },
+                { q: "What prized silver trophy is awarded annually to the championship team of the National Hockey League?", o: ["The Vince Lombardi Trophy", "The Stanley Cup", "The Larry O'Brien Trophy", "The Commissioner's Trophy"], a: 1 },
+                { q: "Which historic bicycle race tracks thousands of kilometers across France each summer?", o: ["Giro d'Italia", "Vuelta a España", "Tour de France", "Paris-Roubaix"], a: 2 },
+                { q: "What prestigious annual championship game crowns the ultimate winner of the NFL season?", o: ["The World Series", "The Stanley Cup Finals", "The Super Bowl", "The NBA Finals"], a: 2 },
+                { q: "Which specific tennis tournament is famously contested on grass courts at the All England Club?", o: ["The US Open", "The French Open", "Wimbledon", "The Australian Open"], a: 2 },
+                { q: "What annual automotive endurance race challenges sports car teams to drive uninterrupted for a full day in France?", o: ["The Monaco Grand Prix", "The Indianapolis 500", "The 24 Hours of Le Mans", "The Daytona 500"], a: 2 },
+                { q: "Which nation secured the 2023 ICC Men's Cricket World Cup title in a historic final?", o: ["India", "Australia", "England", "South Africa"], a: 1 },
+                { q: "What iconic green jacket trophy is presented to the winner of which major golf tournament?", o: ["The US Open", "The PGA Championship", "The Masters Tournament", "The Open Championship"], a: 2 },
+                { q: "What exact distance matrix spans a standard, internationally certified athletic Marathon track?", o: ["20.2 Miles", "26.2 Miles (42.195 km)", "31.1 Miles", "15.5 Miles"], a: 1 },
+                { q: "Which famous multi-sport event brings together nations from the former British Empire every four years?", o: ["The Pan American Games", "The Commonwealth Games", "The Asian Games", "The Mediterranean Games"], a: 1 }
             ]
         ];
 
         let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
         function showView(vId) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); document.getElementById(vId).classList.add('active-view'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Cognitive - Sector ${num} Initialization`; showView('pre-quiz-view'); }
+        function selectLevel(num) { currentSectorIndex = num - 1; document.getElementById('preQuizTitle').innerText = `Sports - Sector ${num} Initialization`; showView('pre-quiz-view'); }
         function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
         function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
         function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
@@ -252,7 +257,7 @@
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
         function renderQuestion() {
-            const item = COGNITIVE_DATA[currentSectorIndex][currentQuestionIndex];
+            const item = SPORTS_DATA[currentSectorIndex][currentQuestionIndex];
             document.getElementById('questionTracker').innerText = `Item ${currentQuestionIndex + 1}/10`;
             document.getElementById('questionText').innerText = item.q;
             const container = document.getElementById('optionsContainer'); container.innerHTML = "";
@@ -266,9 +271,9 @@
         }
         function navigateQuestion(dir) { if (dir === 1) { if (currentQuestionIndex < 9) { currentQuestionIndex++; renderQuestion(); } else { clearInterval(quizTimer); evaluateQuizSession(); } } else { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } } }
         function evaluateQuizSession() {
-            const data = COGNITIVE_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            const data = SPORTS_DATA[currentSectorIndex]; let score = 0; data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
             document.getElementById('scoreDisplay').innerText = `${score}/10`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Cognitive logic metrics verified within standard parameters." : "Logical pattern anomalies detected. Reset current quadrant.";
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Stat track parameters verified and balanced successfully." : "Performance metrics below target threshold. Reset sector fields.";
             buildReviewMatrix(data); showView('results-view');
         }
         function buildReviewMatrix(data) {

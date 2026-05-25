@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Database | QuestEngine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-md: 14px;
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
+        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Responsive Navigation System */
+        nav { position: fixed; top: 0; left: 0; width: 100%; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 1000; height: 70px; }
+        .nav-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; position: relative; }
+        .brand { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: #2563eb; }
+        
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-main); background: #f1f5f9; }
+
+        /* Mobile Menu Toggle Button (Hidden on Desktop) */
+        .mobile-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; z-index: 1100; }
+
+        main { flex: 1; max-width: 1400px; width: 100%; margin: 110px auto 4rem; padding: 0 2rem; }
+        .section-header { margin-bottom: 2.5rem; }
+        .section-header h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .section-header p { color: var(--text-muted); font-size: 1rem; }
+
+        /* Card Matrix Layout */
+        .card-matrix { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        .card { background: var(--surface); border-radius: var(--radius-md); border: 1px solid var(--border); overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        
+        .card-img { width: 100%; height: 160px; object-fit: cover; background: #e2e8f0; }
+        .card-content { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+        .card-desc { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: auto; }
+
+        /* Responsive Mobile Breakpoints */
+        @media (max-width: 768px) {
+            .nav-container { padding: 0 1.5rem; }
+            
+            /* Show hamburger menu on mobile */
+            .mobile-toggle { display: block; } 
+            
+            /* Hidden drop-down menu for mobile */
+            .nav-links { position: absolute; top: 70px; left: 0; width: 100%; background: var(--surface); flex-direction: column; gap: 0; padding: 1rem 0; border-bottom: 1px solid var(--border); display: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+            .nav-links.open { display: flex; } /* Turned on by Javascript */
+            .nav-links li { width: 100%; text-align: center; }
+            .nav-links a { display: block; padding: 0.75rem 2rem; border-radius: 0; }
+            
+            main { padding: 0 1rem; margin-top: 100px; }
+            .card-matrix { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+            .section-header h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
+            
+            <button class="mobile-toggle" id="menuToggle" aria-label="Toggle navigation Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="quiz.html" class="active">Quizzes</a></li>
+                <li><a href="games.html">Games</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="section-header">
+            <h2>Knowledge Evaluation Hub</h2>
+            <p>Select an isolated subject sector to configure your evaluation engine.</p>
+        </div>
+
+        <div class="card-matrix">
+            <a href="chemistry.html" class="card chem-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1554475900-0a0350e3fc7b?q=80&w=600&auto=format&fit=crop" alt="Chemistry">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#ef4444;"><i class="fa-solid fa-flask"></i> Chemistry</h3>
+                    <p class="card-desc">Atomic setups, bonding mechanics, thermodynamics, and molecular diagnostics.</p>
+                </div>
+            </a>
+
+            <a href="malayalamriddles.html" class="card riddle-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600" alt="Malayalam">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#b45309;"><i class="fa-solid fa-brain"></i> കടങ്കഥകൾ</h3>
+                    <p class="card-desc">Traditional language puzzles testing lateral problem-solving patterns.</p>
+                </div>
+            </a>
+
+            <a href="biology.html" class="card bio-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1633167606207-d840b5070fc2?q=80&w=600&auto=format&fit=crop" alt="Biology">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#10b981;"><i class="fa-solid fa-dna"></i> Biology</h3>
+                    <p class="card-desc">Cytological structures, advanced genomic setups, and ecological pathways.</p>
+                </div>
+            </a>
+
+            <a href="art.html" class="card art-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop" alt="Art">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#d97706;"><i class="fa-solid fa-palette"></i> Art</h3>
+                    <p class="card-desc">Artistic evaluation quadrants, canvas structural validation parameters, and aesthetics metrics.</p>
+                </div>
+            </a>
+
+            <a href="film.html" class="card film-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=600&auto=format&fit=crop" alt="Film">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#dc2626;"><i class="fa-solid fa-film"></i> Film</h3>
+                    <p class="card-desc">Academy Award chronicles, legendary movie quotes, and directional visionaries.</p>
+                </div>
+            </a>
+
+            <a href="sports.html" class="card sports-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=600&auto=format&fit=crop" alt="Sports">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#2563eb;"><i class="fa-solid fa-trophy"></i> Sports</h3>
+                    <p class="card-desc">Olympic history chronologies, rule variations, and elite athlete analytical timelines.</p>
+                </div>
+            </a>
+
+            <a href="food.html" class="card food-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=600&auto=format&fit=crop" alt="Food">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#166534;"><i class="fa-solid fa-wheat-awn"></i> Food</h3>
+                    <p class="card-desc">Culinary world records, ingredient chemical reactions, and global gastronomy traditions.</p>
+                </div>
+            </a>
+
+            <a href="travel.html" class="card travel-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600&auto=format&fit=crop" alt="Travel">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#ca8a04;"><i class="fa-solid fa-compass"></i> Travel</h3>
+                    <p class="card-desc">Tourist trap analysis, ancient monument coordinates, and global transit networks.</p>
+                </div>
+            </a>
+
+            <a href="health.html" class="card health-card">
+                <img class="card-img" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop" alt="Health">
+                <div class="card-content">
+                    <h3 class="card-title" style="color:#0d9488;"><i class="fa-solid fa-heart-pulse"></i> Health</h3>
+                    <p class="card-desc">Macronutrient balance matrices, human structural anatomy, and preventative health science.</p>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 QuestEngine Platform Ecosystem. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        // Toggle menu when clicking the menu button
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            const icon = menuToggle.querySelector('i');
+            if (navLinks.classList.contains('open')) {
+                icon.className = 'fa-solid fa-xmark'; // X symbol when open
+            } else {
+                icon.className = 'fa-solid fa-bars';  // Hamburger when closed
+            }
+        });
+
+        // Close menu if a user clicks outside of the navigation panel
+        document.addEventListener('click', (event) => {
+            if (!menuToggle.contains(event.target) && !navLinks.contains(event.target)) {
+                navLinks.classList.remove('open');
+                menuToggle.querySelector('i').className = 'fa-solid fa-bars';
+            }
+        });
+    </script>
+</body>
+</html>
