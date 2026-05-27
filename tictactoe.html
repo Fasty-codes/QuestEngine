@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe | QuestArcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-1: #ffffff;
+            --bg-gradient-2: #f8fafc;
+            --bg-gradient-3: #e2e8f0;
+            --card-light: rgba(255, 255, 255, 0.85);
+            --text-dark: #0f172a;
+            --grid-line: rgba(255, 255, 255, 0.2);
+            --x-color: #00f2fe;
+            --x-glow: #00c6ff;
+            --o-color: #ff007f;
+            --o-glow: #f355da;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow: hidden;
+            background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-1));
+            background-size: 400% 400%;
+            animation: fluidBg 14s ease infinite;
+        }
+
+        @keyframes fluidBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .arcade-card {
+            background: var(--card-light);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .view { display: none; }
+        .view.active { display: block; animation: viewSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        @keyframes viewSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 2.4rem; font-weight: 900; color: var(--text-dark); margin-bottom: 0.25rem; letter-spacing: -0.5px; }
+        .subtitle { color: #64748b; margin-bottom: 2rem; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .label { font-weight: 700; font-size: 0.85rem; color: #475569; display: block; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.75px; }
+        .grid-selector { display: flex; gap: 12px; justify-content: center; margin-bottom: 2.5rem; }
+        
+        .btn-select {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 0.85rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.2s ease;
+            color: #64748b;
+        }
+        .btn-select:hover { border-color: #cbd5e1; background: #f8fafc; color: var(--text-dark); }
+        .btn-select.selected { border-color: var(--text-dark); background: var(--text-dark); color: white; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--text-dark);
+            color: white;
+            border: none;
+            padding: 1.1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover { background: #1e293b; transform: translateY(-1px); box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18); }
+
+        .status-header { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; color: #334155; height: 1.5rem; }
+        
+        /* The Board Container holds the aspect ratio firmly */
+        .board-container {
+            background: #090d16;
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: inset 0 4px 20px rgba(0,0,0,0.5), 0 10px 30px rgba(9, 13, 22, 0.2);
+            margin-bottom: 1.5rem;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fixed Grid Setup: No overlapping parameters, strictly structured rows/columns */
+        .board {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        /* Perfected clean lines style layout */
+        .cell {
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            /* Explicitly handle overflow so markers don't warp structural heights */
+            overflow: hidden; 
+            transition: background 0.2s ease;
+        }
+        .cell:hover:not(.occupied) { background: rgba(255, 255, 255, 0.03); }
+
+        /* Super Clean high intensity neon markers */
+        .cell span {
+            display: block;
+            line-height: 1;
+            transform: scale(0);
+            animation: tokenPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .cell.X span {
+            color: var(--x-color);
+            text-shadow: 0 0 8px var(--x-glow), 0 0 20px var(--x-glow);
+        }
+
+        .cell.O span {
+            color: var(--o-color);
+            text-shadow: 0 0 8px var(--o-glow), 0 0 20px var(--o-glow);
+        }
+
+        @keyframes tokenPop {
+            0% { transform: scale(0.4); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .cell.winner {
+            animation: winPulse 0.6s ease infinite alternate;
+        }
+        @keyframes winPulse {
+            from { background: rgba(255, 255, 255, 0.01); filter: brightness(1); }
+            to { background: rgba(255, 255, 255, 0.08); filter: brightness(1.3); }
+        }
+
+        .controls-row { display: flex; gap: 12px; }
+        .btn-secondary {
+            flex: 1;
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid #e2e8f0;
+            padding: 0.9rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+        /* Popup Overlays for game statuses */
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(9, 13, 22, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+            transition: opacity 0.4s ease;
+        }
+        .screen-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .overlay-window {
+            text-align: center;
+            padding: 2rem;
+            max-width: 85%;
+            transform: scale(0.7);
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .screen-overlay.active .overlay-window { transform: scale(1); }
+
+        .status-icon { font-size: 4rem; margin-bottom: 1rem; display: inline-block; }
+        .status-title { font-size: 2.2rem; font-weight: 900; color: white; margin-bottom: 0.5rem; }
+        .status-desc { color: #94a3b8; margin-bottom: 2rem; font-size: 0.95rem; }
+
+        .confetti-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            top: -20px;
+            border-radius: 50%;
+            animation: fallAnimation 3s linear infinite;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        @keyframes fallAnimation {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
+        }
+
+        .win-animate { animation: floatWindow 3s ease-in-out infinite; }
+        .lose-animate { animation: tiltShake 0.5s ease-in-out; }
+        .draw-animate { animation: scalePulse 0.4s ease-in-out; }
+
+        @keyframes floatWindow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes tiltShake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            20%, 60% { transform: translateX(-6px) rotate(-1.5deg); }
+            40%, 80% { transform: translateX(6px) rotate(1.5deg); }
+        }
+        @keyframes scalePulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="arcade-card">
+        <div id="resultOverlay" class="screen-overlay">
+            <div id="overlayWindow" class="overlay-window">
+                <div id="statusIcon" class="status-icon">🎉</div>
+                <div id="statusTitle" class="status-title">Victory!</div>
+                <div id="statusDesc" class="status-desc">You outsmarted the arcade bot.</div>
+                <button class="btn-primary" onclick="closeOverlayAndReset()">Play Again</button>
+            </div>
+        </div>
+
+        <div id="startView" class="view active">
+            <h1>QuestArcade</h1>
+            <p class="subtitle">Neon Tic-Tac-Toe</p>
+            
+            <div style="margin-bottom: 2.5rem;">
+                <span class="label">Select Grid Architecture</span>
+                <div class="grid-selector">
+                    <button class="btn-select selected" onclick="changeGridConfig(3, this)">3 x 3</button>
+                    <button class="btn-select" onclick="changeGridConfig(4, this)">4 x 4</button>
+                    <button class="btn-select" onclick="changeGridConfig(5, this)">5 x 5</button>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="launchArena()">Enter Match</button>
+        </div>
+
+        <div id="arenaView" class="view">
+            <div class="status-header" id="turnIndicator">Your turn (X)</div>
+            
+            <div class="board-container">
+                <div class="board" id="boardGrid"></div>
+            </div>
+
+            <div class="controls-row">
+                <button class="btn-secondary" onclick="returnToMenu()">Main Menu</button>
+                <button class="btn-primary" style="flex: 1.4;" onclick="wipeAndRestart()">Reset Arena</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gridSize = 3;
+        let boardArr = [];
+        let isGameRunning = true;
+        let userMarker = 'X';
+        let botMarker = 'O';
+        let currentTurn = 'X';
+        let winningCombos = [];
+
+        function changeGridConfig(size, btnElement) {
+            gridSize = size;
+            document.querySelectorAll('.btn-select').forEach(b => b.classList.remove('selected'));
+            btnElement.classList.add('selected');
+        }
+
+        function switchActiveView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        function launchArena() {
+            winningCombos = generateWinningLines(gridSize);
+            switchActiveView('arenaView');
+            wipeAndRestart();
+        }
+
+        function returnToMenu() {
+            switchActiveView('startView');
+        }
+
+        function generateWinningLines(size) {
+            let lines = [];
+            for (let r = 0; r < size; r++) {
+                let row = [];
+                for (let c = 0; c < size; c++) row.push(r * size + c);
+                lines.push(row);
+            }
+            for (let c = 0; c < size; c++) {
+                let col = [];
+                for (let r = 0; r < size; r++) col.push(r * size + c);
+                lines.push(col);
+            }
+            let d1 = [];
+            for (let i = 0; i < size; i++) d1.push(i * size + i);
+            lines.push(d1);
+            let d2 = [];
+            for (let i = 0; i < size; i++) d2.push(i * size + (size - 1 - i));
+            lines.push(d2);
+            return lines;
+        }
+
+        function wipeAndRestart() {
+            boardArr = Array(gridSize * gridSize).fill("");
+            isGameRunning = true;
+            currentTurn = 'X';
+            document.getElementById('turnIndicator').innerText = "Your turn (X)";
+            
+            const boardElement = document.getElementById('boardGrid');
+            boardElement.innerHTML = "";
+            boardElement.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            boardElement.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
+            // Dynamically lock accurate font sizing inside grid boundaries
+            let fontSizeMap = { 3: '3.2rem', 4: '2.4rem', 5: '1.85rem' };
+            let currentFontSize = fontSizeMap[gridSize] || '2rem';
+
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.style.fontSize = currentFontSize;
+                
+                const r = Math.floor(i / gridSize);
+                const c = i % gridSize;
+                
+                // Absolute clean look: Internal lines only
+                if (c < gridSize - 1) cell.style.borderRight = "3px solid var(--grid-line)";
+                if (r < gridSize - 1) cell.style.borderBottom = "3px solid var(--grid-line)";
+                
+                cell.addEventListener('click', () => handlePlayerSelection(cell, i));
+                boardElement.appendChild(cell);
+            }
+        }
+
+        function handlePlayerSelection(cellElement, index) {
+            if (boardArr[index] !== "" || !isGameRunning || currentTurn !== userMarker) return;
+
+            placeToken(index, userMarker, cellElement);
+            if (checkGameStatus()) return;
+
+            currentTurn = botMarker;
+            document.getElementById('turnIndicator').innerText = "Bot calculation...";
+            
+            setTimeout(() => {
+                computeBotMove();
+            }, 500);
+        }
+
+        function placeToken(index, player, cellElement) {
+            boardArr[index] = player;
+            cellElement.innerHTML = `<span>${player}</span>`;
+            cellElement.classList.add(player, 'occupied');
+        }
+
+        function computeBotMove() {
+            if (!isGameRunning) return;
+
+            let targetMove = locateCriticalIndex(botMarker);
+            if (targetMove === null) {
+                targetMove = locateCriticalIndex(userMarker);
+            }
+            if (targetMove === null) {
+                targetMove = evaluateSetupThreats();
+            }
+
+            const midNode = Math.floor((gridSize * gridSize) / 2);
+            if (targetMove === null && boardArr[midNode] === "") {
+                targetMove = midNode;
+            }
+
+            if (targetMove === null) {
+                let vacancies = [];
+                boardArr.forEach((val, idx) => { if (val === "") vacancies.push(idx); });
+                if (vacancies.length > 0) {
+                    targetMove = vacancies[Math.floor(Math.random() * vacancies.length)];
+                }
+            }
+
+            if (targetMove !== null) {
+                const selectedCell = document.querySelector(`.cell[data-index='${targetMove}']`);
+                placeToken(targetMove, botMarker, selectedCell);
+                
+                if (checkGameStatus()) return;
+                
+                currentTurn = userMarker;
+                document.getElementById('turnIndicator').innerText = "Your turn (X)";
+            }
+        }
+
+        function locateCriticalIndex(targetPlayer) {
+            for (let line of winningCombos) {
+                let matchCount = 0;
+                let clearSlot = null;
+                for (let idx of line) {
+                    if (boardArr[idx] === targetPlayer) matchCount++;
+                    else if (boardArr[idx] === "") clearSlot = idx;
+                }
+                if (matchCount === gridSize - 1 && clearSlot !== null) {
+                    return clearSlot;
+                }
+            }
+            return null;
+        }
+
+        function evaluateSetupThreats() {
+            for (let tier = gridSize - 2; tier >= 1; tier--) {
+                for (let line of winningCombos) {
+                    let botMatch = 0;
+                    let alternatives = [];
+                    let humanBlocked = false;
+
+                    for (let idx of line) {
+                        if (boardArr[idx] === botMarker) botMatch++;
+                        else if (boardArr[idx] === userMarker) humanBlocked = true;
+                        else alternatives.push(idx);
+                    }
+
+                    if (!humanBlocked && botMatch === tier && alternatives.length > 0) {
+                        return alternatives[Math.floor(Math.random() * alternatives.length)];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function checkGameStatus() {
+            let winFound = false;
+
+            for (let line of winningCombos) {
+                const benchmarkVal = boardArr[line[0]];
+                if (benchmarkVal === "") continue;
+                
+                let holdsMatch = true;
+                for (let i = 1; i < line.length; i++) {
+                    if (boardArr[line[i]] !== benchmarkVal) {
+                        holdsMatch = false;
+                        break;
+                    }
+                }
+                if (holdsMatch) {
+                    winFound = true;
+                    highlightWinnerLine(line);
+                    triggerOutcomeAnimation(benchmarkVal === userMarker ? 'win' : 'lose');
+                    break;
+                }
+            }
+
+            if (!winFound && !boardArr.includes("")) {
+                triggerOutcomeAnimation('draw');
+                return true;
+            }
+
+            return winFound;
+        }
+
+        function highlightWinnerLine(line) {
+            line.forEach(idx => {
+                document.querySelector(`.cell[data-index='${idx}']`).classList.add('winner');
+            });
+        }
+
+        function triggerOutcomeAnimation(result) {
+            isGameRunning = false;
+            const overlay = document.getElementById('resultOverlay');
+            const windowBox = document.getElementById('overlayWindow');
+            const icon = document.getElementById('statusIcon');
+            const title = document.getElementById('statusTitle');
+            const desc = document.getElementById('statusDesc');
+
+            windowBox.className = "overlay-window";
+            clearConfetti();
+
+            if (result === 'win') {
+                icon.innerText = "🏆";
+                title.innerText = "Victory!";
+                desc.innerText = "Fantastic match! You outsmarted the system.";
+                windowBox.classList.add('win-animate');
+                generateConfettiBurst();
+            } else if (result === 'lose') {
+                icon.innerText = "🤖";
+                title.innerText = "Defeat!";
+                desc.innerText = "The bot predicted your paths. Try another tactic.";
+                windowBox.classList.add('lose-animate');
+            } else {
+                icon.innerText = "🤝";
+                title.innerText = "Draw!";
+                desc.innerText = "An evenly matched tactical standoff.";
+                windowBox.classList.add('draw-animate');
+            }
+
+            setTimeout(() => {
+                overlay.classList.add('active');
+            }, 400);
+        }
+
+        function closeOverlayAndReset() {
+            document.getElementById('resultOverlay').classList.remove('active');
+            clearConfetti();
+            wipeAndRestart();
+        }
+
+        function generateConfettiBurst() {
+            const overlay = document.getElementById('resultOverlay');
+            const colors = ['#00f2fe', '#ff007f', '#f59e0b', '#10b981'];
+            for (let i = 0; i < 65; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'confetti-particle';
+                flake.style.left = Math.random() * 100 + '%';
+                flake.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                flake.style.animationDelay = Math.random() * 2.5 + 's';
+                flake.style.transform = `scale(${Math.random() * 0.7 + 0.4})`;
+                overlay.appendChild(flake);
+            }
+        }
+
+        function clearConfetti() {
+            document.querySelectorAll('.confetti-particle').forEach(el => el.remove());
+        }
+    </script>
+</body>
+</html>
