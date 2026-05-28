@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Mob Image Finder | QuestEngine</title>
+    <title>Ultimate 50 Mob Visual Challenge | QuestEngine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,9 +54,9 @@
         .tracker-pill, .timer { background: #f5f5f4; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
         .timer { color: var(--danger); }
 
-        /* Mob Image Panel Styling */
-        .image-frame-panel { background: #1e1b18; border: 3px solid var(--accent); border-radius: 16px; padding: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: center; align-items: center; min-height: 240px; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
-        .mob-target-img { max-height: 200px; max-width: 100%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0px 8px 10px rgba(0,0,0,0.5)); }
+        /* Pixel Art Image Holder Area */
+        .image-frame-panel { background: #1e1b18; border: 3px solid var(--accent); border-radius: 16px; padding: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: center; align-items: center; min-height: 240px; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); }
+        .mob-target-img { max-height: 200px; max-width: 100%; object-fit: contain; image-rendering: pixelated; }
 
         .options-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 0.5rem; }
         .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; }
@@ -94,15 +94,15 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-cube"></i> QuestEngine</a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-cubes"></i> QuestEngine</a>
             <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
         </div>
     </header>
 
     <div id="exitModal" class="modal-overlay">
         <div class="modal-box">
-            <h3>Quit Active Session?</h3>
-            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure you want to stop? Unsaved sector progress will vanish.</p>
+            <h3>Exit Sector Run?</h3>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Unsaved progress within this sector maps will reset.</p>
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
                 <button class="btn-primary" onclick="confirmExitQuiz()">Quit</button>
@@ -113,12 +113,14 @@
     <div id="level-view" class="view active-view">
         <div class="view-container">
             <div class="level-container">
-                <h2>Identify the Minecraft Mob</h2>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Analyze the high-definition mob snapshot rendering and choose the match.</p>
+                <h2>Minecraft Mob Identification Hub</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a Sector zone. Each contains 10 hyper-focused visual questions.</p>
                 <div class="level-grid">
                     <button class="level-btn" onclick="selectLevel(1)">1</button>
                     <button class="level-btn" onclick="selectLevel(2)">2</button>
                     <button class="level-btn" onclick="selectLevel(3)">3</button>
+                    <button class="level-btn" onclick="selectLevel(4)">4</button>
+                    <button class="level-btn" onclick="selectLevel(5)">5</button>
                 </div>
                 <a href="index.html" class="btn-secondary"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Return Hub</a>
             </div>
@@ -128,14 +130,14 @@
     <div id="pre-quiz-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2 id="preQuizTitle">Sector Identification</h2>
+                <h2 id="preQuizTitle">Sector</h2>
                 <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
-                    <div><i class="fa-solid fa-image" style="margin-right:6px;"></i> 5 Visual Targets</div>
-                    <div><i class="fa-solid fa-stopwatch" style="margin-right:6px;"></i> 02:00 Min</div>
+                    <div><i class="fa-solid fa-images" style="margin-right:6px;"></i> 10 Visual Cards</div>
+                    <div><i class="fa-solid fa-stopwatch" style="margin-right:6px;"></i> 03:00 Min</div>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button class="btn-secondary" onclick="showView('level-view')">Back</button>
-                    <button class="btn-primary" onclick="startQuiz()">Launch Run</button>
+                    <button class="btn-secondary" onclick="showView('level-view')">Map Select</button>
+                    <button class="btn-primary" onclick="startQuiz()">Launch Database</button>
                 </div>
             </div>
         </div>
@@ -144,19 +146,18 @@
     <div id="quiz-view" class="view">
         <div class="quiz-window">
             <div class="quiz-header">
-                <span class="tracker-pill" id="questionTracker">Mob 1/5</span>
-                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 02:00</span>
+                <span class="tracker-pill" id="questionTracker">Card 1/10</span>
+                <span class="timer" id="timerDisplay"><i class="fa-solid fa-clock"></i> 03:00</span>
             </div>
             <div style="flex: 1;">
-                <!-- Main Visual Image Projection Window -->
                 <div class="image-frame-panel">
-                    <img id="mobDisplayImage" src="" alt="Target Mob Blueprint" class="mob-target-img">
+                    <img id="mobDisplayImage" src="" alt="Target Profile Asset" class="mob-target-img">
                 </div>
-                <h3 style="font-size:1.15rem; margin-bottom:1rem; font-weight: 600; text-align: center; color: var(--text-muted);">Which entity matches this physical visual profile?</h3>
+                <h3 style="font-size:1.15rem; margin-bottom:1rem; font-weight: 600; text-align: center; color: var(--text-muted);">Identify the entity matching this structural render:</h3>
                 <div class="options-list" id="optionsContainer"></div>
             </div>
             <div class="quiz-controls">
-                <button class="btn-secondary" onclick="requestAbortQuiz()">Quit</button>
+                <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
                 <div class="control-group">
                     <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
                     <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
@@ -168,12 +169,12 @@
     <div id="results-view" class="view">
         <div class="view-container">
             <div class="pre-quiz-card">
-                <h2>Evaluation Terminal</h2>
-                <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/5</div>
+                <h2>Analysis Completed</h2>
+                <div style="font-size: 4rem; font-weight: 800; color: var(--accent); margin: 1rem 0;" id="scoreDisplay">0/10</div>
                 <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Map</button>
-                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Breakdowns</button>
+                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Matrix</button>
                 </div>
                 <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
             </div>
@@ -185,54 +186,77 @@
     </footer>
 
     <script>
-        // High-fidelity asset links sourced directly via cloud repositories for pixel-perfect render matching
+        // 50 Questions Database divided across 5 specific gameplay sectors
         const MINECRAFT_PHOTO_DATA = [
-            // Sector 1: The Overworld Standard
+            // Sector 1: Overworld Passive & Livestock
             [
-                { img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", altImg: "https://minecraft.wiki/images/Creeper_JE2_B5.png", o: ["Creeper", "Zombie", "Slime", "Zombie Pigman"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Creeper.png" },
-                { o: ["Enderman", "Spider", "Phantom", "Wither"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Enderman.png" },
-                { o: ["Skeleton", "Stray", "Wither Skeleton", "Guard"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Skeleton.png" },
-                { o: ["Sheep", "Cow", "Pig", "Goat"], a: 1, actualSrc: "https://assets.minecraftservices.com/lh3/Cow.png" },
-                { o: ["Villager", "Witch", "Pillager", "Evoker"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Villager.png" }
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-cow-face.png", o: ["Cow", "Mooshroom", "Pig", "Goat"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-pig-face.png", o: ["Cow", "Sheep", "Pig", "Pink Slime"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-sheep-face.png", o: ["Llama", "Sheep", "Goat", "Polar Bear"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-chicken-face.png", o: ["Parrot", "Duck", "Chicken", "Bat"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-villager-face.png", o: ["Villager", "Witch", "Pillager", "Zombie Villager"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-wolf-face.png", o: ["Fox", "Wolf / Dog", "Cat", "Ocelot"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-ocelot-face.png", o: ["Cat", "Ocelot", "Fox", "Tiger"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-squid-face.png", o: ["Squid", "Glow Squid", "Octopus", "Guardian"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-mooshroom-face.png", o: ["Cow", "Red Cow", "Mooshroom", "Zombie Cow"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-bat-face.png", o: ["Bat", "Phantom", "Vex", "Parrot"], a: 0 }
             ],
-            // Sector 2: Nether & Abyss
+            // Sector 2: Night Terrors & Monsters
             [
-                { o: ["Blaze", "Ghast", "Magma Cube", "Strider"], a: 1, actualSrc: "https://assets.minecraftservices.com/lh3/Ghast.png" },
-                { o: ["Wither Skeleton", "Skeleton", "Zombie", "Piglin"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Wither_Skeleton.png" },
-                { o: ["Piglin", "Hoglin", "Strider", "Zoglin"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Piglin.png" },
-                { o: ["Blaze", "Magma Cube", "Endermite", "Vex"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Blaze.png" },
-                { o: ["Guardian", "Drowned", "Glow Squid", "Elder Guardian"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Guardian.png" }
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-creeper-face.png", o: ["Creeper", "Charged Creeper", "Zombie", "Slime"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-zombie-face.png", o: ["Husk", "Zombie", "Drowned", "Skeleton"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-skeleton-face.png", o: ["Stray", "Wither Skeleton", "Skeleton", "Guard"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-spider-face.png", o: ["Spider", "Cave Spider", "Silverfish", "Endermite"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-enderman-face.png", o: ["Endermite", "Warden", "Enderman", "Watcher"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-slime-face.png", o: ["Magma Cube", "Slime", "Frog", "Tadpole"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-witch-face.png", o: ["Villager", "Evoker", "Witch", "Pillager"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-husk-face.png", o: ["Zombie", "Husk", "Drowned", "Stray"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-drowned-face.png", o: ["Zombie", "Drowned", "Guardian", "Husk"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-phantom-face.png", o: ["Bat", "Vex", "Allay", "Phantom"], a: 3 }
             ],
-            // Sector 3: Mythic Bosses & Legendaries
+            // Sector 3: The Nether Dimension
             [
-                { o: ["Ender Dragon", "Wither", "Warden", "Ravager"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Ender_Dragon.png" },
-                { o: ["Wither", "Ender Dragon", "Iron Golem", "Warden"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Wither.png" },
-                { o: ["Warden", "Iron Golem", "Ravager", "Hoglin"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Warden.png" },
-                { o: ["Iron Golem", "Snow Golem", "Ravager", "Warden"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Iron_Golem.png" },
-                { o: ["Shulker", "Endermite", "Silverfish", "Allay"], a: 0, actualSrc: "https://assets.minecraftservices.com/lh3/Shulker.png" }
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-ghast-face.png", o: ["White Cube", "Ghast", "Blaze", "Wither"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-zombie-pigman-face.png", o: ["Piglin", "Zombified Piglin", "Hoglin", "Piglin Brute"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-wither-skeleton-face.png", o: ["Skeleton", "Stray", "Wither Skeleton", "Wither"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-blaze-face.png", o: ["Blaze", "Magma Cube", "Ghast", "Strider"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-magma-cube-face.png", o: ["Slime", "Magma Cube", "Strider", "Hoglin"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-piglin-face.png", o: ["Piglin", "Piglin Brute", "Zombified Piglin", "Hoglin"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-hoglin-face.png", o: ["Hoglin", "Zoglin", "Ravager", "Piglin"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-strider-face.png", o: ["Magma Cube", "Ghast", "Strider", "Frog"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-piglin-brute-face.png", o: ["Piglin", "Piglin Brute", "Zoglin", "Wither Skeleton"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-zoglin-face.png", o: ["Hoglin", "Zoglin", "Ravager", "Zombie"], a: 1 }
+            ],
+            // Sector 4: Deep Caverns & Ocean Reefs
+            [
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-guardian-face.png", o: ["Elder Guardian", "Guardian", "Squid", "Pufferfish"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-elder-guardian-face.png", o: ["Guardian", "Elder Guardian", "Warden", "Squid"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-cave-spider-face.png", o: ["Spider", "Cave Spider", "Silverfish", "Endermite"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-silverfish-face.png", o: ["Silverfish", "Endermite", "Worm", "Cave Spider"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-glow-squid-face.png", o: ["Squid", "Glow Squid", "Axolotl", "Guardian"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-axolotl-face.png", o: ["Tadpole", "Frog", "Axolotl", "Fish"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-pufferfish-face.png", o: ["Cod", "Salmon", "Pufferfish", "Squid"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-iron-golem-face.png", o: ["Snow Golem", "Iron Golem", "Warden", "Player"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-snow-golem-face.png", o: ["Snow Golem", "Iron Golem", "Allay", "Vex"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-wandering-trader-face.png", o: ["Villager", "Wandering Trader", "Witch", "Pillager"], a: 1 }
+            ],
+            // Sector 5: Raid Squads & Mythic Bosses
+            [
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-pillager-face.png", o: ["Pillager", "Vindicator", "Evoker", "Witch"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-vindicator-face.png", o: ["Pillager", "Vindicator", "Evoker", "Villager"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-evoker-face.png", o: ["Witch", "Evoker", "Pillager", "Illusioner"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-ravager-face.png", o: ["Hoglin", "Iron Golem", "Ravager", "Warden"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-vex-face.png", o: ["Vex", "Allay", "Bat", "Phantom"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-shulker-face.png", o: ["Endermite", "Silverfish", "Shulker", "Slime"], a: 2 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-endermite-face.png", o: ["Silverfish", "Endermite", "Cave Spider", "Shulker"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-warden-face.png", o: ["Warden", "Wither", "Ender Dragon", "Ravager"], a: 0 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-wither-face.png", o: ["Wither Skeleton", "Wither", "Ender Dragon", "Elder Guardian"], a: 1 },
+                { img: "https://minecraftfaces.com/wp-content/bigfaces/big-ender-dragon-face.png", o: ["Ender Dragon", "Wither", "Phantom", "Warden"], a: 0 }
             ]
         ];
 
-        // Backup static cross-links safely matching alternative wiki architectures if assets update over time
-        const FALLBACK_LINKS = {
-            "Creeper": "https://bugs.mojang.com/secure/attachment/333649/Creeper.png",
-            "Enderman": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/a4/Enderman_JE2_B2.png",
-            "Skeleton": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/f/f1/Skeleton_JE2_B4.png",
-            "Cow": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/d/d4/Cow_JE3_B2.png",
-            "Villager": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/6/6f/Plains_Villager_Base_JE1_BE1.png",
-            "Ghast": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/7/7b/Ghast_JE2_B2.png",
-            "Wither_Skeleton": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/47/Wither_Skeleton_JE2_B3.png",
-            "Piglin": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/a2/Piglin_Base_JE1_BE1.png",
-            "Blaze": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/6/6b/Blaze_JE2_B2.png",
-            "Guardian": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/2/22/Guardian_JE2_B2.png",
-            "Ender_Dragon": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/9/93/Ender_Dragon_JE2_B2.png",
-            "Wither": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/7/7a/Wither_JE2_B3.png",
-            "Warden": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/87/Warden_JE2.png",
-            "Iron_Golem": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c9/Iron_Golem_JE2_B2.png",
-            "Shulker": "https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c7/Closed_Shulker_JE2_B2.png"
-        };
-
-        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 120;
+        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 180;
+        const totalQuestionsPerSector = 10;
         
         function showView(vId) { 
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); 
@@ -242,7 +266,7 @@
         
         function selectLevel(num) { 
             currentSectorIndex = num - 1; 
-            document.getElementById('preQuizTitle').innerText = `Sector Profile ${num}`; 
+            document.getElementById('preQuizTitle').innerText = `Sector Zone ${num}`; 
             showView('pre-quiz-view'); 
         }
         
@@ -252,8 +276,8 @@
 
         function startQuiz() {
             currentQuestionIndex = 0; 
-            userAnswers = new Array(5).fill(null); 
-            timeRemaining = 120; 
+            userAnswers = new Array(totalQuestionsPerSector).fill(null); 
+            timeRemaining = 180; // 3 minutes for 10 structural profiles
             renderQuestion(); 
             showView('quiz-view');
             clearInterval(quizTimer); 
@@ -274,19 +298,12 @@
             document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-clock"></i> ${m}:${s}`;
         }
 
-        function getMobImageUrl(item) {
-            // Converts internal name structure into active remote graphics references
-            const correctName = item.o[item.a].replace(" ", "_");
-            return FALLBACK_LINKS[correctName] || item.actualSrc;
-        }
-
         function renderQuestion() {
             const item = MINECRAFT_PHOTO_DATA[currentSectorIndex][currentQuestionIndex];
-            document.getElementById('questionTracker').innerText = `Mob ${currentQuestionIndex + 1}/5`;
+            document.getElementById('questionTracker').innerText = `Card ${currentQuestionIndex + 1}/${totalQuestionsPerSector}`;
             
-            // Apply visual matrix to central structural frame
             const targetImg = document.getElementById('mobDisplayImage');
-            targetImg.src = getMobImageUrl(item);
+            targetImg.src = item.img;
 
             const container = document.getElementById('optionsContainer'); 
             container.innerHTML = "";
@@ -303,12 +320,12 @@
             });
             
             document.getElementById('prevBtn').style.visibility = (currentQuestionIndex === 0) ? "hidden" : "visible";
-            document.getElementById('nextBtn').innerText = (currentQuestionIndex === 4) ? "Compile Final Grade" : "Next Mob";
+            document.getElementById('nextBtn').innerText = (currentQuestionIndex === totalQuestionsPerSector - 1) ? "Submit Sector Log" : "Next Profile";
         }
 
         function navigateQuestion(dir) { 
             if (dir === 1) { 
-                if (currentQuestionIndex < 4) { 
+                if (currentQuestionIndex < totalQuestionsPerSector - 1) { 
                     currentQuestionIndex++; 
                     renderQuestion(); 
                 } else { 
@@ -329,8 +346,8 @@
             data.forEach((item, idx) => { 
                 if (userAnswers[idx] === item.a) score++; 
             });
-            document.getElementById('scoreDisplay').innerText = `${score}/5`;
-            document.getElementById('resultEvaluationMessage').innerText = score >= 4 ? "Masterful eyes! You know your texture packs perfectly." : "Some renders tricked your vision. Dust off your guide book!";
+            document.getElementById('scoreDisplay').innerText = `${score}/${totalQuestionsPerSector}`;
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Outstanding structural recognition! Steve would be proud." : "Several profiles fooled your detectors. Reload database and re-examine!";
             buildReviewMatrix(data); 
             showView('results-view');
         }
@@ -344,11 +361,11 @@
                 const div = document.createElement('div'); 
                 div.className = `review-item ${isCorrect ? 'correct' : 'wrong'}`;
                 div.innerHTML = `
-                    <img src="${getMobImageUrl(item)}" class="review-thumb" alt="Mob Miniature">
+                    <img src="${item.img}" class="review-thumb" alt="Mini Target">
                     <div style="flex: 1;">
-                        <h4>Target Block Card #${idx + 1}</h4>
-                        <p style="font-size:0.9rem;">Your Answer: <span class='${isCorrect ? 'text-success' : 'text-danger'}'>${sel !== null ? item.o[sel] : 'No Answer Submitted'}</span></p>
-                        ${!isCorrect ? `<p style="font-size:0.9rem;">Target True Identity: <span class='text-success'>${item.o[item.a]}</span></p>` : ''}
+                        <h4>Profile Index Card #${idx + 1}</h4>
+                        <p style="font-size:0.9rem;">Your Submission: <span class='${isCorrect ? 'text-success' : 'text-danger'}'>${sel !== null ? item.o[sel] : 'Skipped/Empty'}</span></p>
+                        ${!isCorrect ? `<p style="font-size:0.9rem;">True Entity Identity: <span class='text-success'>${item.o[item.a]}</span></p>` : ''}
                     </div>
                 `;
                 container.appendChild(div);

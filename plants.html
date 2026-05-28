@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate 50 Plants & Botany Challenge | QuestEngine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Plant Green Main Palette */
+            --bg-primary: #f0fdf4; 
+            --accent: #22c55e; /* Vibrant Plant Green */
+            --accent-hover: #16a34a;
+            --plant-dark: #14532d; /* Text/Deep contrast */
+            --plant-light: #bbf7d0;
+            --text-main: #14532d;
+            --text-muted: #166534;
+            --border-color: rgba(34, 197, 94, 0.3);
+            --success: #15803d;
+            --danger: #dc2626;
+            --font-sans: 'Poppins', sans-serif;
+            --glass-bg: #ffffff;
+            --glass-shadow: 0 10px 30px rgba(34, 197, 94, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); transition: all 0.2s ease; }
+        body { background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        header { position: fixed; top: 0; left: 0; width: 100%; background: #ffffff; z-index: 1000; border-bottom: 2px solid var(--accent); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--plant-dark); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        
+        .view { display: none; width: 100%; }
+        .view.active-view { display: block; }
+        .view-container { max-width: 900px; margin: 100px auto 4rem; padding: 0 1rem; }
+
+        .level-container, .pre-quiz-card { text-align: center; background: var(--glass-bg); padding: 2.5rem 1.5rem; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+        .level-grid { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+        .level-btn { width: 60px; height: 60px; border-radius: 14px; background: white; border: 2px solid var(--border-color); color: var(--plant-dark); font-size: 1.25rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .level-btn:hover { background: var(--accent); color: white; transform: scale(1.05); border-color: var(--accent); }
+
+        .btn-primary { background: var(--accent); color: white; padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-secondary:hover { background: var(--plant-light); border-color: var(--accent); color: var(--plant-dark); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(20, 83, 45, 0.2); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 1rem; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; padding: 2rem 1.5rem; border-radius: 16px; max-width: 400px; width: 100%; text-align: center; border: 1px solid var(--border-color); }
+
+        #quiz-view.active-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; padding: 1rem; z-index: 2000; display: flex; justify-content: center; align-items: center; background: var(--bg-primary); overflow-y: auto; }
+        .quiz-window { width: 100%; max-width: 850px; background: white; border-radius: 20px; border: 2px solid var(--accent); padding: 2rem 1.5rem; box-shadow: var(--glass-shadow); max-height: 95vh; display: flex; flex-direction: column; overflow-y: auto; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; gap: 10px; }
+        .tracker-pill, .timer { background: var(--plant-light); padding: 0.4rem 1rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; color: var(--plant-dark); }
+        .timer { color: var(--danger); background: #fef2f2; border: 1px solid rgba(220, 38, 38, 0.2); }
+
+        .image-frame-panel { background: var(--plant-dark); border: 3px solid var(--accent); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 120px; text-align: center; color: #f0fdf4; }
+
+        .options-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 0.5rem; }
+        .option-btn { background: #fff; border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; font-size: 0.95rem; width: 100%; word-break: break-word; color: var(--text-main); }
+        .option-btn:hover { border-color: var(--accent); background: var(--plant-light); }
+        .option-btn.selected { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+        .quiz-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem; gap: 10px; flex-wrap: wrap; }
+        .control-group { display: flex; gap: 8px; }
+
+        .review-item { background: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 6px solid #ccc; text-align: left; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; display: flex; gap: 15px; align-items: center; }
+        .review-item.correct { border-left-color: var(--success); }
+        .review-item.wrong { border-left-color: var(--danger); }
+        .text-success { color: var(--success); font-weight: 600; }
+        .text-danger { color: var(--danger); font-weight: 600; }
+        footer { background: rgba(0,0,0,0.02); border-top: 1px solid var(--border-color); padding: 1.5rem; text-align: center; margin-top: auto; font-size: 0.85rem; }
+
+        @media (max-width: 768px) { .options-list { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.8rem 1rem; }
+            .logo { font-size: 1.3rem; }
+            .view-container { margin-top: 90px; }
+            .quiz-window { padding: 1.2rem 1rem; }
+            .image-frame-panel { min-height: 100px; padding: 1rem; }
+            .option-btn { padding: 0.85rem 1rem; font-size: 0.9rem; }
+            .quiz-controls { flex-direction: column-reverse; width: 100%; }
+            .quiz-controls button, .control-group { width: 100%; }
+            .control-group button { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Quest<span>Engine</span></a>
+            <a href="index.html" class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">Home</a>
+        </div>
+    </header>
+
+    <div id="exitModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Exit Sector Run?</h3>
+            <p style="margin:1rem 0; font-size: 0.9rem;">Are you sure? Unsaved progress within this plant sector will be lost.</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-secondary" onclick="closeExitModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmExitQuiz()">Quit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="level-view" class="view active-view">
+        <div class="view-container">
+            <div class="level-container">
+                <h2>Plant Kingdom & Botany Matrix</h2>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Select a Plant Sector zone. Each containing exactly 10 comprehensive botanical questions.</p>
+                <div class="level-grid">
+                    <button class="level-btn" onclick="selectLevel(1)">1</button>
+                    <button class="level-btn" onclick="selectLevel(2)">2</button>
+                    <button class="level-btn" onclick="selectLevel(3)">3</button>
+                    <button class="level-btn" onclick="selectLevel(4)">4</button>
+                    <button class="level-btn" onclick="selectLevel(5)">5</button>
+                </div>
+                <a href="index.html" class="btn-secondary">Return Hub</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="pre-quiz-view" class="view">
+        <div class="view-container">
+            <div class="pre-quiz-card">
+                <h2 id="preQuizTitle">Sector</h2>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; font-size: 0.95rem;">
+                    <div>10 Botanical Cards</div>
+                    <div>03:00 Min Timer</div>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Back to Sectors</button>
+                    <button class="btn-primary" onclick="startQuiz()">Launch Plant Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-view" class="view">
+        <div class="quiz-window">
+            <div class="quiz-header">
+                <span class="tracker-pill" id="questionTracker">Card 1/10</span>
+                <span class="timer" id="timerDisplay">03:00</span>
+            </div>
+            <div style="flex: 1;">
+                <div class="image-frame-panel">
+                    <h2 id="questionTopic" style="font-size:1.3rem; font-weight:700; text-transform: uppercase; letter-spacing: 1px;">Topic Prompt</h2>
+                </div>
+                <h3 id="mainQuestionText" style="font-size:1.15rem; margin-bottom:1rem; font-weight: 600; text-align: center; color: var(--text-muted); min-height: 40px;">Question loading...</h3>
+                <div class="options-list" id="optionsContainer"></div>
+            </div>
+            <div class="quiz-controls">
+                <button class="btn-secondary" onclick="requestAbortQuiz()">Abort</button>
+                <div class="control-group">
+                    <button class="btn-secondary" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+                    <button class="btn-primary" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="results-view" class="view">
+        <div class="view-container">
+            <div class="pre-quiz-card">
+                <h2>Analysis Completed</h2>
+                <div style="font-size: 4rem; font-weight: 800; color: var(--accent-hover); margin: 1rem 0;" id="scoreDisplay">0/10</div>
+                <p id="resultEvaluationMessage" style="margin-bottom: 2rem; font-size: 0.95rem;"></p>
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="showView('level-view')">Sectors Base</button>
+                    <button class="btn-primary" id="reviewBtn" onclick="toggleReviewSection()">Review Answers</button>
+                </div>
+                <div id="reviewSection" style="display:none; margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:2rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 QuestEngine. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const PLANT_QUIZ_DATA = [
+            // Sector 1: Plant Classification & Evolution
+            [
+                { cat: "Non-Vascular Plants", q: "Which group of plants lacks a specialized vascular network for transporting water?", o: ["Bryophytes (Mosses)", "Pteridophytes (Ferns)", "Gymnosperms", "Angiosperms"], a: 0 },
+                { cat: "Evolutionary History", q: "Which ancient green algae group is considered the direct evolutionary ancestor of land plants?", o: ["Charophytes", "Chlorophytes", "Rhodophytes", "Cyanobacteria"], a: 0 },
+                { cat: "Seedless Vascular", q: "Ferns reproduce via spores rather than seeds. To which classification group do they belong?", o: ["Pteridophytes", "Bryophytes", "Gymnosperms", "Lycophytes"], a: 0 },
+                { cat: "Angiosperm Division", q: "What primary characteristic distinguishes monocots from dicots during initial sprouting?", o: ["Number of embryonic seed leaves", "Presence of deep taproots", "Color of the flowering stem", "Thickness of leaf waxy cuticles"], a: 0 },
+                { cat: "Gymnosperms", q: "What does the word 'Gymnosperm' translate to literally in biological terms?", o: ["Naked seed", "Enclosed fruit", "Vascular runner", "Spore-bearer"], a: 0 },
+                { cat: "Plant Speciation", q: "Which group comprises the overwhelming majority of all living land plant species today?", o: ["Angiosperms (Flowering plants)", "Gymnosperms (Conifers)", "Bryophytes (Mosses)", "Pteridophytes (Ferns)"], a: 0 },
+                { cat: "Ancient Flora", q: "Horsetails and club mosses reached tree-like proportions during which prehistoric geological period?", o: ["Carboniferous", "Triassic", "Cambrian", "Silurian"], a: 0 },
+                { cat: "Taxonomy", q: "Who is recognized as the father of modern botany for compiling major plant classifications?", o: ["Theophrastus", "Carl Linnaeus", "Gregor Mendel", "Charles Darwin"], a: 0 },
+                { cat: "Seed Production", q: "Which major evolutionary adaptation allowed plants to successfully colonize dry inland environments away from water?", o: ["The development of seeds", "The evolution of stomata", "The creation of broad leaves", "The formation of root hairs"], a: 0 },
+                { cat: "Algae vs Plants", q: "What crucial structural asset separates true land plants from complex multi-cellular underwater seaweeds?", o: ["Embryo retention and protection", "Presence of chlorophyll a", "Cell walls made of cellulose", "Storage of starch reserves"], a: 0 }
+            ],
+            // Sector 2: Leaf Physiology & Photosynthetic Processes
+            [
+                { cat: "Light Absorption", q: "Which specific waveband spectrum colors do plant chlorophylls absorb most efficiently?", o: ["Blue and Red light", "Green and Yellow light", "Infrared light exclusively", "Ultraviolet light only"], a: 0 },
+                { cat: "Photosynthesis Phases", q: "Where exactly within the plant chloroplast do the light-independent (Calvin Cycle) reactions happen?", o: ["Stroma", "Thylakoid lumen", "Granum stacks", "Outer membrane envelope"], a: 0 },
+                { cat: "Carbon Fixation", q: "Which carbon fixation pathway is specifically modified in desert plants like pineapples and cacti to save water?", o: ["CAM pathway", "C3 pathway", "C4 pathway", "Glycolysis pathway"], a: 0 },
+                { cat: "Enzymes", q: "What is the most abundant enzyme on Earth, vital for capturing carbon dioxide in plants?", o: ["RuBisCO", "PEP carboxylase", "Amylase", "ATP Synthase"], a: 0 },
+                { cat: "Leaf Structures", q: "What name is given to the specialized, loosely-packed interior leaf cells optimized for gas exchange?", o: ["Spongy mesophyll", "Palisade mesophyll", "Bundle sheath cells", "Epidermal cells"], a: 0 },
+                { cat: "Water Loss Control", q: "What specific cells actively change shape via fluid pressure to open and close stomata pores?", o: ["Guard cells", "Companion cells", "Trichome structures", "Sclerenchyma sheets"], a: 0 },
+                { cat: "Leaf Veins", q: "What pattern layout defines the vein architecture typical of monocot plant leaves?", o: ["Parallel venation", "Netted/Reticulate venation", "Palmate venation", "Dichotomous branching"], a: 0 },
+                { cat: "Photosynthesis Yield", q: "What primary sugar compound is produced as an immediate result of solar photosynthesis?", o: ["Glucose", "Sucrose", "Cellulose polymer", "Fructose"], a: 0 },
+                { cat: "Leaf Modification", q: "What botanical term describes leaf adaptations converted into climbing support lines?", o: ["Tendrils", "Spines", "Bracts", "Stolons"], a: 0 },
+                { cat: "Gas Products", q: "During photosynthesis, from which exact molecule is the released oxygen gas derived?", o: ["Water molecules", "Carbon dioxide molecules", "Glucose breakdown products", "Soil nitrate ions"], a: 0 }
+            ],
+            // Sector 3: Roots, Stems, and Internal Fluids
+            [
+                { cat: "Root Zones", q: "In which region of a growing plant root does the actual absorption of water mainly take place?", o: ["Zone of maturation (root hairs)", "Zone of elongation", "Meristematic zone", "Protective root cap"], a: 0 },
+                { cat: "Stem Growth", q: "Which internal plant layer is responsible for lateral secondary growth (producing wider rings)?", o: ["Vascular Cambium", "Primary Xylem", "Pith center", "Outer Cortex"], a: 0 },
+                { cat: "Water Properties", q: "What physical force pulls continuous water columns upward through narrow xylem vessels?", o: ["Cohesion and adhesion", "Active root pumping", "Atmospheric surface pressure", "Cytoplasmic streaming"], a: 0 },
+                { cat: "Modified Stems", q: "A white potato represents what type of modified underground plant structure?", o: ["Stem Tuber", "Root Tuber", "True Bulb", "Corm"], a: 0 },
+                { cat: "Nutrient Transport", q: "What biological model explains how sugars move through phloem channels from source to sink?", o: ["Pressure-Flow Hypothesis", "Cohesion-Tension Theory", "Root Pressure Model", "Active Vaporization"], a: 0 },
+                { cat: "Root Symbiosis", q: "What beneficial fungal association links into root systems to increase nutrient collection areas?", o: ["Mycorrhizae", "Rhizobia nodes", "Lichens", "Endophytes"], a: 0 },
+                { cat: "Nitrogen Fixation", q: "Which family of plants forms nodules with bacteria to fix airborne nitrogen into soil compounds?", o: ["Legumes (Fabaceae)", "Grasses (Poaceae)", "Nightshades (Solanaceae)", "Asteraes (Asteraceae)"], a: 0 },
+                { cat: "Guttation", q: "What causes droplets of water to form along leaf margins early in the morning?", o: ["Root pressure driving fluid up", "High transpiration rates", "Dew condensation from wind", "Phloem cell rupture"], a: 0 },
+                { cat: "Stem Core", q: "What is the soft, spongy central tissue layer found in the stems of many vascular plants?", o: ["Pith", "Phloem", "Periderm", "Epidermis"], a: 0 },
+                { cat: "Aerenchyma", q: "What specialized gas-filtering tissue allows wetland plants to grow inside waterlogged mud?", o: ["Aerenchyma", "Sclerenchyma", "Collenchyma", "Chlorenchyma"], a: 0 }
+            ],
+            // Sector 4: Flower Mechanics & Seed Dispersal
+            [
+                { cat: "Flower Parts", q: "What structure forms the sticky, landing surface designed to catch pollen grains?", o: ["Stigma", "Style", "Anther", "Filament"], a: 0 },
+                { cat: "Double Fertilization", q: "What unique process creates both an embryo and its food reserve inside angiosperm seeds?", o: ["Double fertilization", "Apomixis cloning", "Parthenocarpy", "Self-pollination"], a: 0 },
+                { cat: "Seed Energy", q: "What nutritional tissue feeds a developing seed embryo until it grows true leaves?", o: ["Endosperm", "Seed coat (Testa)", "Radicle core", "Hypocotyl node"], a: 0 },
+                { cat: "Fruit Types", q: "Botanically speaking, which of these common items is classified as a true aggregate fruit?", o: ["Raspberry", "Apple", "Watermelon", "Pineapple"], a: 0 },
+                { cat: "Dispersal Methods", q: "What specific seed dispersal mechanism relies on animal coats and human clothing hooks?", o: ["Epizoochory", "Endozoochory", "Anemochory", "Hydrochory"], a: 0 },
+                { cat: "Inflorescence", q: "What term describes a complex, tightly packed cluster of many tiny distinct flowers on a single stem?", o: ["Inflorescence", "Sepal collection", "Corolla ring", "Bract web"], a: 0 },
+                { cat: "Pollen Creation", q: "Inside which part of a flower's male stamen is pollen actively generated?", o: ["Anther", "Filament", "Style", "Ovary"], a: 0 },
+                { cat: "Seed Dormancy", q: "Which plant hormone maintains seed dormancy, stopping them from sprouting in winter?", o: ["Abscisic Acid", "Gibberellic Acid", "Ethylene", "Cytokinin"], a: 0 },
+                { cat: "Sprouting Triggers", q: "What deep chilling process must some seeds go through before they are able to break dormancy?", o: ["Stratification", "Scarification", "Photoperiodism", "Vernalization"], a: 0 },
+                { cat: "True Berries", q: "Which item is a true biological berry, arising completely from a single flower ovary?", o: ["Tomato", "Strawberry", "Blackberry", "Apple"], a: 0 }
+            ],
+            // Sector 5: Hormones, Tropisms & Defensive Tactics
+            [
+                { cat: "Ripening Gas", q: "Which gaseous hormone coordinates fruit ripening and leaf drop across plants?", o: ["Ethylene", "Auxin", "Cytokinin", "Gibberellin"], a: 0 },
+                { cat: "Light Tropism", q: "What term describes a plant bending its physical growth toward a constant light source?", o: ["Positive Phototropism", "Thigmotropism", "Negative Geotropism", "Hydrotropism"], a: 0 },
+                { cat: "Growth Regulators", q: "Which hormone family promotes cell division and delays aging in green leaves?", o: ["Cytokinins", "Auxins", "Gibberellins", "Abscisic Acid"], a: 0 },
+                { cat: "Gravity Sensing", q: "What dense starch particles sink to the bottom of root cells to help plants sense gravity?", o: ["Statoliths", "Chloroplasts", "Chromoplasts", "Vacuoles"], a: 0 },
+                { cat: "Chemical Barriers", q: "What bitter, nitrogen-rich compounds include nicotine and caffeine to deter herbivores?", o: ["Alkaloids", "Tannins", "Terpenoids", "Flavonoids"], a: 0 },
+                { cat: "Day Length", q: "Which protein pigment monitors day length, triggering seasonal flowering?", o: ["Phytochrome", "Carotenoid", "Chlorophyll b", "Anthocyanin"], a: 0 },
+                { cat: "Rapid Movements", q: "What rapid water pressure shift enables quick movements in sensitive plant leaves?", o: ["Changes in turgor pressure", "Sudden phloem pumping", "Rapid cell division bursts", "Xylem vacuum failures"], a: 0 },
+                { cat: "Systemic Defense", q: "Which hormone coordinates defense responses against insect damage across distant leaves?", o: ["Jasmonic Acid", "Salicylic Acid", "Auxin", "Gibberellic Acid"], a: 0 },
+                { cat: "Pathogen Defense", q: "Which molecule triggers systemic acquired resistance (SAR) against viruses and bacteria?", o: ["Salicylic Acid", "Ethylene gas", "Abscisic Acid", "Cytokinin fluid"], a: 0 },
+                { cat: "Shade Avoidance", q: "How do plants adjust when they detect high levels of far-red light filtered through taller neighbors?", o: ["They elongate stems to outgrow shade", "They stop growing entirely", "They shed lower leaves quickly", "They maximize root growth"], a: 0 }
+            ]
+        ];
+
+        let currentSectorIndex = 0, currentQuestionIndex = 0, userAnswers = [], quizTimer = null, timeRemaining = 180;
+        const totalQuestionsPerSector = 10;
+        
+        function showView(vId) { 
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view')); 
+            document.getElementById(vId).classList.add('active-view'); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
+        
+        function selectLevel(num) { 
+            currentSectorIndex = num - 1; 
+            document.getElementById('preQuizTitle').innerText = `Plant Sector Zone ${num}`; 
+            showView('pre-quiz-view'); 
+        }
+        
+        function requestAbortQuiz() { document.getElementById('exitModal').classList.add('active'); }
+        function closeExitModal() { document.getElementById('exitModal').classList.remove('active'); }
+        function confirmExitQuiz() { closeExitModal(); clearInterval(quizTimer); showView('level-view'); }
+
+        function startQuiz() {
+            currentQuestionIndex = 0; 
+            userAnswers = new Array(totalQuestionsPerSector).fill(null); 
+            timeRemaining = 180; 
+            renderQuestion(); 
+            showView('quiz-view');
+            clearInterval(quizTimer); 
+            updateTimerDisplay();
+            quizTimer = setInterval(() => { 
+                timeRemaining--; 
+                updateTimerDisplay(); 
+                if (timeRemaining <= 0) { clearInterval(quizTimer); evaluateQuizSession(); } 
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0'); 
+            const s = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+        }
+
+        function renderQuestion() {
+            const item = PLANT_QUIZ_DATA[currentSectorIndex][currentQuestionIndex];
+            document.getElementById('questionTracker').innerText = `Card ${currentQuestionIndex + 1}/${totalQuestionsPerSector}`;
+            document.getElementById('questionTopic').innerText = item.cat;
+            document.getElementById('mainQuestionText').innerText = item.q;
+
+            const container = document.getElementById('optionsContainer'); 
+            container.innerHTML = "";
+            
+            item.o.forEach((opt, idx) => {
+                const btn = document.createElement('button'); 
+                btn.className = `option-btn ${userAnswers[currentQuestionIndex] === idx ? 'selected' : ''}`;
+                btn.innerHTML = `<span style='font-weight:700;margin-right:8px;'>${String.fromCharCode(65 + idx)}.</span> ${opt}`;
+                btn.onclick = () => { userAnswers[currentQuestionIndex] = idx; renderQuestion(); }; 
+                container.appendChild(btn);
+            });
+            
+            document.getElementById('prevBtn').style.visibility = (currentQuestionIndex === 0) ? "hidden" : "visible";
+            document.getElementById('nextBtn').innerText = (currentQuestionIndex === totalQuestionsPerSector - 1) ? "Submit Sector" : "Next Question";
+        }
+
+        function navigateQuestion(dir) { 
+            if (dir === 1) { 
+                if (currentQuestionIndex < totalQuestionsPerSector - 1) { currentQuestionIndex++; renderQuestion(); } 
+                else { clearInterval(quizTimer); evaluateQuizSession(); } 
+            } else { 
+                if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); } 
+            } 
+        }
+
+        function evaluateQuizSession() {
+            const data = PLANT_QUIZ_DATA[currentSectorIndex]; 
+            let score = 0; 
+            data.forEach((item, idx) => { if (userAnswers[idx] === item.a) score++; });
+            document.getElementById('scoreDisplay').innerText = `${score}/${totalQuestionsPerSector}`;
+            document.getElementById('resultEvaluationMessage').innerText = score >= 7 ? "Excellent analysis! You understand botanical systems on an advanced level." : "Your taxonomy registers errors. Re-examine the specimens and retry the module database.";
+            buildReviewMatrix(data); 
+            showView('results-view');
+        }
+
+        function buildReviewMatrix(data) {
+            const container = document.getElementById('reviewSection'); 
+            container.innerHTML = "";
+            data.forEach((item, idx) => {
+                const sel = userAnswers[idx]; 
+                const isCorrect = (sel === item.a); 
+                const div = document.createElement('div'); 
+                div.className = `review-item ${isCorrect ? 'correct' : 'wrong'}`;
+                div.innerHTML = `
+                    <div style="flex: 1;">
+                        <h4>Question Node #${idx + 1} (${item.cat})</h4>
+                        <p style="font-size:0.95rem; margin: 4px 0; font-weight:500; color:var(--text-muted);">${item.q}</p>
+                        <p style="font-size:0.9rem;">Your Choice: <span class='${isCorrect ? 'text-success' : 'text-danger'}'>${sel !== null ? item.o[sel] : 'Skipped'}</span></p>
+                        ${!isCorrect ? `<p style="font-size:0.9rem;">True Answer: <span class='text-success'>${item.o[item.a]}</span></p>` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleReviewSection() { 
+            const s = document.getElementById('reviewSection'); 
+            s.style.display = s.style.display === "none" ? "block" : "none"; 
+        }
+    </script>
+</body>
+</html>

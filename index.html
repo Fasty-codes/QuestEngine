@@ -177,6 +177,13 @@
             box-shadow: 0 20px 40px -10px rgba(217, 119, 6, 0.2); 
             border-color: rgba(217, 119, 6, 0.4);
         }
+
+        .feature-block.lab-hub:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px -10px rgba(217, 119, 6, 0.2); 
+            border-color: rgba(217, 119, 6, 0.4);
+        }
+
         .feature-block.games-hub:hover { 
             transform: translateY(-8px); 
             box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15); 
@@ -184,6 +191,7 @@
         }
         .feature-block.quiz-hub:hover::before { background: linear-gradient(90deg, var(--accent), #f59e0b); }
         .feature-block.games-hub:hover::before { background: linear-gradient(90deg, #0f172a, #3b82f6); }
+        .feature-block.lab-hub:hover::before { background: linear-gradient(90deg, blue, skyblue); }
 
         .icon-wrap { width: 70px; height: 70px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 2rem; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .feature-block:hover .icon-wrap { transform: scale(1.1) rotate(5deg); }
@@ -281,6 +289,7 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="quiz.html">Quizzes</a></li>
                 <li><a href="games.html">Games</a></li>
+                <li><a href="labs.html">Lab</a></li>
             </ul>
         </div>
     </nav>
@@ -321,6 +330,15 @@
                         </div>
                         <a href="games.html" class="btn btn-dark">Boot Game Matrices <i class="fa-solid fa-play"></i></a>
                     </div>
+
+                    <div class="feature-block lab-hub">
+    <div>
+        <div class="icon-wrap" style="background: rgba(14, 165, 233, 0.15); color: #0284c7;"><i class="fa-solid fa-flask-vial"></i></div>
+        <h2 class="block-title">Interactive Labs</h2>
+        <p class="block-desc">Ditch static theory. Enter a visual sandbox environment where you actively modify environment parameters, track system responses in real-time, and run dynamic trial simulations.</p>
+    </div>
+    <a href="labs.html" class="btn btn-primary" style="background: #0284c7; border-color: #0284c7;">Initialize Labs <i class="fa-solid fa-arrow-right"></i></a>
+</div>
                 </div>
             </div>
         </section>
@@ -332,8 +350,8 @@
                 <h3><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></h3>
                 <p>An optimized cross-device ecosystem providing secure diagnostic frameworks, logical scripts, and interactive verification nodes.</p>
                 <div class="social-grid">
-                    <a href="#" class="social-link" aria-label="X/Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://fasty-codes.github.io/QuestEngine" class="social-link" aria-label="Google"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://github/Fasty-codes" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="social-link" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
                     <a href="#" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
