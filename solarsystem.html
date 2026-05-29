@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solar System | QuestEngine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #030508;
+            --surface: #0b0e14;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(11, 14, 20, 0.9); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border-color); height: 65px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.5rem; }
+        .logo { font-size: 1.35rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--accent); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.4rem 1rem; font-size: 0.85rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+
+        .simulation-container { display: flex; flex: 1; margin-top: 65px; height: calc(100vh - 65px - 50px); position: relative; width: 100vw; }
+        
+        .canvas-frame { flex: 1; position: relative; background: var(--bg-dark); overflow: hidden; height: 100%; }
+        canvas { width: 100%; height: 100%; display: block; }
+
+        .control-panel { width: 340px; background: var(--surface); border-left: 1px solid var(--border-color); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; z-index: 10; overflow-y: auto; }
+        .panel-title { font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+        .panel-title i { color: #f59e0b; }
+        
+        .control-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .control-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        
+        .slider { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+        
+        .toggle-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: white; padding: 0.6rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .toggle-btn.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.08); }
+        .toggle-btn .status { font-weight: 700; font-size: 0.75rem; color: var(--text-muted); }
+        .toggle-btn.active .status { color: var(--accent); }
+
+        .planet-info-card { background: rgba(5, 7, 12, 0.85); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; backdrop-filter: blur(10px); }
+        .info-header { font-weight: 800; color: var(--accent); font-size: 1.1rem; margin-bottom: 0.1rem; }
+        .info-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #f59e0b; margin-bottom: 0.75rem; }
+        .info-stat { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; display: flex; justify-content: space-between; gap: 10px; }
+        .info-fact { font-size: 0.8rem; color: var(--text-main); margin-top: 0.75rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.75rem; line-height: 1.4; }
+        
+        .canvas-tip { position: absolute; bottom: 1rem; left: 1rem; background: rgba(0,0,0,0.6); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem; color: var(--text-muted); pointer-events: none; border: 1px solid rgba(255,255,255,0.05); }
+
+        footer { background: var(--surface); border-top: 1px solid var(--border-color); padding: 1rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); height: 50px; z-index: 10; }
+
+        @media (max-width: 868px) {
+            .simulation-container { flex-direction: column; height: auto; }
+            .canvas-frame { height: 45vh; min-height: 320px; width: 100vw; }
+            .control-panel { width: 100vw; border-left: none; border-top: 1px solid var(--border-color); height: auto; overflow-y: visible; padding: 1.25rem; }
+            body { overflow-y: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo"><i class="fa-solid fa-flask"></i> QuestLabs</a>
+            <a href="labs.html" class="btn-secondary">Home</a>
+        </div>
+    </header>
+
+    <div class="simulation-container">
+        <div class="canvas-frame" id="canvasFrame">
+            <canvas id="spaceCanvas"></canvas>
+            <div class="canvas-tip"><i class="fa-solid fa-hand-pointer"></i> Tap a planet for data parameters</div>
+        </div>
+
+        <div class="control-panel">
+            <div class="panel-title"><i class="fa-solid fa-sun"></i> System Controller</div>
+            
+            <div class="control-group">
+                <label class="control-label" id="speedLabel">Warp Speed (1.0x)</label>
+                <input type="range" id="speedSlider" class="slider" min="0" max="3" step="0.1" value="1">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="toggle-btn active" id="orbitToggle" onclick="toggleOrbits()">
+                    <span>Orbits</span><span class="status" id="orbitStatus">ON</span>
+                </button>
+                <button class="toggle-btn active" id="labelToggle" onclick="toggleLabels()">
+                    <span>Labels</span><span class="status" id="labelStatus">ON</span>
+                </button>
+            </div>
+
+            <div class="planet-info-card" id="infoCard" style="display: none;">
+                <div class="info-header" id="planetName">Earth</div>
+                <div class="info-title" id="planetTitle">The Cradle of Life</div>
+                <div class="info-stat"><span>Orbital Period:</span><span id="planetPeriod">-</span></div>
+                <div class="info-stat"><span>Core Profile:</span><span id="planetType">-</span></div>
+                <div class="info-fact" id="planetFact">-</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 QuestEngine Play Ecosystem. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        const frame = document.getElementById('canvasFrame');
+
+        let simSpeed = 1;
+        let showOrbits = true;
+        let showLabels = true;
+        let selectedPlanet = null;
+        let starFieldArray = [];
+
+        // Comprehensive Planet Dataset with Custom Moons, Aliases, and Detailed Scientific Factoids
+        const planets = [
+            { 
+                name: "Mercury", color: "#a1a1aa", radius: 3.5, factor: 0.13, speed: 0.035, angle: 0, 
+                title: "The Swift Messenger", period: "88 Days", type: "Terrestrial",
+                fact: "The closest planet to the Sun. It experiences extreme temperature shifts because it completely lacks an atmosphere to trap heat.",
+                moons: []
+            },
+            { 
+                name: "Venus", color: "#fbbf24", radius: 6, factor: 0.22, speed: 0.016, angle: 0, 
+                title: "The Hottest Planet", period: "225 Days", type: "Terrestrial",
+                fact: "Even though Mercury is closer to the Sun, Venus is hotter ($460^\circ\text{C}$) because its thick, runaway carbon dioxide atmosphere acts like a massive greenhouse trap.",
+                moons: []
+            },
+            { 
+                name: "Earth", color: "#3b82f6", radius: 6.5, factor: 0.33, speed: 0.010, angle: 0, 
+                title: "The Blue Oasis", period: "365 Days", type: "Terrestrial",
+                fact: "The only known world in our universe currently confirmed to harbor dynamic liquid water oceans and biological ecosystems.",
+                moons: [{ dist: 11, radius: 1.2, speed: 0.04, angle: 0, color: "#cbd5e1" }]
+            },
+            { 
+                name: "Mars", color: "#f87171", radius: 4.8, factor: 0.44, speed: 0.008, angle: 0, 
+                title: "The Red Planet", period: "687 Days", type: "Terrestrial",
+                fact: "Its rusty soil gets its iconic red tint from massive amounts of iron oxide (rust) coating its surface dust layers.",
+                moons: [
+                    { dist: 9, radius: 1, speed: 0.05, angle: 0, color: "#94a3b8" },
+                    { dist: 13, radius: 0.8, speed: 0.03, angle: 2, color: "#cbd5e1" }
+                ]
+            },
+            { 
+                name: "Jupiter", color: "#e28743", radius: 13, factor: 0.58, speed: 0.004, angle: 0, 
+                title: "The King of Gas Giants", period: "12 Years", type: "Gas Giant",
+                fact: "Jupiter looks orange and red because its fast-moving atmosphere is filled with clouds of ammonium hydrosulfide and sulfur compounds splitting under harsh solar radiation.",
+                moons: [
+                    { dist: 18, radius: 1.5, speed: 0.035, angle: 0, color: "#fde047" },
+                    { dist: 22, radius: 1.3, speed: 0.025, angle: 1, color: "#93c5fd" }
+                ]
+            },
+            { 
+                name: "Saturn", color: "#fef08a", radius: 10.5, factor: 0.73, speed: 0.0022, angle: 0, 
+                title: "The Ringed Jewel", period: "29 Years", type: "Gas Giant", hasRings: true,
+                fact: "Its spectacular rings aren't solid; they are composed of billions of pieces of clean ice chunks, rocky space dust particles, and cosmic debris.",
+                moons: [{ dist: 20, radius: 1.6, speed: 0.02, angle: 0, color: "#fb923c" }]
+            },
+            { 
+                name: "Uranus", color: "#22d3ee", radius: 8.5, factor: 0.85, speed: 0.0010, angle: 0, 
+                title: "The Ice Giant Bullseye", period: "84 Years", type: "Ice Giant",
+                fact: "Uranus is unique because it rotates completely on its side, practically rolling around the Sun along its orbital pathway plane.",
+                moons: []
+            },
+            { 
+                name: "Neptune", color: "#6366f1", radius: 8, factor: 0.94, speed: 0.0006, angle: 0, 
+                title: "The Windswept Abyss", period: "165 Years", type: "Ice Giant",
+                fact: "This cold blue world experiences the most violent atmospheric wind speeds in our solar system, reaching supersonic speeds up to $2,100\text{ km/h}$.",
+                moons: []
+            },
+            { 
+                name: "Pluto", color: "#cbd5e1", radius: 2.2, factor: 0.99, speed: 0.0003, angle: 0, 
+                title: "The Dwarf Planet", period: "248 Years", type: "Dwarf Planet",
+                fact: "Reclassified as a dwarf planet in 2006, this distant icy rock features a giant, frozen nitrogen glacier shaped exactly like a heart.",
+                moons: []
+            }
+        ];
+
+        function constructStars() {
+            starFieldArray = [];
+            for (let i = 0; i < 120; i++) {
+                starFieldArray.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    r: Math.random() * 1.5 + 0.3,
+                    opacity: Math.random() * 0.6 + 0.4
+                });
+            }
+        }
+
+        function resizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const width = frame.clientWidth;
+            const height = frame.clientHeight;
+            
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        constructStars();
+        resizeCanvas();
+
+        document.getElementById('speedSlider').addEventListener('input', (e) => {
+            simSpeed = parseFloat(e.target.value);
+            document.getElementById('speedLabel').innerText = `Warp Speed (${simSpeed.toFixed(1)}x)`;
+        });
+
+        function toggleOrbits() {
+            showOrbits = !showOrbits;
+            document.getElementById('orbitToggle').classList.toggle('active', showOrbits);
+            document.getElementById('orbitStatus').innerText = showOrbits ? "ON" : "OFF";
+        }
+
+        function toggleLabels() {
+            showLabels = !showLabels;
+            document.getElementById('labelToggle').classList.toggle('active', showLabels);
+            document.getElementById('labelStatus').innerText = showLabels ? "ON" : "OFF";
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = canvas.width / (2 * (window.devicePixelRatio || 1));
+            const centerY = canvas.height / (2 * (window.devicePixelRatio || 1));
+            const maxBoundRadius = Math.min(centerX, centerY) - 30;
+
+            let targetClicked = false;
+
+            planets.forEach(p => {
+                const currentOrbitDistance = p.factor * maxBoundRadius + 22;
+                const px = centerX + Math.cos(p.angle) * currentOrbitDistance;
+                const py = centerY + Math.sin(p.angle) * currentOrbitDistance;
+                const hitDelta = Math.sqrt((x - px)**2 + (y - py)**2);
+
+                if (hitDelta <= p.radius + 15) {
+                    selectedPlanet = p;
+                    targetClicked = true;
+                    
+                    document.getElementById('infoCard').style.display = "block";
+                    document.getElementById('planetName').innerText = p.name;
+                    document.getElementById('planetName').style.color = p.color;
+                    document.getElementById('planetTitle').innerText = p.title;
+                    document.getElementById('planetPeriod').innerText = p.period;
+                    document.getElementById('planetType').innerText = p.type;
+                    document.getElementById('planetFact').innerHTML = p.fact;
+                }
+            });
+
+            if (!targetClicked) {
+                selectedPlanet = null;
+                document.getElementById('infoCard').style.display = "none";
+            }
+        });
+
+        function renderLoop() {
+            const w = canvas.width / (window.devicePixelRatio || 1);
+            const h = canvas.height / (window.devicePixelRatio || 1);
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            const cx = w / 2;
+            const cy = h / 2;
+            const maxRadiusRange = Math.min(cx, cy) - 30;
+
+            // Render Stars
+            starFieldArray.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+                ctx.fill();
+            });
+
+            // Draw Sun
+            ctx.beginPath();
+            ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+            ctx.fillStyle = "#f59e0b";
+            ctx.fill();
+
+            planets.forEach(p => {
+                p.angle += p.speed * simSpeed;
+                const currentDist = p.factor * maxRadiusRange + 22;
+
+                if (showOrbits) {
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, currentDist, 0, Math.PI * 2);
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                const px = cx + Math.cos(p.angle) * currentDist;
+                const py = cy + Math.sin(p.angle) * currentDist;
+
+                // Saturn Rings
+                if (p.hasRings) {
+                    ctx.beginPath();
+                    ctx.ellipse(px, py, p.radius + 7, p.radius / 2 + 1.5, Math.PI / 6, 0, Math.PI * 2);
+                    ctx.strokeStyle = "rgba(254, 240, 138, 0.35)";
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                }
+
+                // Render Planet Sphere
+                ctx.beginPath();
+                ctx.arc(px, py, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+
+                // Draw Active Moon Sub-Orbits
+                p.moons.forEach(m => {
+                    m.angle += m.speed * simSpeed;
+                    const mx = px + Math.cos(m.angle) * m.dist;
+                    const my = py + Math.sin(m.angle) * m.dist;
+
+                    ctx.beginPath();
+                    ctx.arc(mx, my, m.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = m.color;
+                    ctx.fill();
+                });
+
+                if (selectedPlanet === p) {
+                    ctx.beginPath();
+                    ctx.arc(px, py, p.radius + 5, 0, Math.PI * 2);
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                if (showLabels) {
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+                    ctx.font = "500 10px Poppins";
+                    ctx.textAlign = "center";
+                    ctx.fillText(p.name, px, py - p.radius - 5);
+                }
+            });
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        renderLoop();
+    </script>
+</body>
+</html>

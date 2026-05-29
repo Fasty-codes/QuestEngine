@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Neon Periodic Table | QuestEngine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #030307;
+            --panel-glass: rgba(10, 10, 20, 0.75);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
+        
+        /* Strict 100vh Layout Framework */
+        body { 
+            background: var(--bg-dark); 
+            color: #fff; 
+            height: 100vh; 
+            max-height: 100vh;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        
+        header { 
+            height: 60px; 
+            background: rgba(3, 3, 7, 0.9); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid var(--panel-border); 
+            padding: 0 1.5rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: #00e5ff; text-shadow: 0 0 8px #00e5ff; }
+
+        /* Table Stage Window */
+        .table-stage { 
+            flex: 1; 
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            align-items: center; 
+            overflow: auto; /* Triggers the beautiful scrollbar when screen is small */
+            position: relative;
+        }
+        
+        .neon-grid { 
+            display: grid; 
+            grid-template-columns: repeat(18, minmax(62px, 1fr)); 
+            grid-template-rows: repeat(10, minmax(70px, 1fr));
+            gap: 6px; 
+            width: 100%;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        /* CUSTOM ULTRA-SLEEK NEON SCROLLBARS */
+        .table-stage::-webkit-scrollbar,
+        .inspector-panel::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .table-stage::-webkit-scrollbar-track,
+        .inspector-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .table-stage::-webkit-scrollbar-thumb,
+        .inspector-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+        .table-stage::-webkit-scrollbar-thumb:hover,
+        .inspector-panel::-webkit-scrollbar-thumb:hover {
+            background: #00e5ff;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+
+        /* Interactive Element Nodes */
+        .element-node {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 6px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            border: 2px solid hsl(var(--hue), 100%, 60%);
+            box-shadow: 0 0 8px hsl(var(--hue), 100%, 60%, 0.25), inset 0 0 8px hsl(var(--hue), 100%, 60%, 0.15);
+            color: hsl(var(--hue), 100%, 85%);
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s;
+        }
+        .element-node:hover {
+            transform: scale(1.15);
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 18px hsl(var(--hue), 100%, 60%, 0.6), inset 0 0 12px hsl(var(--hue), 100%, 60%, 0.4);
+        }
+        .element-node.active-selected {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 25px #fff, inset 0 0 15px hsl(var(--hue), 100%, 60%);
+            border-color: #fff;
+        }
+
+        .atomic-num { font-size: 0.75rem; font-weight: 700; opacity: 0.8; }
+        .symbol { font-size: 1.6rem; font-weight: 800; color: #fff; text-align: center; line-height: 1.1; text-shadow: 0 0 8px hsl(var(--hue), 100%, 60%); }
+        .name-lbl { font-size: 0.55rem; text-align: center; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Placeholders (Lanthanides/Actinides slots in main row) */
+        .placeholder-node { justify-content: flex-start; cursor: default; pointer-events: none; }
+        .placeholder-node .name-lbl { font-size: 0.6rem; margin-top: auto; white-space: normal; line-height: 1.1; text-align: left; }
+
+        /* Spacer Row for alignment */
+        .grid-spacer { grid-row: 8; grid-column: 1 / -1; height: 15px; pointer-events: none; }
+
+        /* SLIDING INSIDE FLYOUT DRAWER PANEL */
+        .inspector-panel { 
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 380px; 
+            background: var(--panel-glass); 
+            border-left: 1px solid var(--panel-border); 
+            backdrop-filter: blur(35px); 
+            -webkit-backdrop-filter: blur(35px);
+            padding: 2rem 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 1.5rem;
+            overflow-y: auto;
+            z-index: 2000;
+            box-shadow: -15px 0 35px rgba(0,0,0,0.7);
+            
+            /* Hidden offscreen by default */
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* State trigger rule for JavaScript interaction */
+        .inspector-panel.panel-open {
+            transform: translateX(0);
+        }
+
+        .panel-header { 
+            font-size: 1rem; 
+            font-weight: 700; 
+            color: #9ca3af; 
+            border-bottom: 1px solid var(--panel-border); 
+            padding-bottom: 0.75rem; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center; 
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .close-btn:hover { color: #fff; transform: scale(1.1); }
+
+        /* Atomic Spec Layout Components */
+        .giant-preview {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-top: 4px solid var(--live-color);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.01);
+        }
+        .giant-symbol { font-size: 4.5rem; font-weight: 800; color: #fff; line-height: 1; text-shadow: 0 0 25px var(--live-color); }
+        .giant-name { font-size: 1.5rem; font-weight: 700; margin-top: 0.5rem; }
+        .giant-category { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--live-color); margin-top: 0.25rem; }
+
+        .data-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+        .data-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .data-row .label { color: #9ca3af; font-weight: 500; }
+        .data-row .value { font-weight: 600; color: #fff; text-align: right; }
+        
+        .electron-shells { display: flex; gap: 5px; }
+        .shell-dot { background: var(--live-color); padding: 2px 7px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; color: #000; }
+
+        /* RESPONSIVE DESIGN MEDIA OVERRIDES */
+        @media (max-width: 600px) {
+            .inspector-panel {
+                width: 100%; /* Cover full width on mobile screens smoothly */
+                border-left: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="labs.html" class="logo"><i class="fa-solid fa-flask"></i> QuestLabs</a>
+    </header>
+
+    <div class="table-stage">
+        <div class="neon-grid" id="neonMatrix"></div>
+    </div>
+
+    <div class="inspector-panel" id="inspectorPanel">
+        <div class="panel-header">
+            <span><i class="fa-solid fa-chart-simple" style="margin-right: 6px;"></i> ATOMIC PROFILE</span>
+            <button class="close-btn" id="closePanelBtn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="giant-preview" id="previewBox">
+            <div class="giant-symbol" id="inspectSymbol">-</div>
+            <div class="giant-name" id="inspectName">-</div>
+            <div class="giant-category" id="inspectCategory">-</div>
+        </div>
+
+        <div class="data-grid">
+            <div class="data-row">
+                <span class="label">Atomic Number</span>
+                <span class="value" id="inspectNum">-</span>
+            </div>
+            <div class="data-row">
+                <span class="label">Standard Atomic Mass</span>
+                <span class="value" id="inspectMass">-</span>
+            </div>
+            <div class="data-row">
+                <span class="label">Electron Configuration</span>
+                <span class="value" id="inspectConfig">-</span>
+            </div>
+            <div class="data-row">
+                <span class="label">Electrons Per Shell</span>
+                <div class="electron-shells" id="inspectShells"></div>
+            </div>
+            <div class="data-row">
+                <span class="label">Valence Electrons</span>
+                <span class="value" id="inspectValence">-</span>
+            </div>
+            <div class="data-row">
+                <span class="label">State of Matter (STP)</span>
+                <span class="value" id="inspectState">-</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // High Fidelity Structural Element Dataset containing full atomic property profiles
+        const elementsData = [
+            "1,H,Hydrogen,1,1,1.008,1s¹,1,1,Gas", "2,He,Helium,18,1,4.0026,1s²,2,2,Gas",
+            "3,Li,Lithium,1,2,6.94,[He] 2s¹,2-1,1,Solid", "4,Be,Beryllium,2,2,9.0122,[He] 2s²,2-2,2,Solid", "5,B,Boron,13,2,10.81,[He] 2s² 2p¹,2-3,3,Solid", "6,C,Carbon,14,2,12.011,[He] 2s² 2p²,2-4,4,Solid", "7,N,Nitrogen,15,2,14.007,[He] 2s² 2p³,2-5,5,Gas", "8,O,Oxygen,16,2,15.999,[He] 2s² 2p⁴,2-6,6,Gas", "9,F,Fluorine,17,2,18.998,[He] 2s² 2p⁵,2-7,7,Gas", "10,Ne,Neon,18,2,20.180,[He] 2s² 2p⁶,2-8,8,Gas",
+            "11,Na,Sodium,1,3,22.990,[Ne] 3s¹,2-8,1,Solid", "12,Mg,Magnesium,2,3,24.305,[Ne] 3s²,2-8-2,2,Solid", "13,Al,Aluminum,13,3,26.982,[Ne] 3s² 3p¹,2-8-3,3,Solid", "14,Si,Silicon,14,3,28.085,[Ne] 3s² 3p²,2-8-4,4,Solid", "15,P,Phosphorus,15,3,30.974,[Ne] 3s² 3p³,2-8-5,5,Solid", "16,S,Sulfur,16,3,32.06,[Ne] 3s² 3p⁴,2-8-6,6,Solid", "17,Cl,Chlorine,17,3,35.45,[Ne] 3s² 3p⁵,2-8-7,7,Gas", "18,Ar,Argon,18,3,39.948,[Ne] 3s² 3p⁶,2-8-8,8,Gas",
+            
+            // Row 4
+            "19,K,Potassium,1,4,39.098,[Ar] 4s¹,2-8-8-1,1,Solid", "20,Ca,Calcium,2,4,40.078,[Ar] 4s²,2-8-8-2,2,Solid", "21,Sc,Scandium,3,4,44.956,[Ar] 3d¹ 4s²,2-8-9-2,2,Solid", "22,Ti,Titanium,4,4,47.867,[Ar] 3d² 4s²,2-8-10-2,2,Solid", "23,V,Vanadium,5,4,50.942,[Ar] 3d³ 4s²,2-8-11-2,2,Solid", "24,Cr,Chromium,6,4,51.996,[Ar] 3d⁵ 4s¹,2-8-13-1,1,Solid", "25,Mn,Manganese,7,4,54.938,[Ar] 3d⁵ 4s²,2-8-13-2,2,Solid", "26,Fe,Iron,8,4,55.845,[Ar] 3d⁶ 4s²,2-8-14-2,2,Solid", "27,Co,Cobalt,9,4,58.933,[Ar] 3d⁷ 4s²,2-8-15-2,2,Solid", "28,Ni,Nickel,10,4,58.693,[Ar] 3d⁸ 4s²,2-8-16-2,2,Solid", "29,Cu,Copper,11,4,63.546,[Ar] 3d¹⁰ 4s¹,2-8-18-1,1,Solid", "30,Zn,Zinc,12,4,65.38,[Ar] 3d¹⁰ 4s²,2-8-18-2,2,Solid", "31,Ga,Gallium,13,4,69.723,[Ar] 3d¹⁰ 4s² 4p¹,2-8-18-3,3,Solid", "32,Ge,Germanium,14,4,72.630,[Ar] 3d¹⁰ 4s² 4p²,2-8-18-4,4,Solid", "33,As,Arsenic,15,4,74.922,[Ar] 3d¹⁰ 4s² 4p³,2-8-18-5,5,Solid", "34,Se,Selenium,16,4,78.971,[Ar] 3d¹⁰ 4s² 4p⁴,2-8-18-6,6,Solid", "35,Br,Bromine,17,4,79.904,[Ar] 3d¹⁰ 4s² 4p⁵,2-8-18-7,7,Liquid", "36,Kr,Krypton,18,4,83.798,[Ar] 3d¹⁰ 4s² 4p⁶,2-8-18-8,8,Gas",
+            
+            // Row 5
+            "37,Rb,Rubidium,1,5,85.468,[Kr] 5s¹,2-8-18-8-1,1,Solid", "38,Sr,Strontium,2,5,87.62,[Kr] 5s²,2-8-18-8-2,2,Solid", "39,Y,Yttrium,3,5,88.906,[Kr] 4d¹ 5s²,2-8-18-9-2,2,Solid", "40,Zr,Zirconium,4,5,91.224,[Kr] 4d² 5s²,2-8-18-10-2,2,Solid", "41,Nb,Niobium,5,5,92.906,[Kr] 4d⁴ 5s¹,2-8-18-12-1,1,Solid", "42,Mo,Molybdenum,6,5,95.95,[Kr] 4d⁵ 5s¹,2-8-18-13-1,1,Solid", "43,Tc,Technetium,7,5,98,[Kr] 4d⁵ 5s²,2-8-18-13-2,2,Synthetic", "44,Ru,Ruthenium,8,5,101.07,[Kr] 4d⁷ 5s¹,2-8-18-15-1,1,Solid", "45,Rh,Rhodium,9,5,102.91,[Kr] 4d⁸ 5s¹,2-8-18-16-1,1,Solid", "46,Pd,Palladium,10,5,106.42,[Kr] 4d¹⁰,2-8-18-18,0,Solid", "47,Ag,Silver,11,5,107.87,[Kr] 4d¹⁰ 5s¹,2-8-18-18-1,1,Solid", "48,Cd,Cadmium,12,5,112.41,[Kr] 4d¹⁰ 5s²,2-8-18-18-2,2,Solid", "49,In,Indium,13,5,114.82,[Kr] 4d¹⁰ 5s² 5p¹,2-8-18-18-3,3,Solid", "50,Sn,Tin,14,5,118.71,[Kr] 4d¹⁰ 5s² 5p²,2-8-18-18-4,4,Solid", "51,Sb,Antimony,15,5,121.76,[Kr] 4d¹⁰ 5s² 5p³,2-8-18-18-5,5,Solid", "52,Te,Tellurium,16,5,127.60,[Kr] 4d¹⁰ 5s² 5p⁴,2-8-18-18-6,6,Solid", "53,I,Iodine,17,5,126.90,[Kr] 4d¹⁰ 5s² 5p⁵,2-8-18-18-7,7,Solid", "54,Xe,Xenon,18,5,131.29,[Kr] 4d¹⁰ 5s² 5p⁶,2-8-18-18-8,8,Gas",
+            
+            // Row 6
+            "55,Cs,Cesium,1,6,132.91,[Xe] 6s¹,2-8-18-18-8-1,1,Solid", "56,Ba,Barium,2,6,137.33,[Xe] 6s²,2-8-18-18-8-2,2,Solid", "57-71, ,Lanthanides,3,6,-,-,-,-,-",
+            "72,Hf,Hafnium,4,6,178.49,[Xe] 4f¹⁴ 5d² 6s²,2-8-18-32-10-2,2,Solid", "73,Ta,Tantalum,5,6,180.95,[Xe] 4f¹⁴ 5d³ 6s²,2-8-18-32-11-2,2,Solid", "74,W,Tungsten,6,6,183.84,[Xe] 4f¹⁴ 5d⁴ 6s²,2-8-18-32-12-2,2,Solid", "75,Re,Rhenium,7,6,186.21,[Xe] 4f¹⁴ 5d⁵ 6s²,2-8-18-32-13-2,2,Solid", "76,Os,Osmium,8,6,190.23,[Xe] 4f¹⁴ 5d⁶ 6s²,2-8-18-32-14-2,2,Solid", "77,Ir,Iridium,9,6,192.22,[Xe] 4f¹⁴ 5d⁷ 6s²,2-8-18-32-15-2,2,Solid", "78,Pt,Platinum,10,6,195.08,[Xe] 4f¹⁴ 5d⁹ 6s¹,2-8-18-32-17-1,1,Solid", "79,Au,Gold,11,6,196.97,[Xe] 4f¹⁴ 5d¹⁰ 6s¹,2-8-18-32-18-1,1,Solid", "80,Hg,Mercury,12,6,200.59,[Xe] 4f¹⁴ 5d¹⁰ 6s²,2-8-18-32-18-2,2,Liquid", "81,Tl,Thallium,13,6,204.38,[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹,2-8-18-32-18-3,3,Solid", "82,Pb,Lead,14,6,207.2,[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²,2-8-18-32-18-4,4,Solid", "83,Bi,Bismuth,15,6,208.98,[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³,2-8-18-32-18-5,5,Solid", "84,Po,Polonium,16,6,209,[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴,2-8-18-32-18-6,6,Solid", "85,At,Astatine,17,6,210,[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵,2-8-18-32-18-7,7,Solid", "86,Rn,Radon,18,6,222,[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶,2-8-18-32-18-8,8,Gas",
+            
+            // Row 7
+            "87,Fr,Francium,1,7,223,[Rn] 7s¹,2-8-18-32-18-8-1,1,Solid", "88,Ra,Radium,2,7,226,[Rn] 7s²,2-8-18-32-18-8-2,2,Solid", "89-103, ,Actinides,3,7,-,-,-,-,-",
+            "104,Rf,Rutherfordium,4,7,267,[Rn] 5f¹⁴ 6d² 7s²,2-8-18-32-32-10-2,2,Synthetic", "105,Db,Dubnium,5,7,268,[Rn] 5f¹⁴ 6d³ 7s²,2-8-18-32-32-11-2,2,Synthetic", "106,Sg,Seaborgium,6,7,269,[Rn] 5f¹⁴ 6d⁴ 7s²,2-8-18-32-32-12-2,2,Synthetic", "107,Bh,Bohrium,7,7,270,[Rn] 5f¹⁴ 6d⁵ 7s²,2-8-18-32-32-13-2,2,Synthetic", "108,Hs,Hassium,8,7,277,[Rn] 5f¹⁴ 6d⁶ 7s²,2-8-18-32-32-14-2,2,Synthetic", "109,Mt,Meitnerium,9,7,278,[Rn] 5f¹⁴ 6d⁷ 7s²,2-8-18-32-32-15-2,2,Synthetic", "110,Ds,Darmstadtium,10,7,281,[Rn] 5f¹⁴ 6d⁸ 7s²,2-8-18-32-32-16-2,2,Synthetic", "111,Rg,Roentgenium,11,7,282,[Rn] 5f¹⁴ 6d⁹ 7s²,2-8-18-32-32-17-1,1,Synthetic", "112,Cn,Copernicium,12,7,285,[Rn] 5f¹⁴ 6d¹⁰ 7s²,2-8-18-32-32-18-2,2,Synthetic", "113,Nh,Nihonium,13,7,286,[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹,2-8-18-32-32-18-3,3,Synthetic", "114,Fl,Flerovium,14,7,289,[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²,2-8-18-32-32-18-4,4,Synthetic", "115,Mc,Moscovium,15,7,290,[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³,2-8-18-32-32-18-5,5,Synthetic", "116,Lv,Livermorium,16,7,293,[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴,2-8-18-32-32-18-6,6,Synthetic", "117,Ts,Tennessine,17,7,294,[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵,2-8-18-32-32-18-7,7,Synthetic", "118,Og,Oganesson,18,7,294,[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶,2-8-18-32-32-18-8,8,Synthetic",
+            
+            // Lanthanides Row (Row 9)
+            "57,La,Lanthanum,3,9,138.91,[Xe] 5d¹ 6s²,2-8-18-18-9-2,2,Solid", "58,Ce,Cerium,4,9,140.12,[Xe] 4f¹ 5d¹ 6s²,2-8-18-19-9-2,2,Solid", "59,Pr,Praseodymium,5,9,140.91,[Xe] 4f³ 6s²,2-8-18-21-8-2,2,Solid", "60,Nd,Neodymium,6,9,144.24,[Xe] 4f⁴ 6s²,2-8-18-22-8-2,2,Solid", "61,Pm,Promethium,7,9,145,[Xe] 4f⁵ 6s²,2-8-18-23-8-2,2,Synthetic", "62,Sm,Samarium,8,9,150.36,[Xe] 4f⁶ 6s²,2-8-18-24-8-2,2,Solid", "63,Eu,Europium,9,9,151.96,[Xe] 4f⁷ 6s²,2-8-18-25-8-2,2,Solid", "64,Gd,Gadolinium,10,9,157.25,[Xe] 4f⁷ 5d¹ 6s²,2-8-18-25-9-2,2,Solid", "65,Tb,Terbium,11,9,158.93,[Xe] 4f⁹ 6s²,2-8-18-27-8-2,2,Solid", "66,Dy,Dysprosium,12,9,162.50,[Xe] 4f¹⁰ 6s²,2-8-18-28-8-2,2,Solid", "67,Ho,Holmium,13,9,164.93,[Xe] 4f¹¹ 6s²,2-8-18-29-8-2,2,Solid", "68,Er,Erbium,14,9,167.26,[Xe] 4f¹² 6s²,2-8-18-30-8-2,2,Solid", "69,Tm,Thulium,15,9,168.93,[Xe] 4f¹³ 6s²,2-8-18-31-8-2,2,Solid", "70,Yb,Ytterbium,16,9,173.05,[Xe] 4f¹⁴ 6s²,2-8-18-32-8-2,2,Solid", "71,Lu,Lutetium,17,9,174.97,[Xe] 4f¹⁴ 5d¹ 6s²,2-8-18-32-9-2,2,Solid",
+            
+            // Actinides Row (Row 10)
+            "89,Ac,Actinium,3,10,227,[Rn] 6d¹ 7s²,2-8-18-32-18-9-2,2,Solid", "90,Th,Thorium,4,10,232.04,[Rn] 6d² 7s²,2-8-18-32-18-10-2,2,Solid", "91,Pa,Protactinium,5,10,231.04,[Rn] 5f² 6d¹ 7s²,2-8-18-32-20-9-2,2,Solid", "92,U,Uranium,6,10,238.03,[Rn] 5f³ 6d¹ 7s²,2-8-18-32-21-9-2,2,Solid", "93,Np,Neptunium,7,10,237,[Rn] 5f⁴ 6d¹ 7s²,2-8-18-32-22-9-2,2,Synthetic", "94,Pu,Plutonium,8,10,244,[Rn] 5f⁶ 7s²,2-8-18-32-24-8-2,2,Synthetic", "95,Am,Americium,9,10,243,[Rn] 5f⁷ 7s²,2-8-18-32-25-8-2,2,Synthetic", "96,Cm,Curium,10,10,247,[Rn] 5f⁷ 6d¹ 7s²,2-8-18-32-25-9-2,2,Synthetic", "97,Bk,Berkelium,11,10,247,[Rn] 5f⁹ 7s²,2-8-18-32-27-8-2,2,Synthetic", "98,Cf,Californium,12,10,251,[Rn] 5f¹⁰ 7s²,2-8-18-32-28-8-2,2,Synthetic", "99,Es,Einsteinium,13,10,252,[Rn] 5f¹¹ 7s²,2-8-18-32-29-8-2,2,Synthetic", "100,Fm,Fermium,14,10,257,[Rn] 5f¹² 7s²,2-8-18-32-30-8-2,2,Synthetic", "101,Md,Mendelevium,15,10,258,[Rn] 5f¹³ 7s²,2-8-18-32-31-8-2,2,Synthetic", "102,No,Nobelium,16,10,259,[Rn] 5f¹⁴ 7s²,2-8-18-32-32-8-2,2,Synthetic", "103,Lr,Lawrencium,17,10,262,[Rn] 5f¹⁴ 7s² 7p¹,2-8-18-32-32-8-3,3,Synthetic"
+        ];
+
+        function getCategoryName(hue) {
+            if (hue === 225) return "Reactive Nonmetal";
+            if (hue === 335) return "Inner Transition Metal";
+            switch(hue) {
+                case 0: return "Alkali Metal";
+                case 25: return "Alkaline Earth Metal";
+                case 45: case 55: case 65: case 75: case 85: case 95: case 105: case 115: case 125: case 135: return "Transition Metal";
+                case 155: return "Post-Transition Metal";
+                case 185: return "Metalloid";
+                case 255: return "Reactive Nonmetal";
+                case 285: return "Halogen";
+                case 310: return "Noble Gas";
+                default: return "Unknown Classification";
+            }
+        }
+
+        function calculateHue(num, col, row) {
+            if (num === '1') return 225; // Hydrogen Blue Exception
+            if (row >= 9 || num === '57-71' || num === '89-103') return 335; // Pink Blocks
+
+            const hueMap = {
+                1: 0, 2: 25, 3: 45, 4: 55, 5: 65, 6: 75, 7: 85, 8: 95, 
+                9: 105, 10: 115, 11: 125, 12: 135, 13: 155, 14: 185, 
+                15: 225, 16: 255, 17: 285, 18: 310
+            };
+            return hueMap[col] || 0;
+        }
+
+        function initMatrix() {
+            const grid = document.getElementById('neonMatrix');
+
+            const spacer = document.createElement('div');
+            spacer.className = "grid-spacer";
+            grid.appendChild(spacer);
+
+            elementsData.forEach(elementStr => {
+                const [num, sym, name, col, row, mass, config, shells, valence, state] = elementStr.split(',');
+                const hue = calculateHue(num, parseInt(col), parseInt(row));
+                
+                const node = document.createElement('div');
+                node.className = "element-node";
+                node.style.gridColumn = col;
+                node.style.gridRow = row;
+                node.style.setProperty('--hue', hue);
+                
+                if (sym.trim() === '') {
+                    node.classList.add('placeholder-node');
+                    node.innerHTML = `
+                        <div class="atomic-num">${num}</div>
+                        <div class="name-lbl">${name}</div>
+                    `;
+                } else {
+                    node.innerHTML = `
+                        <div class="atomic-num">${num}</div>
+                        <div class="symbol">${sym}</div>
+                        <div class="name-lbl">${name}</div>
+                    `;
+                    
+                    node.onclick = () => {
+                        document.querySelectorAll('.element-node').forEach(n => n.classList.remove('active-selected'));
+                        node.classList.add('active-selected');
+                        
+                        triggerInspection({ num, sym, name, mass, config, shells, valence, state, hue });
+                    };
+                }
+                
+                grid.appendChild(node);
+            });
+
+            // Close Sidebar Event
+            document.getElementById('closePanelBtn').onclick = () => {
+                document.getElementById('inspectorPanel').classList.remove('panel-open');
+                document.querySelectorAll('.element-node').forEach(n => n.classList.remove('active-selected'));
+            };
+        }
+
+        function triggerInspection(el) {
+            const panel = document.getElementById('inspectorPanel');
+            const hslColor = `hsl(${el.hue}, 100%, 60%)`;
+            
+            document.getElementById('previewBox').style.setProperty('--live-color', hslColor);
+
+            // Populate Content Fields
+            document.getElementById('inspectSymbol').innerText = el.sym;
+            document.getElementById('inspectSymbol').style.textShadow = `0 0 20px ${hslColor}`;
+            document.getElementById('inspectName').innerText = el.name;
+            document.getElementById('inspectCategory').innerText = getCategoryName(el.hue);
+            document.getElementById('inspectNum').innerText = el.num;
+            document.getElementById('inspectMass').innerText = el.mass + " u";
+            document.getElementById('inspectConfig').innerText = el.config;
+            document.getElementById('inspectValence').innerText = el.valence;
+            document.getElementById('inspectState').innerText = el.state;
+
+            // Generate Electron Shell Elements
+            const shellWrapper = document.getElementById('inspectShells');
+            shellWrapper.innerHTML = '';
+            el.shells.split('-').forEach(shellCount => {
+                const dot = document.createElement('span');
+                dot.className = "shell-dot";
+                dot.innerText = shellCount;
+                shellWrapper.appendChild(dot);
+            });
+
+            // Slide panel forward smoothly
+            panel.classList.add('panel-open');
+        }
+
+        window.onload = initMatrix;
+    </script>
+</body>
+</html>

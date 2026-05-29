@@ -47,60 +47,83 @@
         .section-header h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main); }
         .section-header p { color: var(--text-muted); font-size: 1rem; }
 
-        /* Lab Switcher Tab Elements */
-        .lab-tab-row { display: flex; gap: 10px; margin-bottom: 2rem; flex-wrap: wrap; }
-        .tab-btn { background: var(--surface); border: 1px solid var(--border); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-muted); transition: all 0.2s ease; }
-        .tab-btn:hover { background: #f8fafc; color: var(--text-main); }
-        .tab-btn.active[data-target="tree"] { border-color: var(--tree-green); background: #f0fdf4; color: var(--tree-green); }
-        .tab-btn.active[data-target="plant"] { border-color: var(--plant-green); background: #f0fdf4; color: var(--plant-green); }
-        .tab-btn.active[data-target="redstone"] { border-color: var(--minecraft-red); background: #fef2f2; color: var(--minecraft-red); }
+        /* Card Grid Layout */
+.card-matrix { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 1.5rem; 
+}
 
-        /* Two Column Lab Workstation Layout */
-        .lab-layout { display: none; grid-template-columns: 320px 1fr; gap: 2rem; background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: var(--radius-md); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03); }
-        .lab-layout.active-layout { display: grid; }
+/* Base Card Styling */
+.card { 
+    background: var(--surface); 
+    border-radius: var(--radius-md); 
+    border: 1px solid var(--border); 
+    overflow: hidden; 
+    text-decoration: none; 
+    color: inherit; 
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03); 
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease; 
+}
 
-        .control-panel { border-right: 1px solid var(--border); padding-right: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
-        .display-panel { padding-left: 1rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; }
+/* Card Hover Effects */
+.card:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1); 
+    border-color: #4f46e5; 
+}
 
-        .slider-group label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; color: var(--text-main); }
-        .slider-group input[type="range"] { width: 100%; accent-color: var(--accent); }
-        .slider-group input[type="range"].tree-accent { accent-color: var(--tree-green); }
-        .slider-group input[type="range"].plant-accent { accent-color: var(--plant-green); }
-        .slider-group input[type="range"].redstone-accent { accent-color: var(--minecraft-red); }
-        
-        .readout-meta { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
+/* Image Framework */
+.card-img { 
+    width: 100%; 
+    height: 160px; 
+    object-fit: cover; 
+    background: #e2e8f0; 
+}
 
-        .action-trigger { width: 100%; border: none; padding: 0.8rem; border-radius: 8px; font-weight: 600; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.95rem; }
-        .action-trigger.btn-tree { background: var(--tree-green); }
-        .action-trigger.btn-plant { background: var(--plant-green); }
-        .action-trigger.btn-redstone { background: var(--minecraft-red); }
-        .action-trigger:hover { opacity: 0.9; transform: translateY(-1px); }
+/* Card Body Content */
+.card-content { 
+    padding: 1.25rem; 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+}
 
-        /* Monitor Viewport Configuration */
-        .viewport-screen { background: #0f172a; border-radius: 12px; min-height: 340px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; border: 4px solid #1e293b; padding: 1rem; }
-        .telemetry-tag { position: absolute; top: 12px; right: 12px; font-family: var(--font-mono); font-size: 0.8rem; color: #38bdf8; background: rgba(15, 23, 42, 0.8); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
+.card-title { 
+    font-size: 1.15rem; 
+    font-weight: 700; 
+    margin-bottom: 0.5rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
 
-        /* Sim Rendering Assets */
-        .tree-core-render { width: 220px; height: 220px; border-radius: 50%; background: #eab308; border: 8px solid #b45309; display: flex; justify-content: center; align-items: center; position: relative; box-shadow: inset 0 0 40px rgba(0,0,0,0.15); }
-        .wood-layer-ring { border: 2px solid rgba(139, 92, 26, 0.35); border-radius: 50%; position: absolute; }
-        
-        .chamber-vial-rack { width: 100%; display: flex; justify-content: space-around; align-items: flex-end; height: 180px; padding-bottom: 10px; }
-        .glass-vial { width: 45px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 30px 30px 10px 10px; border: 2px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column-reverse; }
-        .vial-liquid { width: 100%; background: rgba(34, 197, 94, 0.4); height: 50%; transition: height 0.5s ease; position: relative; }
-        .gas-bubble { width: 6px; height: 6px; background: rgba(255,255,255,0.6); border-radius: 50%; position: absolute; bottom: 0; animation: ascendBubble 2s infinite linear; }
+.card-desc { 
+    color: var(--text-muted); 
+    font-size: 0.85rem; 
+    line-height: 1.5; 
+    margin-bottom: 1rem; 
+}
 
-        .redstone-conduit-line { display: flex; gap: 15px; align-items: center; width: 95%; }
-        .gate-module { width: 50px; height: 50px; background: #475569; border: 3px solid #334155; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: #94a3b8; font-weight: 700; font-family: var(--font-mono); position: relative; }
-        .gate-module.active-power { background: #b91c1c; border-color: #ef4444; color: #fecaca; box-shadow: 0 0 20px #ef4444; }
-        .dust-wire { flex: 1; height: 8px; background: #334155; position: relative; }
-        .dust-wire.active-power { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+/* Bottom Action Label ("Try It") */
+.play-tag { 
+    margin-top: auto; 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    color: var(--accent); 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em; 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+}
 
-        @keyframes ascendBubble {
-            0% { bottom: 0; left: 25%; opacity: 0; }
-            30% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { bottom: 85%; left: 65%; opacity: 0; }
-        }
+/* Changes label color to the scientific indigo theme color on hover */
+.card:hover .play-tag { 
+    color: #4f46e5; 
+}
 
         footer { background: var(--surface); border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: auto; }
 
@@ -127,7 +150,7 @@
 
     <nav>
         <div class="nav-container">
-            <a href="index.html" class="brand"><i class="fa-solid fa-cubes"></i> Quest<span>Engine</span></a>
+            <a href="index.html" class="brand"><i class="fa-solid fa-flask"></i> Quest<span>Labs</span></a>
             
             <button class="mobile-toggle" id="menuToggle" aria-label="Toggle navigation Menu">
                 <i class="fa-solid fa-bars"></i>
@@ -148,92 +171,43 @@
             <p>Modify structural coefficients and environmental limits to observe data model changes in real-time.</p>
         </div>
 
-        <div class="lab-tab-row">
-            <button class="tab-btn active" data-target="tree" onclick="toggleActiveLab('tree')"><i class="fa-solid fa-tree"></i> Dendro-Chronology</button>
-            <button class="tab-btn" data-target="plant" onclick="toggleActiveLab('plant')"><i class="fa-solid fa-leaf"></i> Photosynthetic Arena</button>
-            <button class="tab-btn" data-target="redstone" onclick="toggleActiveLab('redstone')"><i class="fa-solid fa-cube"></i> Redstone Delay Matrix</button>
-        </div>
+        <div class="card-matrix">
+    <a href="pendulum.html" class="card pendulum-card">
+    <img class="card-img" src="https://m.media-amazon.com/images/I/61Fu+ZHRDeL._AC_.jpg" alt="Pendulum Experiment">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#4f46e5;"><i class="fa-solid fa-bezier-curve"></i> Pendulum Lab</h3>
+        <p class="card-desc">Explore harmonic motion by adjusting string length, gravity, and mass to see how they change the swing period.</p>
+        <span class="play-tag">Try It <i class="fa-solid fa-chevron-right"></i></span>
+    </div>
+</a>
 
-        <div id="lab-tree" class="lab-layout active-layout">
-            <div class="control-panel">
-                <div class="slider-group">
-                    <label for="rainInput">Annual Rain Capacity</label>
-                    <input type="range" id="rainInput" class="tree-accent" min="5" max="45" value="25" oninput="executeTreeSim()">
-                    <div class="readout-meta"><span>Arid Drought</span><span>Dense Monsoons</span></div>
-                </div>
-                <div class="slider-group">
-                    <label for="tempInput">Zonal Mean Temperature</label>
-                    <input type="range" id="tempInput" class="tree-accent" min="10" max="90" value="50" oninput="executeTreeSim()">
-                    <div class="readout-meta"><span>Freezing Frost</span><span>Sub-Tropical Heat</span></div>
-                </div>
-                <div class="slider-group">
-                    <label for="ageInput">Time Variable (Years)</label>
-                    <input type="range" id="ageInput" class="tree-accent" min="3" max="10" value="6" oninput="executeTreeSim()">
-                    <div class="readout-meta"><span>3 Cycles</span><span>10 Cycles</span></div>
-                </div>
-                <button class="action-trigger btn-tree" onclick="executeTreeSim()"><i class="fa-solid fa-seedling"></i> Render Ring Specimen</button>
-            </div>
-            <div class="display-panel">
-                <div class="viewport-screen">
-                    <div class="telemetry-tag" id="treeTelemetry">CYCLES: 6 YRS | CELL DENSITY: NORMAL</div>
-                    <div class="tree-core-render" id="treeCanvas"></div>
-                </div>
-                <p class="card-desc" style="margin-bottom: 0;"><strong>Operational Insight:</strong> Cellular expansion widths correlate with annual rain parameters. Narrow, condensed lines demonstrate survival strain across seasons.</p>
-            </div>
-        </div>
+<a href="solarsystem.html" class="card solar-card">
+    <img class="card-img" src="https://plus.unsplash.com/premium_photo-1717620945061-fdb31301a205?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c29sYXIlMjBzeXN0ZW18ZW58MHx8MHx8fDA%3D" alt="Solar System Model">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#eab308;"><i class="fa-solid fa-sun"></i> Solar System Model</h3>
+        <p class="card-desc">Simulate planetary orbits by altering orbital distance, solar mass, and velocity vectors to study Kepler's laws.</p>
+        <span class="play-tag">Try It <i class="fa-solid fa-chevron-right"></i></span>
+    </div>
+</a>
 
-        <div id="lab-plant" class="lab-layout">
-            <div class="control-panel">
-                <div class="slider-group">
-                    <label for="lightInput">Light Spectrum Waveband</label>
-                    <input type="range" id="lightInput" class="plant-accent" min="400" max="700" value="520" oninput="executePlantSim()">
-                    <div class="readout-meta"><span style="color:#3b82f6;">400nm (Blue)</span><span style="color:#22c55e;">520nm (Green)</span><span style="color:#ef4444;">700nm (Red)</span></div>
-                </div>
-                <div class="slider-group">
-                    <label for="co2Input">CO₂ Carbon Concentration</label>
-                    <input type="range" id="co2Input" class="plant-accent" min="10" max="100" value="45" oninput="executePlantSim()">
-                    <div class="readout-meta"><span>Low Yield</span><span>High Saturation</span></div>
-                </div>
-                <button class="action-trigger btn-plant" onclick="executePlantSim()"><i class="fa-solid fa-bolt"></i> Emit Photon Flux</button>
-            </div>
-            <div class="display-panel">
-                <div class="viewport-screen" style="background: #020617;">
-                    <div class="telemetry-tag" id="plantTelemetry">O₂ NET PRODUCTION: 0.00ml/m</div>
-                    <div class="chamber-vial-rack">
-                        <div class="glass-vial"><div class="vial-liquid" id="vialH2O"></div><div class="gas-bubble" style="animation-delay:0s"></div><div class="gas-bubble" style="animation-delay:0.8s"></div></div>
-                        <div class="glass-vial"><div class="vial-liquid" id="vialCO2" style="background:rgba(56,189,248,0.3)"></div><div class="gas-bubble" style="animation-delay:0.4s"></div></div>
-                        <div class="glass-vial"><div class="vial-liquid" id="vialO2" style="background:rgba(254,240,138,0.5)"></div><div class="gas-bubble" style="animation-delay:0.2s"></div><div class="gas-bubble" style="animation-delay:1.1s"></div></div>
-                    </div>
-                </div>
-                <p class="card-desc" style="margin-bottom: 0;"><strong>Operational Insight:</strong> Chlorophyll molecules actively absorb blue and red photons while bouncing green frequencies away, directly modifying gas release rates.</p>
-            </div>
-        </div>
+<a href="periodictable.html" class="card periodic-card">
+    <img class="card-img" src="https://tse3.mm.bing.net/th/id/OIP.N6fQiK35DeJo5Vp5qbQNLgHaFI?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Periodic Table Lab">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#0d9488;"><i class="fa-solid fa-flask"></i> Periodic Table Interactive</h3>
+        <p class="card-desc">Investigate elemental properties by filtering electron shells, atomic radii, valence groups, and electronegativity trends.</p>
+        <span class="play-tag">Try It <i class="fa-solid fa-chevron-right"></i></span>
+    </div>
+</a>
 
-        <div id="lab-redstone" class="lab-layout">
-            <div class="control-panel">
-                <div class="slider-group">
-                    <label for="tickInput">Repeater Gate Delay</label>
-                    <input type="range" id="tickInput" class="redstone-accent" min="1" max="4" value="2" oninput="adjustRedstoneFeedbackText()">
-                    <div class="readout-meta"><span>1 Tick (0.1s)</span><span id="tickReadoutLabel">2 Ticks</span><span>4 Ticks (0.4s)</span></div>
-                </div>
-                <button class="action-trigger btn-redstone" onclick="fireRedstonePulse()"><i class="fa-solid fa-power-off"></i> Inject Energy Pulse</button>
-            </div>
-            <div class="display-panel">
-                <div class="viewport-screen">
-                    <div class="telemetry-tag" id="redstoneTelemetry">LINE STATUS: LOW POWER</div>
-                    <div class="redstone-conduit-line">
-                        <div class="gate-module" id="rNode1">IN</div>
-                        <div class="dust-wire" id="rWire1"></div>
-                        <div class="gate-module" id="rNode2">R1</div>
-                        <div class="dust-wire" id="rWire2"></div>
-                        <div class="gate-module" id="rNode3">R2</div>
-                        <div class="dust-wire" id="rWire3"></div>
-                        <div class="gate-module" id="rNode4">OUT</div>
-                    </div>
-                </div>
-                <p class="card-desc" style="margin-bottom: 0;"><strong>Operational Insight:</strong> Power drops off natively at block 15. Repeaters re-extend signal logic maps back to full output strength at the cost of processing ticks.</p>
-            </div>
-        </div>
+<a href="phscale.html" class="card ph-card">
+    <img class="card-img" src="https://m.media-amazon.com/images/I/61wOFtLX44L.jpg" alt="pH Scale Lab">
+    <div class="card-content">
+        <h3 class="card-title" style="color:#2563eb;"><i class="fa-solid fa-droplet"></i> pH Scale Simulator</h3>
+        <p class="card-desc">Simulate chemical solutions by measuring H₃O⁺ and OH⁻ ion concentrations to observe acidification and neutralization reactions.</p>
+        <span class="play-tag">Try It <i class="fa-solid fa-chevron-right"></i></span>
+    </div>
+</a>
+</div>
     </main>
 
     <footer>

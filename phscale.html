@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestLabs | pH Scale Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --panel-border: #e2e8f0;
+            --font-sans: 'Poppins', sans-serif;
+            --live-color: #00a99d; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-sans); }
+        
+        body { 
+            background: var(--bg-main); 
+            color: var(--text-main); 
+            height: 100vh; 
+            max-height: 100vh;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        
+        /* Premium Light Header */
+        header { 
+            height: 60px; 
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--panel-border); 
+            padding: 0 1.5rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-shrink: 0;
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo i { color: #00a99d; }
+
+        /* Main Workspace App Layout */
+        .workspace {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Left/Main App Canvas Window */
+        .scale-container {
+            flex: 1;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .instruction-text {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            font-weight: 700;
+        }
+        .sub-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        /* SMART RESPONSIVE GRID STRIP */
+        .ph-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr); /* Clean straight line row layout on large viewports */
+            gap: 10px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 5px;
+        }
+
+        /* Elegant Light-Mode Indicator Cards */
+        .ph-node {
+            background: var(--bg-card);
+            border: 1px solid var(--panel-border);
+            border-top: 6px solid var(--node-color);
+            border-radius: 12px;
+            padding: 1.25rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, border-color 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+        .ph-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
+        }
+        .ph-node.selected {
+            transform: translateY(-5px) scale(1.03);
+            border-color: var(--node-color);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.02), 0 10px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .ph-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--node-color);
+            line-height: 1.2;
+        }
+        .ph-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+            margin-top: 4px;
+        }
+
+        /* Right Side Sliding Drawer Panel Component */
+        .inspector-panel {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            bottom: 0;
+            width: 400px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--panel-border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.03);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .inspector-panel.panel-open {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .close-btn:hover { color: var(--text-main); transform: scale(1.1); }
+
+        /* Premium Minimalist Liquid Display */
+        .beaker-display {
+            background: var(--bg-main);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 2.2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid var(--live-color);
+        }
+        .beaker-display::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 35%;
+            background: var(--live-color);
+            opacity: 0.06;
+            filter: blur(15px);
+        }
+
+        .level-badge {
+            font-size: 5rem;
+            font-weight: 800;
+            color: var(--live-color);
+            line-height: 1;
+        }
+        .level-title { font-size: 1.35rem; font-weight: 700; margin-top: 0.5rem; color: var(--text-main); }
+        .level-category {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Analytical Data Visualization Cards */
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        .card-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;}
+        .card-label i { color: var(--live-color); }
+        
+        .ion-bar-container { display: flex; flex-direction: column; gap: 12px; }
+        .ion-row { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+        .ion-meta-wrapper { display: flex; justify-content: space-between; width: 100%; }
+        .ion-track { height: 7px; background: #f1f5f9; border-radius: 4px; overflow: hidden; width: 100%; position: relative;}
+        .ion-fill { height: 100%; background: var(--live-color); border-radius: 4px; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* Real world dynamic sample lists */
+        .examples-list { display: flex; flex-direction: column; gap: 0.6rem; }
+        .example-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-main);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-main);
+            border-left: 4px solid var(--live-color);
+            border: 1px solid var(--panel-border);
+            border-left: 4px solid var(--live-color);
+        }
+
+        /* CUSTOM MODERN SCROLLBARS */
+        .scale-container::-webkit-scrollbar,
+        .inspector-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scale-container::-webkit-scrollbar-track,
+        .inspector-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scale-container::-webkit-scrollbar-thumb,
+        .inspector-panel::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .scale-container::-webkit-scrollbar-thumb:hover,
+        .inspector-panel::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* ADVANCED SCREEN MEDIA MEDIA RESPONSIVENESS OVERRIDES */
+        @media (max-width: 1100px) {
+            .ph-grid {
+                grid-template-columns: repeat(5, 1fr); /* 5 columns on tablets */
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .instruction-text { font-size: 1.25rem; }
+            .sub-text { font-size: 0.85rem; margin-bottom: 1.5rem; }
+            .scale-container { padding: 1.5rem 1rem; }
+            
+            .ph-grid {
+                grid-template-columns: repeat(3, 1fr); /* 3 columns on mobile viewport screens */
+                gap: 8px;
+            }
+            .ph-node { padding: 1rem 0.25rem; }
+            .ph-number { font-size: 1.5rem; }
+
+            .inspector-panel {
+                width: 100%; /* Fully responsive drawer layout takeover on smartphones */
+                top: 60px;
+                height: calc(100vh - 60px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="labs.html" class="logo"><i class="fa-solid fa-flask-vial"></i> QuestLabs</a>
+    </header>
+
+    <div class="workspace">
+        <div class="scale-container">
+            <h2 class="instruction-text">pH Scale Diagnostics Canvas</h2>
+            <p class="sub-text">Select any dynamic reference indicator node to analyze molecular ion concentration ratios</p>
+            
+            <div class="ph-grid" id="phGridContainer">
+                </div>
+        </div>
+
+        <div class="inspector-panel" id="inspectorPanel">
+            <div class="panel-header">
+                <span>MOLECULAR METRIC PROFILE</span>
+                <button class="close-btn" id="closePanelBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="beaker-display" id="beakerDisplay">
+                <div class="level-badge" id="inspectNum">7</div>
+                <div class="level-title" id="inspectTitle">Neutral</div>
+                <div class="level-category" id="inspectCategory">Pure Balance</div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-label"><i class="fa-solid fa-circle-nodes"></i> Ion Concentration Status</div>
+                <div class="ion-bar-container">
+                    <div class="ion-row">
+                        <div class="ion-meta-wrapper">
+                            <span>Hydrogen Ions [H⁺]</span>
+                            <span id="hLabelVal">50%</span>
+                        </div>
+                        <div class="ion-track"><div class="ion-fill" id="hIonFill"></div></div>
+                    </div>
+                    <div class="ion-row">
+                        <div class="ion-meta-wrapper">
+                            <span>Hydroxide Ions [OH⁻]</span>
+                            <span id="ohLabelVal">50%</span>
+                        </div>
+                        <div class="ion-track"><div class="ion-fill" id="ohIonFill"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-label"><i class="fa-solid fa-layer-group"></i> Real-World Material Matrix</div>
+                <div class="examples-list" id="exampleWrapper">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Highly calibrated precise mapping profile dataset (pH values 0 - 14)
+        const phDataset = [
+            { num: 0, title: "Highly Acidic", cat: "Battery Acid / Pure HCl", color: "#e11d48", h: 100, oh: 0, items: ["Lead-Acid Car Batteries", "Concentrated Laboratory Acid", "Industrial Metal Cleaners"] },
+            { num: 1, title: "Strong Acid", cat: "Gastric Secretions", color: "#ea580c", h: 93, oh: 7, items: ["Human Stomach Acid", "Commercial Rust Removers"] },
+            { num: 2, title: "Strong Acid", cat: "Citrus Concentrations", color: "#f97316", h: 86, oh: 14, items: ["Pure Lemon Juice", "Household Vinegar solutions"] },
+            { num: 3, title: "Moderate Acid", cat: "Carbonated Solutions", color: "#eab308", h: 78, oh: 22, items: ["Commercial Soft Drinks", "Orange Juices", "Grapefruit Concentrates"] },
+            { num: 4, title: "Moderate Acid", cat: "Organic Solutions", color: "#a3e635", h: 71, oh: 29, items: ["Tomato Juice", "Acidic Rainwater runoff", "Craft Beers"] },
+            { num: 5, title: "Weak Acid", cat: "Brewed Infusions", color: "#84cc16", h: 64, oh: 36, items: ["Black Coffee", "Natural Bananas", "Steeped Tea leaves"] },
+            { num: 6, title: "Micro Acid", cat: "Biological Secretions", color: "#22c55e", h: 57, oh: 43, items: ["Fresh Milk", "Human Saliva secretions", "Urine compounds"] },
+            { num: 7, title: "Perfect Neutral", cat: "Pure Aquatics", color: "#0d9488", h: 50, oh: 50, items: ["Distilled Pure H₂O", "Healthy Human Bloodstream", "Soft Contact Lens Saline"] },
+            { num: 8, title: "Micro Alkaline", cat: "Ocean Currents", color: "#06b6d4", h: 43, oh: 57, items: ["Natural Marine Seawater", "Fresh Egg Whites"] },
+            { num: 9, title: "Weak Alkaline", cat: "Baking Chemistry", color: "#3b82f6", h: 36, oh: 64, items: ["Baking Soda Solution", "Hard Tap Groundwater", "Fluoride Toothpastes"] },
+            { num: 10, title: "Moderate Alkaline", cat: "Antacid Compounds", color: "#2563eb", h: 29, oh: 71, items: ["Milk of Magnesia", "Indigestion Antacid Tablets"] },
+            { num: 11, title: "Moderate Alkaline", cat: "Household Detergents", color: "#4f46e5", h: 22, oh: 78, items: ["Household Ammonia Solution", "Laundry Detergents"] },
+            { num: 12, title: "Strong Alkaline", cat: "Soapy Surfactants", color: "#7c3aed", h: 14, oh: 86, items: ["Concentrated Soapy Solutions", "Hair Relaxer creams"] },
+            { num: 13, title: "Strong Alkaline", cat: "Oxidizing Bleaches", color: "#9333ea", h: 7, oh: 93, items: ["Liquid Household Bleach", "Oven Surface Spray Cleaners"] },
+            { num: 14, title: "Highly Alkaline", cat: "Caustic Destructors", color: "#c026d3", h: 0, oh: 100, items: ["Commercial Liquid Drain Openers", "Sodium Hydroxide (Lye)"] }
+        ];
+
+        function buildInterface() {
+            const grid = document.getElementById('phGridContainer');
+            
+            phDataset.forEach(data => {
+                const cardNode = document.createElement('div');
+                cardNode.className = "ph-node";
+                cardNode.style.setProperty('--node-color', data.color);
+                
+                let tagType = "Acid";
+                if(data.num === 7) tagType = "Neut";
+                if(data.num > 7) tagType = "Alkl";
+
+                cardNode.innerHTML = `
+                    <div class="ph-number">${data.num}</div>
+                    <div class="ph-label">${tagType}</div>
+                `;
+                
+                cardNode.onclick = () => {
+                    document.querySelectorAll('.ph-node').forEach(node => node.classList.remove('selected'));
+                    cardNode.classList.add('selected');
+                    viewAtomicDetails(data);
+                };
+
+                grid.appendChild(cardNode);
+            });
+
+            // Close Flyout Trigger Logic
+            document.getElementById('closePanelBtn').onclick = () => {
+                document.getElementById('inspectorPanel').classList.remove('panel-open');
+                document.querySelectorAll('.ph-node').forEach(node => node.classList.remove('selected'));
+            };
+        }
+
+        function viewAtomicDetails(level) {
+            const sideDrawer = document.getElementById('inspectorPanel');
+            
+            // Apply current dynamic theme color values
+            document.documentElement.style.setProperty('--live-color', level.color);
+
+            // Text property bindings
+            document.getElementById('inspectNum').innerText = level.num;
+            document.getElementById('inspectTitle').innerText = level.title;
+            document.getElementById('inspectCategory').innerText = level.cat;
+
+            // Chart bar conversions
+            document.getElementById('hIonFill').style.width = level.h + "%";
+            document.getElementById('ohIonFill').style.width = level.oh + "%";
+            document.getElementById('hLabelVal').innerText = level.h + "%";
+            document.getElementById('ohLabelVal').innerText = level.oh + "%";
+
+            // Render Dynamic Material Chips
+            const layoutTarget = document.getElementById('exampleWrapper');
+            layoutTarget.innerHTML = '';
+            level.items.forEach(material => {
+                const chipItem = document.createElement('div');
+                chipItem.className = "example-item";
+                chipItem.innerHTML = `<i class="fa-solid fa-vial-circle-check" style="font-size: 0.85rem; opacity: 0.65;"></i> <span>${material}</span>`;
+                layoutTarget.appendChild(chipItem);
+            });
+
+            // Engage window viewport animation forward
+            sideDrawer.classList.add('panel-open');
+        }
+
+        window.onload = buildInterface;
+    </script>
+</body>
+</html>
